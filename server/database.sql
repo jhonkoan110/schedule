@@ -16,7 +16,7 @@
 --    status VARCHAR(100),
 --    status_color VARCHAR(100),
 --    commentary VARCHAR(512),
---    photo BYTEA,
+--    photo VARCHAR(521),
 --    service_id INTEGER,
 --    FOREIGN KEY (master_id) REFERENCES masters (id),
 --    FOREIGN KEY (service_id) REFERENCES services (id)
@@ -33,7 +33,7 @@
 -- CREATE TABLE specializations(
 --    id SERIAL PRIMARY KEY,
 --    name VARCHAR(100),
---    icon BYTEA
+--    icon VARCHAR(512)
 -- );
 
 -- CREATE TABLE masters(

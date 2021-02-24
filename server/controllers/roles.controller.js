@@ -11,7 +11,7 @@ rolesRouter.get('/', async (req, res) => {
 });
 
 // Создать роль
-rolesRouter.post('/', checkRole(1), async (req, res) => {
+rolesRouter.post('/', async (req, res) => {
     const { name, rights } = req.body;
     const newRole = await rolesService.createRole(name, rights);
     res.status(200).json(newRole);
