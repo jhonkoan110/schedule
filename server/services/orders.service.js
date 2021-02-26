@@ -6,10 +6,22 @@ export const getOrders = async () => {
     return orders;
 };
 
+// Получить заказа по id клиента
+export const getOrdersByClient = async (user_id) => {
+    const orders = await ordersRepository.getOrdersByClient(user_id);
+    return orders;
+};
+
 // Создать заказ
 export const createOrder = async (data, photoName) => {
     const newOrder = await ordersRepository.createOrder(data, photoName);
     return newOrder;
+};
+
+// Обновить заказ
+export const updateOrder = async (data, photoName) => {
+    const updatedOrder = await ordersRepository.updateOrder(data, photoName);
+    return updatedOrder;
 };
 
 // Удалить заказ

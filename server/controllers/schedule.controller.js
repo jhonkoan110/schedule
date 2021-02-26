@@ -1,4 +1,5 @@
 import Router from 'express';
+import checkRoleMiddleware from '../middlewares/checkRoleMiddleware';
 import * as scheduleService from '../services/schedule.service';
 
 const scheduleRouter = new Router();
@@ -17,7 +18,7 @@ scheduleRouter.get('/:master_id', async (req, res) => {
 });
 
 // Создать расписание мастера
-scheduleRouter.post('/', async (req, res) => {
+scheduleRouter.post('/', checkRoleMiddleware([2]), async (req, res) => {
     const newSchedule = await scheduleService.createSchedule(req.body);
     res.status(200).json({ newSchedule });
 });

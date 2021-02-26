@@ -1,10 +1,11 @@
 import Router from 'express';
+import checkRoleMiddleware from '../middlewares/checkRoleMiddleware';
 import * as mastersService from '../services/masters.service';
 
 const mastersRouter = new Router();
 
 // Получить всех мастеров
-mastersRouter.get('/', async (req, res) => {
+mastersRouter.get('/', checkRoleMiddleware([1, 2]), async (req, res) => {
     const masters = await mastersService.getMasters();
     return res.status(200).json({ masters });
 });
