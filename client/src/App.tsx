@@ -1,32 +1,25 @@
-import { Button, makeStyles, Typography } from '@material-ui/core';
-
-const useStyles = makeStyles({
-    helloThereStyle: {
-        fontWeight: 'bold',
-        color: 'purple',
-        fontSize: '10rem',
-    },
-    buttonStyles: {
-        color: 'green',
-        border: 0,
-        '&:hover': {
-            backgroundColor: 'red',
-            border: 0,
-        },
-    },
-});
+import React from 'react';
+import { Route, Switch } from 'react-router-dom';
+import Header from './components/Header/Header';
+import Administration from './pages/Administration/Administration';
+import MyOrders from './pages/MyOrders/MyOrders';
+import Schedule from './pages/Schedule/Schedule';
 
 const App: React.FC = () => {
-    const classes = useStyles();
-
     return (
         <>
-            <Typography className={classes.helloThereStyle} variant="h1" color="primary">
-                Hello world
-            </Typography>
-            <Button className={classes.buttonStyles} color="secondary" variant="outlined">
-                This is my first button
-            </Button>
+            <Header />
+            <Switch>
+                <Route path="/orders">
+                    <MyOrders />
+                </Route>
+                <Route path="/schedule">
+                    <Schedule />
+                </Route>
+                <Route path="/administration">
+                    <Administration />
+                </Route>
+            </Switch>
         </>
     );
 };
