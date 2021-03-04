@@ -3,6 +3,7 @@ import express from 'express';
 import path from 'path';
 import fileUpload from 'express-fileupload';
 import { config } from 'dotenv';
+import 'reflect-metadata';
 import locationsRouter from './controllers/locations.controller';
 import rolesRouter from './controllers/roles.controller';
 import usersRouter from './controllers/users.controller';

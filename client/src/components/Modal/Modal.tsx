@@ -1,5 +1,5 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
-import React, { useState } from 'react';
+import React from 'react';
 import CloseIcon from '@material-ui/icons/Close';
 import useModalStyles from './modalStyles';
 

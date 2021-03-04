@@ -52,7 +52,9 @@ const Header = () => {
                         Администрирование
                     </NavLink>
                 </Breadcrumbs>
-                <Button variant="contained">Войти</Button>
+                <NavLink to="registration">
+                    <Button variant="contained">Войти</Button>
+                </NavLink>
             </Toolbar>
         </AppBar>
     );
