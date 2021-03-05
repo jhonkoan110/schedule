@@ -27,3 +27,18 @@ export const createMaster = async (props: MasterProps) => {
 
     return await getRepository(Master).save(master);
 };
+
+// Удалить мастера
+export const deleteMaster = async (id: number) => {
+    return await getRepository(Master).delete(id);
+};
+
+// Обновить мастера
+export const updateMaster = async (props: MasterProps) => {
+    const { id, user, specialization, location } = props;
+    const mastersRepository = getRepository(Master);
+    const master = await mastersRepository.findOne(id);
+
+    mastersRepository.merge(master, { user, specialization, location });
+    return await mastersRepository.save(master);
+};

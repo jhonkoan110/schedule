@@ -9,3 +9,13 @@ export const getMasters = async () => {
 export const createMaster = async (props: mastersRepository.MasterProps) => {
     return await mastersRepository.createMaster(props);
 };
+
+// Удалить мастера
+export const deleteMaster = async (id: number) => {
+    return await mastersRepository.deleteMaster(id);
+};
+
+// Обновить мастера
+export const updateMaster = async (props: mastersRepository.MasterProps) => {
+    return await mastersRepository.updateMaster(props);
+};

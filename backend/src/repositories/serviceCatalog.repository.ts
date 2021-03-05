@@ -33,7 +33,7 @@ export const deleteServiceCatalog = async (id: number) => {
     return await getRepository(ServiceCatalog).delete(id);
 };
 
-// // Обновить услугу
+// Обновить услугу
 export const updateServiceCatalog = async (props: ServiceCatalogProps) => {
     const { id, name, price, duration, specialization } = props;
 

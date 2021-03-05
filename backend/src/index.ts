@@ -13,6 +13,7 @@ import ordersRouter from './controllers/orders.controller';
 import usersRouter from './controllers/users.controller';
 import locationsRouter from './controllers/locations.controller';
 import mastersRouter from './controllers/masters.controller';
+import schdeuleRouter from './controllers/schedule.controller';
 
 dotenv.config({ path: __dirname + '/.env' });
 
@@ -36,5 +37,6 @@ app.use('/api/orders', ordersRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/locations', locationsRouter);
 app.use('/api/masters', mastersRouter);
+app.use('/api/schedule', schdeuleRouter);
 
 app.listen(PORT, () => console.log(`Server started on ${PORT}`));

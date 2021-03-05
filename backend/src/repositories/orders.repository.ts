@@ -51,3 +51,40 @@ export const createOrder = async (props: OrderProps) => {
     const ordersRepository = getRepository(Order);
     return await ordersRepository.save(newOrder);
 };
+
+// Удалить заказ
+export const deleteOrder = async (id: number) => {
+    return await getRepository(Order).delete(id);
+};
+
+// Обновить заказ
+export const updateOrder = async (props: OrderProps) => {
+    const {
+        id,
+        user_id,
+        description,
+        start_date,
+        end_date,
+        status,
+        status_color,
+        commentary,
+        photo,
+        master,
+    } = props;
+
+    const ordersRepository = getRepository(Order);
+    const order = await ordersRepository.findOne(id);
+
+    ordersRepository.merge(order, {
+        user_id,
+        description,
+        start_date,
+        end_date,
+        status,
+        status_color,
+        commentary,
+        photo,
+        master,
+    });
+    return await ordersRepository.save(order);
+};

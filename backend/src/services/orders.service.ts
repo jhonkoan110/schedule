@@ -9,3 +9,13 @@ export const getOrders = async () => {
 export const createOrder = async (props: ordersRepository.OrderProps) => {
     return await ordersRepository.createOrder(props);
 };
+
+// Удалить заказ
+export const deleteOrder = async (id: number) => {
+    return await ordersRepository.deleteOrder(id);
+};
+
+// Обновить заказ
+export const updateOrder = async (props: ordersRepository.OrderProps) => {
+    return await ordersRepository.updateOrder(props);
+};

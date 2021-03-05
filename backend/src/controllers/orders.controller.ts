@@ -14,4 +14,17 @@ ordersRouter.post('/', async (req: express.Request, res: express.Response) => {
     return res.json({ order });
 });
 
+// Удалить заказ
+ordersRouter.delete('/:id', async (req: express.Request, res: express.Response) => {
+    const { id } = req.params;
+    const order = await ordersService.deleteOrder(Number(id));
+    return res.json({ order });
+});
+
+// Обновить заказ
+ordersRouter.put('/', async (req: express.Request, res: express.Response) => {
+    const order = await ordersService.updateOrder(req.body);
+    return res.json({ order });
+});
+
 export default ordersRouter;
