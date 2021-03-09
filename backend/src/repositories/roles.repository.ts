@@ -1,3 +1,4 @@
+import { NotFoundError } from './../errors/notFoundError';
 import { Role } from './../models/Role';
 import { getRepository } from 'typeorm';
 
@@ -9,41 +10,74 @@ export interface RoleProps {
 
 // Получить все роли
 export const getRoles = async () => {
-    return await getRepository(Role).find();
+    try {
+        return await getRepository(Role).find();
+    } catch (error) {
+        throw new Error(error.message);
+    }
 };
 
-// Добавить роль
+// Создать роль
 export const createRole = async (props: RoleProps) => {
-    const { name, rights } = props;
-    const role = new Role();
-    role.name = name;
-    role.rights = rights;
+    try {
+        const { name, rights } = props;
+        const role = new Role();
+        role.name = name;
+        role.rights = rights;
 
-    const rolesRepository = getRepository(Role);
-    await rolesRepository
-        .save(role)
-        .then((role) => console.log(role))
-        .catch((error) => console.log(error));
+        const rolesRepository = getRepository(Role);
+        await rolesRepository.save(role).catch((error) => console.log(error));
 
-    return role;
+        return role;
+    } catch (error) {
+        throw new Error(error.message);
+    }
 };
 
 // Удалить роль
 export const deleteRole = async (id: number) => {
-    const rolesRepository = getRepository(Role);
-    const deletedRole = await rolesRepository.delete(id);
-    return deletedRole;
+    try {
+        const rolesRepository = getRepository(Role);
+
+        // Проверка, есть ли такая роль
+        const role = await rolesRepository.findOne(id);
+        if (!role) {
+            throw new NotFoundError('');
+        }
+
+        // Если роль есть, удалить её
+        return await rolesRepository.delete(id);
+    } catch (err) {
+        if (err instanceof NotFoundError) {
+            throw new NotFoundError('Такой роли не найдено');
+        } else {
+            throw new Error(err.message);
+        }
+    }
 };
 
 // Обновить роль
 export const updateRole = async (props: RoleProps) => {
-    const { id, name, rights } = props;
+    try {
+        const { id, name, rights } = props;
+        const rolesRepository = getRepository(Role);
 
-    const rolesRepository = getRepository(Role);
-    const role = await rolesRepository.findOne(id);
+        // Проверка есть ли такая роль
+        const role = await rolesRepository.findOne(id);
+        if (!role) {
+            throw new NotFoundError('');
+        }
 
-    rolesRepository.merge(role, { name, rights });
-    const result = await rolesRepository.save(role);
+        // Если роль есть, обновить её
+        rolesRepository.merge(role, { name, rights });
+        const result = await rolesRepository.save(role);
 
-    return result;
+        return result;
+    } catch (err) {
+        if (err instanceof NotFoundError) {
+            throw new NotFoundError('Такой роли не найдено');
+        } else {
+            throw new Error(err.message);
+        }
+    }
 };

@@ -15,3 +15,8 @@ export const createLocation = async (props: LocationProps) => {
 export const deleteLocation = async (id: number) => {
     return await locationsRepository.deleteLocation(id);
 };
+
+// Обновить локацию
+export const updateLocation = async (props: LocationProps) => {
+    return await locationsRepository.updateLocation(props);
+};

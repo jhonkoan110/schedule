@@ -1,5 +1,6 @@
+import { NotFoundError } from './../errors/notFoundError';
 import { LocationType } from './../models/LocationType';
-import { getRepository } from 'typeorm';
+import { getRepository, Not } from 'typeorm';
 
 export interface LocationTypeProps {
     id?: number;
@@ -8,29 +9,63 @@ export interface LocationTypeProps {
 
 // Получить все типы локации
 export const getLocationTypes = async () => {
-    return await getRepository(LocationType).find();
+    try {
+        return await getRepository(LocationType).find();
+    } catch (error) {
+        throw new Error(error.message);
+    }
 };
 
 // Создать тип локации
 export const createLocationType = async (name: string) => {
-    const locationType = new LocationType();
-    locationType.name = name;
+    try {
+        const locationType = new LocationType();
+        locationType.name = name;
 
-    const locationTypesRepository = getRepository(LocationType);
-    return await locationTypesRepository.save(locationType).catch((err) => console.log(err));
+        const locationTypesRepository = getRepository(LocationType);
+        return await locationTypesRepository.save(locationType).catch((err) => console.log(err));
+    } catch (error) {
+        throw new Error(error.message);
+    }
 };
 
 // Удалить тип локации
 export const deleteLocationType = async (id: number) => {
-    const locationTypesRepository = getRepository(LocationType);
-    return await locationTypesRepository.delete(id);
+    try {
+        const locationTypesRepository = getRepository(LocationType);
+
+        // Проверка, есть ли такой тип
+        const locationType = await locationTypesRepository.findOne(id);
+        if (!locationType) {
+            throw new NotFoundError('');
+        }
+
+        return await locationTypesRepository.delete(id);
+    } catch (error) {
+        if (error instanceof NotFoundError) {
+            throw new NotFoundError('Такой тип не найден');
+        } else {
+            throw new Error(error.message);
+        }
+    }
 };
 
 // Обновить тип локации
 export const updateLocationType = async (id: number, name: string) => {
-    const locationTypesRepository = getRepository(LocationType);
-    const locationType = await locationTypesRepository.findOne(id);
+    try {
+        const locationTypesRepository = getRepository(LocationType);
+        const locationType = await locationTypesRepository.findOne(id);
+        if (!locationType) {
+            throw new NotFoundError('');
+        }
 
-    locationTypesRepository.merge(locationType, { name });
-    return await locationTypesRepository.save(locationType);
+        locationTypesRepository.merge(locationType, { name });
+        return await locationTypesRepository.save(locationType);
+    } catch (error) {
+        if (error instanceof NotFoundError) {
+            throw new NotFoundError('Такой тип не найден');
+        } else {
+            throw new Error(error.message);
+        }
+    }
 };

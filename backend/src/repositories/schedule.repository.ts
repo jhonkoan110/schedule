@@ -1,3 +1,4 @@
+import { NotFoundError } from './../errors/notFoundError';
 import { Schedule } from './../models/Schedule';
 import { getRepository } from 'typeorm';
 import { Master } from './../models/Master';
@@ -11,35 +12,67 @@ export interface ScheduleProps {
 
 // Получить всё расписание
 export const getSchedule = async () => {
-    return await getRepository(Schedule).find();
+    try {
+        return await getRepository(Schedule).find();
+    } catch (error) {
+        throw new Error(error.message);
+    }
 };
 
 // Создать расписание
 export const createSchedule = async (props: ScheduleProps) => {
-    const { working_hours, status, master } = props;
-    const schedule = new Schedule();
+    try {
+        const { working_hours, status, master } = props;
+        const schedule = new Schedule();
 
-    schedule.working_hours = working_hours;
-    schedule.status = status;
-    schedule.master = master;
+        schedule.working_hours = working_hours;
+        schedule.status = status;
+        schedule.master = master;
 
-    return await getRepository(Schedule)
-        .save(schedule)
-        .catch((err) => console.log(err));
+        return await getRepository(Schedule).save(schedule);
+    } catch (error) {
+        throw new Error(error.message);
+    }
 };
 
 // Удалить расписание
 export const deleteSchedule = async (id: number) => {
-    return await getRepository(Schedule).delete(id);
+    try {
+        // Проверка, есть ли расписание
+        const schedule = await getRepository(Schedule).findOne(id);
+        if (!schedule) {
+            throw new NotFoundError('');
+        }
+
+        return await getRepository(Schedule).delete(id);
+    } catch (error) {
+        if (error instanceof NotFoundError) {
+            throw new NotFoundError('Такой роли не найдено');
+        } else {
+            throw new Error(error.message);
+        }
+    }
 };
 
 // Обновить расписание
 export const updateSchedule = async (props: ScheduleProps) => {
-    const { id, working_hours, status, master } = props;
+    try {
+        const { id, working_hours, status, master } = props;
 
-    const scheduleRepository = getRepository(Schedule);
-    const schedule = await scheduleRepository.findOne(id);
+        const scheduleRepository = getRepository(Schedule);
+        const schedule = await scheduleRepository.findOne(id);
 
-    scheduleRepository.merge(schedule, { working_hours, status, master });
-    return await scheduleRepository.save(schedule);
+        if (!schedule) {
+            throw new NotFoundError('');
+        }
+
+        scheduleRepository.merge(schedule, { working_hours, status, master });
+        return await scheduleRepository.save(schedule);
+    } catch (error) {
+        if (error instanceof NotFoundError) {
+            throw new NotFoundError('Такой роли не найдено');
+        } else {
+            throw new Error(error.message);
+        }
+    }
 };
