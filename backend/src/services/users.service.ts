@@ -1,5 +1,10 @@
 import * as usersRepository from '../repositories/users.repository';
 
+// Получить одлного пользователя
+export const getOneUser = async (login: string) => {
+    return await usersRepository.getOneUser(login);
+};
+
 // Получить всех пользоваталей
 export const getUsers = async () => {
     return await usersRepository.getUsers();

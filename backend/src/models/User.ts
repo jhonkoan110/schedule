@@ -10,6 +10,9 @@ export class User {
     login: string;
 
     @Column()
+    password: string;
+
+    @Column()
     firstname: string;
 
     @Column()

@@ -6,11 +6,20 @@ import { Role } from './../models/Role';
 export interface UsersProps {
     id?: number;
     login: string;
+    password: string;
     firstname: string;
     lastname: string;
     middlename: string;
     role: Role;
 }
+
+// Получить одного пользователя
+export const getOneUser = async (login: string) => {
+    return await getRepository(User)
+        .createQueryBuilder('user')
+        .where('user.login = :login', { login })
+        .getOne();
+};
 
 // Получить всех пользователей
 export const getUsers = async () => {
@@ -24,10 +33,11 @@ export const getUsers = async () => {
 // Создать пользователя
 export const createUser = async (props: UsersProps) => {
     try {
-        const { login, firstname, lastname, middlename, role } = props;
+        const { login, password, firstname, lastname, middlename, role } = props;
         const user = new User();
 
         user.login = login;
+        user.password = password;
         user.lastname = lastname;
         user.firstname = firstname;
         user.middlename = middlename;
