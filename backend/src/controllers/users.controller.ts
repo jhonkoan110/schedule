@@ -34,7 +34,7 @@ usersRouter.post('/login', async (req: express.Request, res: express.Response) =
     const { login, password } = req.body;
     const user = await usersService.getOneUser(login);
     if (!user) {
-        return res.status(400).json('Такого пользователя не существует');
+        return res.status(404).json('Такого пользователя не существует');
     }
     const comparePassword = bcrypt.compareSync(password, user.password);
     if (!comparePassword) {
@@ -42,7 +42,7 @@ usersRouter.post('/login', async (req: express.Request, res: express.Response) =
     }
 
     const token = generateJwt(user.id, user.login, Number(user.role));
-    return res.status(200).json({ token });
+    return res.status(200).json({ token, user });
 });
 
 // Проверка, авторизован ли пользователь

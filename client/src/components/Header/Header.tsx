@@ -1,39 +1,23 @@
-import { AppBar, Breadcrumbs, Button, makeStyles, Toolbar } from '@material-ui/core';
+import { AppBar, Breadcrumbs, Button, ButtonGroup, makeStyles, Toolbar } from '@material-ui/core';
 import HomeIcon from '@material-ui/icons/Home';
 import React from 'react';
 import DateRangeIcon from '@material-ui/icons/DateRange';
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 import { NavLink } from 'react-router-dom';
-
-const useStyles = makeStyles((theme) => {
-    console.log(theme);
-
-    return {
-        appBar: {
-            marginBottom: '0.5rem',
-        },
-        toolbar: {
-            display: 'flex',
-            justifyContent: 'space-between',
-        },
-        link: {
-            display: 'flex',
-            color: '#fff',
-            '&.active': {
-                color: '#f3a5d7',
-            },
-        },
-        activeLink: {
-            color: 'secondary',
-        },
-        icon: {
-            marginRight: theme.spacing(0.5),
-        },
-    };
-});
+import useStyles from './style';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppStateType } from '../../store/store';
+import { authDataFetched } from '../../store/auth/actionCreators';
 
 const Header = () => {
     const classes = useStyles();
+    const dispatch = useDispatch();
+    const authData = useSelector((state: AppStateType) => state.auth.authData);
+
+    const logoutHandler = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        localStorage.clear();
+        dispatch(authDataFetched(null));
+    };
 
     return (
         <AppBar className={classes.appBar} position="static">
@@ -52,9 +36,27 @@ const Header = () => {
                         Администрирование
                     </NavLink>
                 </Breadcrumbs>
-                <NavLink to="registration">
-                    <Button variant="contained">Войти</Button>
-                </NavLink>
+                {!authData ? (
+                    <ButtonGroup>
+                        <NavLink className={classes.loginButton} to="login">
+                            <Button variant="contained">Войти</Button>
+                        </NavLink>
+                        <NavLink to="registration">
+                            <Button variant="contained">Зарегистрироваться</Button>
+                        </NavLink>
+                    </ButtonGroup>
+                ) : (
+                    <ButtonGroup>
+                        <NavLink className={classes.loginButton} to="login">
+                            <Button variant="contained">{authData.user.login}</Button>
+                        </NavLink>
+                        <NavLink to="registration">
+                            <Button variant="contained" onClick={logoutHandler}>
+                                Выйти
+                            </Button>
+                        </NavLink>
+                    </ButtonGroup>
+                )}
             </Toolbar>
         </AppBar>
     );

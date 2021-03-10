@@ -1,0 +1,4 @@
+// Аутентификация
+export const AUTH_DATA_FETCHING = 'AUTH_DATA_FETCHING';
+export const AUTH_DATA_FETCHED = 'AUTH_DATA_FETCHED';
+export const AUTH_DATA_FETCHED_ERR = 'AUTH_DATA_FETCHED_ERR';
