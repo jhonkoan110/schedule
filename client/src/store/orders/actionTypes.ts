@@ -1,0 +1,4 @@
+// Заказы
+export const ORDERS_FETCHING = 'ORDERS_FETCHING';
+export const ORDERS_FETCHED = 'ORDERS_FETCHED';
+export const ORDERS_FETCHED_ERR = 'ORDERS_FETCHED_ERR';
