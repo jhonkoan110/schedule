@@ -1,3 +1,4 @@
+import { DeleteError } from './../errors/deleteError';
 import { NotFoundError } from './../errors/notFoundError';
 import { User } from './../models/User';
 import { getRepository, getTreeRepository } from 'typeorm';

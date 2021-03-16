@@ -1,3 +1,5 @@
+import { DeleteError } from './../errors/deleteError';
+import { User } from './../models/User';
 import { NotFoundError } from './../errors/notFoundError';
 import { Role } from './../models/Role';
 import { getRepository } from 'typeorm';
@@ -34,6 +36,14 @@ export const createRole = async (props: RoleProps) => {
     }
 };
 
+// Получить всех пользователей по роли
+export const getUsersByRoleId = async (id: number) => {
+    const users = await getRepository(User).find({ where: { role: id } });
+    console.log(users);
+
+    return users;
+};
+
 // Удалить роль
 export const deleteRole = async (id: number) => {
     try {
@@ -41,18 +51,36 @@ export const deleteRole = async (id: number) => {
 
         // Проверка, есть ли такая роль
         const role = await rolesRepository.findOne(id);
+
         if (!role) {
-            throw new NotFoundError('');
+            throw new NotFoundError('Такой роли не найдено');
+        }
+
+        // Проверка, есть ли у роли пользователи
+        const users = await getRepository(User).find({ where: { role: id } });
+        console.log(users);
+
+        if (users.length > 1) {
+            throw new DeleteError('');
         }
 
         // Если роль есть, удалить её
         return await rolesRepository.delete(id);
-    } catch (err) {
-        if (err instanceof NotFoundError) {
-            throw new NotFoundError('Такой роли не найдено');
-        } else {
-            throw new Error(err.message);
+    } catch (error) {
+        if (Object.getPrototypeOf(error) === NotFoundError.prototype) {
+            console.log(error.message);
         }
+        // Если проверять с условием на сущность ошибки, то ничего не происходит
+
+        // if (err instanceof NotFoundError) {
+        //     console.log('Caught NotFoundError');
+
+        //     throw new NotFoundError('Такой роли не найдено');
+        // } else if (err instanceof DeleteError) {
+        //     throw new DeleteError('У этой роли ещё есть пользователи');
+        // } else {
+        //     throw new Error(err.message);
+        // }
     }
 };
 

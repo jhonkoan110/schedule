@@ -1,3 +1,4 @@
+import { DeleteError } from './../errors/deleteError';
 import { NotFoundError } from './../errors/notFoundError';
 import * as express from 'express';
 import * as rolesService from '../services/roles.service';
@@ -25,6 +26,13 @@ rolesRouter.post('/', async (req, res) => {
     }
 });
 
+// Получить пользователей по роли
+rolesRouter.get('/users_by_role/:id', async (req: express.Request, res: express.Response) => {
+    const { id } = req.params;
+    const users = await rolesService.getUsersByRoleId(Number(id));
+    return res.status(200).json({ users });
+});
+
 // Удалить роль
 rolesRouter.delete('/:id', async (req: express.Request, res: express.Response) => {
     try {
@@ -33,7 +41,11 @@ rolesRouter.delete('/:id', async (req: express.Request, res: express.Response) =
         res.json({ role });
     } catch (err) {
         if (err instanceof NotFoundError) {
-            return res.status(404).json(err.message);
+            console.log(err);
+
+            return res.status(404).json(err);
+        } else if (err instanceof DeleteError) {
+            return res.status(400).json(err.message);
         } else {
             return res.status(500).json(err.message);
         }
