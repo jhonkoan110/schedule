@@ -1,23 +1,28 @@
+import { LocationTypeRepository } from './../repositories/locationTypes.repository';
 import { Request } from 'express';
-import * as locationTypesRepository from '../repositories/locationTypes.repository';
+import { getCustomRepository } from 'typeorm';
 
 // Получить все типы локации
 export const getLocationTypes = async () => {
-    return await locationTypesRepository.getLocationTypes();
+    const locationTypeRepository = getCustomRepository(LocationTypeRepository);
+    return await locationTypeRepository.findAll();
 };
 
 // Создать тип локации
 export const createLocationType = async (name: string) => {
-    return await locationTypesRepository.createLocationType(name);
+    const locationTypeRepository = getCustomRepository(LocationTypeRepository);
+    return await locationTypeRepository.createAndSave(name);
 };
 
 // Удалить тип локации
 export const deleteLocationType = async (id: number) => {
-    return await locationTypesRepository.deleteLocationType(id);
+    const locationTypeRepository = getCustomRepository(LocationTypeRepository);
+    return await locationTypeRepository.delete(id);
 };
 
 // Обновить тип локации
 export const updateLocationType = async (req: Request) => {
+    const locationTypeRepository = getCustomRepository(LocationTypeRepository);
     const { id, name } = req.body;
-    return await locationTypesRepository.updateLocationType(id, name);
+    return await locationTypeRepository.updateAndSave(id, name);
 };

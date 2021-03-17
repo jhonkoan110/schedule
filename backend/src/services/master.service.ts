@@ -1,21 +1,26 @@
-import * as mastersRepository from '../repositories/master.repository';
+import { MasterRepository, MasterProps } from './../repositories/master.repository';
+import { getCustomRepository } from 'typeorm';
 
 // Получить всех мастеров
 export const getMasters = async () => {
-    return await mastersRepository.getMasters();
+    const masterRepository = getCustomRepository(MasterRepository);
+    return await masterRepository.findAll();
 };
 
 // Создать мастера
-export const createMaster = async (props: mastersRepository.MasterProps) => {
-    return await mastersRepository.createMaster(props);
+export const createMaster = async (props: MasterProps) => {
+    const masterRepository = getCustomRepository(MasterRepository);
+    return await masterRepository.createAndSave(props);
 };
 
 // Удалить мастера
 export const deleteMaster = async (id: number) => {
-    return await mastersRepository.deleteMaster(id);
+    const masterRepository = getCustomRepository(MasterRepository);
+    return await masterRepository.delete(id);
 };
 
 // Обновить мастера
-export const updateMaster = async (props: mastersRepository.MasterProps) => {
-    return await mastersRepository.updateMaster(props);
+export const updateMaster = async (props) => {
+    const masterRepository = getCustomRepository(MasterRepository);
+    return await masterRepository.updateAndSave(props);
 };

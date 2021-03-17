@@ -1,8 +1,8 @@
+import { ServiceCatalog } from './../models/ServiceCatalog';
 import { DeleteError } from './../errors/deleteError';
-import { Order } from './../models/Order';
 import { NotFoundError } from './../errors/notFoundError';
-import { getRepository } from 'typeorm';
-import { ServiceCatalog } from '../models/ServiceCatalog';
+import { AbstractRepository, EntityRepository, getRepository, getCustomRepository } from 'typeorm';
+import { OrderRepository } from './orders.repository';
 
 export interface ServiceCatalogProps {
     id?: number;
@@ -10,62 +10,64 @@ export interface ServiceCatalogProps {
     price: number;
     duration: string;
     specialization: string;
-    order: Order;
 }
 
-// Получить все услуги
-export const getServiceCatalog = async () => {
-    return await getRepository(ServiceCatalog).find();
-};
-
-// Создать услугу
-export const createServiceCatalog = async (props: ServiceCatalogProps) => {
-    const { name, price, duration, specialization } = props;
-    const serviceCatalog = new ServiceCatalog();
-
-    serviceCatalog.name = name;
-    serviceCatalog.price = price;
-    serviceCatalog.duration = duration;
-    serviceCatalog.specialization = specialization;
-
-    const serviceCatalogRepository = getRepository(ServiceCatalog);
-    return await serviceCatalogRepository.save(serviceCatalog).catch((err) => console.log(err));
-};
-
-// Удалить услугу
-export const deleteServiceCatalog = async (id: number) => {
-    // Проверка, есть ли услуга
-    const serviceCatalog = await getRepository(ServiceCatalog).findOne(id);
-    if (!serviceCatalog) {
-        throw new NotFoundError(404, 'Такого сервиса не найдено');
+@EntityRepository(ServiceCatalog)
+export class ServiceCatalogRepository extends AbstractRepository<ServiceCatalog> {
+    // Получить все услуги
+    async findAll() {
+        return await this.repository.find();
     }
 
-    // Проверка, есть ли еще заказы с этой услугой
-    const orders = await getRepository(Order).find({ where: { service: id } });
-    if (orders.length > 0) {
-        throw new DeleteError(400, 'У этой услуги ещё есть заказы');
-    }
-    console.log(orders);
+    // Создать услугу
+    async createAndSave(props: ServiceCatalogProps) {
+        const { name, price, duration, specialization } = props;
+        const service: ServiceCatalogProps = new ServiceCatalog();
 
-    return await getRepository(ServiceCatalog).delete(id);
-};
+        service.name = name;
+        service.price = price;
+        service.duration = duration;
+        service.specialization = specialization;
 
-// Обновить услугу
-export const updateServiceCatalog = async (props: ServiceCatalogProps) => {
-    const { id, name, price, duration, specialization } = props;
-    const serviceCatalogRepository = getRepository(ServiceCatalog);
-    const serviceCatalog = await serviceCatalogRepository.findOne();
-
-    if (!serviceCatalog) {
-        throw new NotFoundError(404, 'Такого сервиса не найдено');
+        return await this.repository.save(service);
     }
 
-    serviceCatalogRepository.merge(serviceCatalog, {
-        id,
-        name,
-        price,
-        duration,
-        specialization,
-    });
-    return await serviceCatalogRepository.save(serviceCatalog);
-};
+    // Удалить услугу
+    async delete(id: number) {
+        // Проверка, есть ли услуга
+        const serviceCatalog = await this.repository.findOne(id);
+        if (!serviceCatalog) {
+            throw new NotFoundError(404, 'Такого сервиса не найдено');
+        }
+
+        // Проверка, есть ли еще заказы с этой услугой
+        const orderRepository = getCustomRepository(OrderRepository);
+        const orders = await orderRepository.findOrdersByServiceId(id);
+        if (orders.length > 0) {
+            throw new DeleteError(400, 'У этой услуги ещё есть заказы');
+        }
+
+        return await this.repository.delete(id);
+    }
+
+    // Обновить услугу
+    async updateAndSave(props: ServiceCatalogProps) {
+        const { id, name, price, duration, specialization } = props;
+        // const serviceCatalogRepository = getRepository(ServiceCatalog);
+
+        // Проверка, есть ли такая услуга
+        const serviceCatalog = await this.repository.findOne(id);
+
+        if (!serviceCatalog) {
+            throw new NotFoundError(404, 'Такого сервиса не найдено');
+        }
+
+        this.repository.merge(serviceCatalog, {
+            name,
+            price,
+            duration,
+            specialization,
+        });
+        return await this.repository.save(serviceCatalog);
+    }
+}

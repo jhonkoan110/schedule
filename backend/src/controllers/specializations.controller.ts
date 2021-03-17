@@ -61,4 +61,11 @@ specializationsRouter.put('/', async (req: express.Request, res: express.Respons
     }
 });
 
+// Получить по имени
+specializationsRouter.get('/', async (req, res) => {
+    const { name } = req.body;
+    const spec = await specializationsService.findByName(name);
+    res.json({ spec });
+});
+
 export default specializationsRouter;

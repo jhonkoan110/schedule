@@ -1,22 +1,26 @@
-import { ScheduleProps } from './../repositories/schedule.repository';
-import * as scheduleRepository from '../repositories/schedule.repository';
+import { getCustomRepository } from 'typeorm';
+import { ScheduleProps, ScheduleRepository } from './../repositories/schedule.repository';
 
 // Получить расписание
 export const getSchedule = async () => {
-    return await scheduleRepository.getSchedule();
+    const scheduleRepository = getCustomRepository(ScheduleRepository);
+    return await scheduleRepository.findAll();
 };
 
 // Создать расписание
 export const createSchedule = async (props: ScheduleProps) => {
-    return await scheduleRepository.createSchedule(props);
+    const scheduleRepository = getCustomRepository(ScheduleRepository);
+    return await scheduleRepository.createAndSave(props);
 };
 
 // Удалить расписание
 export const deleteSchedule = async (id: number) => {
-    return await scheduleRepository.deleteSchedule(id);
+    const scheduleRepository = getCustomRepository(ScheduleRepository);
+    return await scheduleRepository.delete(id);
 };
 
 // Обновить расписание
 export const updateSchedule = async (props: ScheduleProps) => {
-    return await scheduleRepository.updateSchedule(props);
+    const scheduleRepository = getCustomRepository(ScheduleRepository);
+    return await scheduleRepository.updateAndSave(props);
 };

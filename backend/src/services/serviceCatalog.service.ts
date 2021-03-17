@@ -1,21 +1,29 @@
-import * as serviceCatalogRepository from '../repositories/serviceCatalog.repository';
+import {
+    ServiceCatalogProps,
+    ServiceCatalogRepository,
+} from './../repositories/serviceCatalog.repository';
+import { getCustomRepository } from 'typeorm';
 
 // Получить все услуги
 export const getServiceCatalog = async () => {
-    return await serviceCatalogRepository.getServiceCatalog();
+    const serviceCatalogRepository = getCustomRepository(ServiceCatalogRepository);
+    return await serviceCatalogRepository.findAll();
 };
 
 // Создать услугу
-export const createServiceCatalog = async (props: serviceCatalogRepository.ServiceCatalogProps) => {
-    return await serviceCatalogRepository.createServiceCatalog(props);
+export const createServiceCatalog = async (props: ServiceCatalogProps) => {
+    const serviceCatalogRepository = getCustomRepository(ServiceCatalogRepository);
+    return await serviceCatalogRepository.createAndSave(props);
 };
 
 // Удалить услугу
 export const deleteServiceCatalog = async (id: number) => {
-    return await serviceCatalogRepository.deleteServiceCatalog(id);
+    const serviceCatalogRepository = getCustomRepository(ServiceCatalogRepository);
+    return await serviceCatalogRepository.delete(id);
 };
 
 // Обновить услугу
-export const updateServicaCatalog = async (props: serviceCatalogRepository.ServiceCatalogProps) => {
-    return await serviceCatalogRepository.updateServiceCatalog(props);
+export const updateServicaCatalog = async (props: ServiceCatalogProps) => {
+    const serviceCatalogRepository = getCustomRepository(ServiceCatalogRepository);
+    return await serviceCatalogRepository.updateAndSave(props);
 };

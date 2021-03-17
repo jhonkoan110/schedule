@@ -1,26 +1,32 @@
-import * as usersRepository from '../repositories/users.repository';
+import { UserRepository, UsersProps } from './../repositories/users.repository';
+import { getCustomRepository } from 'typeorm';
 
 // Получить одлного пользователя
 export const getOneUser = async (login: string) => {
-    return await usersRepository.getOneUser(login);
+    const userRepository = getCustomRepository(UserRepository);
+    return await userRepository.findUserByLogin(login);
 };
 
 // Получить всех пользоваталей
 export const getUsers = async () => {
-    return await usersRepository.getUsers();
+    const userRepository = getCustomRepository(UserRepository);
+    return await userRepository.findAll();
 };
 
 // Создать пользователя
-export const createUser = async (props: usersRepository.UsersProps) => {
-    return await usersRepository.createUser(props);
+export const createUser = async (props: UsersProps) => {
+    const userRepository = getCustomRepository(UserRepository);
+    return await userRepository.createAndSave(props);
 };
 
 // Удалить пользователя
 export const deleteUser = async (id: number) => {
-    return await usersRepository.deleteUser(id);
+    const userRepository = getCustomRepository(UserRepository);
+    return await userRepository.delete(id);
 };
 
 // Обновить пользователя
-export const updateUser = async (props: usersRepository.UsersProps) => {
-    return await usersRepository.updateUser(props);
+export const updateUser = async (props: UsersProps) => {
+    const userRepository = getCustomRepository(UserRepository);
+    return await userRepository.updateAndSave(props);
 };

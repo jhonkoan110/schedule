@@ -11,7 +11,7 @@ const generateJwt = (id: number, login: string, role: number) => {
 };
 
 // Получить одного пользователя
-usersRouter.get('/', async (req, res) => {
+usersRouter.get('/one_user', async (req, res) => {
     try {
         const { login } = req.body;
         const user = await usersService.getOneUser(login);

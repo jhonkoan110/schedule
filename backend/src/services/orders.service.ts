@@ -1,21 +1,26 @@
-import * as ordersRepository from '../repositories/orders.repository';
+import { getCustomRepository } from 'typeorm';
+import { OrderProps, OrderRepository } from '../repositories/orders.repository';
 
 // Получить все заказы
 export const getOrders = async () => {
-    return await ordersRepository.getOrders();
+    const orderRepository = getCustomRepository(OrderRepository);
+    return await orderRepository.findAll();
 };
 
 // Создать заказ
-export const createOrder = async (props: ordersRepository.OrderProps) => {
-    return await ordersRepository.createOrder(props);
+export const createOrder = async (props: OrderProps) => {
+    const orderRepository = getCustomRepository(OrderRepository);
+    return await orderRepository.createAndSave(props);
 };
 
 // Удалить заказ
 export const deleteOrder = async (id: number) => {
-    return await ordersRepository.deleteOrder(id);
+    const orderRepository = getCustomRepository(OrderRepository);
+    return await orderRepository.delete(id);
 };
 
 // Обновить заказ
-export const updateOrder = async (props: ordersRepository.OrderProps) => {
-    return await ordersRepository.updateOrder(props);
+export const updateOrder = async (props: OrderProps) => {
+    const orderRepository = getCustomRepository(OrderRepository);
+    return await orderRepository.updateAndSave(props);
 };

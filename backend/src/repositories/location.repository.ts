@@ -1,6 +1,6 @@
 import { NotFoundError } from './../errors/notFoundError';
 import { LocationType } from './../models/LocationType';
-import { getMongoRepository, getRepository } from 'typeorm';
+import { AbstractRepository, EntityRepository } from 'typeorm';
 import { Location } from '../models/Location';
 
 export interface LocationProps {
@@ -11,14 +11,20 @@ export interface LocationProps {
     coordinates: string;
 }
 
-// Получить все локации
-export const getLocations = async () => {
-    return await getRepository(Location).find();
-};
+@EntityRepository(Location)
+export class LocationRepository extends AbstractRepository<Location> {
+    // Получить все локации
+    async findAll() {
+        return await this.repository.find();
+    }
 
-// Создать локацию
-export const createLocation = async (props: LocationProps) => {
-    try {
+    // Получить локации по id типа
+    async getAllByType(id: number) {
+        return await this.repository.find({ where: { location_type: id } });
+    }
+
+    // Создать локацию
+    async createAndSave(props: LocationProps) {
         const { location_type, name, coordinates } = props;
         const location = new Location();
 
@@ -26,39 +32,34 @@ export const createLocation = async (props: LocationProps) => {
         location.name = name;
         location.coordinates = coordinates;
 
-        return await getRepository(Location).save(location);
-    } catch (error) {
-        throw new Error(error.message);
-    }
-};
-
-// Удалить локацию
-export const deleteLocation = async (id: number) => {
-    // Проверка, есть ли такая локация
-    const location = await getRepository(Location).findOne(id);
-    console.log(location);
-
-    if (!location) {
-        throw new NotFoundError(404, 'Такой локации не найдено');
+        return await this.repository.save(location);
     }
 
-    return await getRepository(Location).delete(id);
-};
+    // Удалить локацию
+    async delete(id: number) {
+        // Проверка, есть ли такая локация
+        const location = await this.repository.findOne(id);
 
-// Обновить локацию
-export const updateLocation = async (props: LocationProps) => {
-    const { id, location_type, name, coordinates } = props;
+        if (!location) {
+            throw new NotFoundError(404, 'Такой локации не найдено');
+        }
 
-    const locationsRepository = getRepository(Location);
-
-    const location = await locationsRepository.findOne(id);
-
-    // Проверка, есть ли такая локация
-    if (!location) {
-        throw new NotFoundError(404, 'Такой локации не найдено');
+        return await this.repository.delete(id);
     }
 
-    locationsRepository.merge(location, { location_type, name, coordinates });
+    // Обновить локацию
+    async updateAndSave(props: LocationProps) {
+        const { id, location_type, name, coordinates } = props;
 
-    return await locationsRepository.save(location);
-};
+        // Проверка, есть ли такая локация
+        const location = await this.repository.findOne(id);
+
+        if (!location) {
+            throw new NotFoundError(404, 'Такой локации не найдено');
+        }
+
+        this.repository.merge(location, { location_type, name, coordinates });
+
+        return await this.repository.save(location);
+    }
+}
