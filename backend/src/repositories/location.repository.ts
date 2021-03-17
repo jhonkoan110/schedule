@@ -13,11 +13,7 @@ export interface LocationProps {
 
 // Получить все локации
 export const getLocations = async () => {
-    try {
-        return await getRepository(Location).find();
-    } catch (error) {
-        throw new Error(error.message);
-    }
+    return await getRepository(Location).find();
 };
 
 // Создать локацию
@@ -38,43 +34,31 @@ export const createLocation = async (props: LocationProps) => {
 
 // Удалить локацию
 export const deleteLocation = async (id: number) => {
-    try {
-        // Проверка, есть ли такая локация
-        const location = await getRepository(Location).findOne(id);
-        if (!location) {
-            throw new NotFoundError('');
-        }
+    // Проверка, есть ли такая локация
+    const location = await getRepository(Location).findOne(id);
+    console.log(location);
 
-        return await getRepository(Location).delete(id);
-    } catch (error) {
-        if (error instanceof NotFoundError) {
-            throw new NotFoundError('Такой локации не найдно');
-        } else {
-            throw new Error(error.message);
-        }
+    if (!location) {
+        throw new NotFoundError(404, 'Такой локации не найдено');
     }
+
+    return await getRepository(Location).delete(id);
 };
 
 // Обновить локацию
 export const updateLocation = async (props: LocationProps) => {
-    try {
-        const { id, location_type, name, coordinates } = props;
-        const locationsRepository = getMongoRepository(Location);
+    const { id, location_type, name, coordinates } = props;
 
-        const location = await locationsRepository.findOne(id);
-        // Проверка, есть ли такая локация
-        if (!location) {
-            throw new NotFoundError('');
-        }
+    const locationsRepository = getRepository(Location);
 
-        locationsRepository.merge(location, { location_type, name, coordinates });
+    const location = await locationsRepository.findOne(id);
 
-        return await locationsRepository.save(location);
-    } catch (error) {
-        if (error instanceof NotFoundError) {
-            throw new NotFoundError('Такой локации не найдно');
-        } else {
-            throw new Error(error.message);
-        }
+    // Проверка, есть ли такая локация
+    if (!location) {
+        throw new NotFoundError(404, 'Такой локации не найдено');
     }
+
+    locationsRepository.merge(location, { location_type, name, coordinates });
+
+    return await locationsRepository.save(location);
 };

@@ -1,7 +1,7 @@
-// Ошибка "Не найдено"
-export class NotFoundError extends Error {
-    constructor(message: string) {
-        super(message);
-        this.name = 'NotFoundError';
+import CustomError from './CustomError';
+
+export class NotFoundError extends CustomError {
+    constructor(public status: number, public message: string) {
+        super();
     }
 }

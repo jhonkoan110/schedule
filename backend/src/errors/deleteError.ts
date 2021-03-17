@@ -1,7 +1,9 @@
 // Ошибка "Ещё есть связанные сущности"
-export class DeleteError extends Error {
-    constructor(message: string) {
-        super(message);
-        this.name = 'DeleteError';
+
+import CustomError from './CustomError';
+
+export class DeleteError extends CustomError {
+    constructor(public status: number, public message: string) {
+        super();
     }
 }

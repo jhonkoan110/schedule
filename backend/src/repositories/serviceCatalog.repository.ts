@@ -1,3 +1,5 @@
+import { DeleteError } from './../errors/deleteError';
+import { Order } from './../models/Order';
 import { NotFoundError } from './../errors/notFoundError';
 import { getRepository } from 'typeorm';
 import { ServiceCatalog } from '../models/ServiceCatalog';
@@ -8,78 +10,62 @@ export interface ServiceCatalogProps {
     price: number;
     duration: string;
     specialization: string;
+    order: Order;
 }
 
 // Получить все услуги
 export const getServiceCatalog = async () => {
-    try {
-        return await getRepository(ServiceCatalog).find();
-    } catch (error) {
-        throw new Error(error.mesage);
-    }
+    return await getRepository(ServiceCatalog).find();
 };
 
 // Создать услугу
 export const createServiceCatalog = async (props: ServiceCatalogProps) => {
-    try {
-        const { name, price, duration, specialization } = props;
-        const serviceCatalog = new ServiceCatalog();
+    const { name, price, duration, specialization } = props;
+    const serviceCatalog = new ServiceCatalog();
 
-        serviceCatalog.name = name;
-        serviceCatalog.price = price;
-        serviceCatalog.duration = duration;
-        serviceCatalog.specialization = specialization;
+    serviceCatalog.name = name;
+    serviceCatalog.price = price;
+    serviceCatalog.duration = duration;
+    serviceCatalog.specialization = specialization;
 
-        const serviceCatalogRepository = getRepository(ServiceCatalog);
-        return await serviceCatalogRepository.save(serviceCatalog).catch((err) => console.log(err));
-    } catch (error) {
-        throw new Error(error.message);
-    }
+    const serviceCatalogRepository = getRepository(ServiceCatalog);
+    return await serviceCatalogRepository.save(serviceCatalog).catch((err) => console.log(err));
 };
 
 // Удалить услугу
 export const deleteServiceCatalog = async (id: number) => {
-    try {
-        // Проверка, есть ли услуга
-        const serviceCatalog = await getRepository(ServiceCatalog).findOne(id);
-        if (!serviceCatalog) {
-            throw new NotFoundError('');
-        }
-
-        return await getRepository(ServiceCatalog).delete(id);
-    } catch (error) {
-        if (error instanceof NotFoundError) {
-            throw new NotFoundError('Такого сервиса не найдено');
-        } else {
-            throw new Error(error.message);
-        }
+    // Проверка, есть ли услуга
+    const serviceCatalog = await getRepository(ServiceCatalog).findOne(id);
+    if (!serviceCatalog) {
+        throw new NotFoundError(404, 'Такого сервиса не найдено');
     }
+
+    // Проверка, есть ли еще заказы с этой услугой
+    const orders = await getRepository(Order).find({ where: { service: id } });
+    if (orders.length > 0) {
+        throw new DeleteError(400, 'У этой услуги ещё есть заказы');
+    }
+    console.log(orders);
+
+    return await getRepository(ServiceCatalog).delete(id);
 };
 
 // Обновить услугу
 export const updateServiceCatalog = async (props: ServiceCatalogProps) => {
-    try {
-        const { id, name, price, duration, specialization } = props;
-        const serviceCatalogRepository = getRepository(ServiceCatalog);
-        const serviceCatalog = await serviceCatalogRepository.findOne();
+    const { id, name, price, duration, specialization } = props;
+    const serviceCatalogRepository = getRepository(ServiceCatalog);
+    const serviceCatalog = await serviceCatalogRepository.findOne();
 
-        if (!serviceCatalog) {
-            throw new NotFoundError('');
-        }
-
-        serviceCatalogRepository.merge(serviceCatalog, {
-            id,
-            name,
-            price,
-            duration,
-            specialization,
-        });
-        return await serviceCatalogRepository.save(serviceCatalog);
-    } catch (error) {
-        if (error instanceof NotFoundError) {
-            throw new NotFoundError('Такого сервиса не найдено');
-        } else {
-            throw new Error(error.message);
-        }
+    if (!serviceCatalog) {
+        throw new NotFoundError(404, 'Такого сервиса не найдено');
     }
+
+    serviceCatalogRepository.merge(serviceCatalog, {
+        id,
+        name,
+        price,
+        duration,
+        specialization,
+    });
+    return await serviceCatalogRepository.save(serviceCatalog);
 };

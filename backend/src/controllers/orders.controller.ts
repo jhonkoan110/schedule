@@ -31,7 +31,7 @@ ordersRouter.delete('/:id', async (req: express.Request, res: express.Response) 
         return res.status(200).json({ order });
     } catch (error) {
         if (error instanceof NotFoundError) {
-            return res.status(404).json(error.message);
+            return res.status(error.status).json(error.message);
         } else {
             return res.status(500).json(error);
         }
@@ -45,7 +45,7 @@ ordersRouter.put('/', async (req: express.Request, res: express.Response) => {
         return res.status(200).json({ order });
     } catch (error) {
         if (error instanceof NotFoundError) {
-            return res.status(404).json(error.message);
+            return res.status(error.status).json(error.message);
         } else {
             return res.status(500).json(error);
         }

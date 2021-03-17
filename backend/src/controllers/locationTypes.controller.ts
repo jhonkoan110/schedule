@@ -1,3 +1,4 @@
+import { DeleteError } from './../errors/deleteError';
 import { NotFoundError } from './../errors/notFoundError';
 import * as express from 'express';
 import * as locationTypesService from '../services/locationTypes.service';
@@ -33,7 +34,9 @@ locationTypesRouter.delete('/:id', async (req: express.Request, res: express.Res
         return res.status(200).json({ locationType });
     } catch (error) {
         if (error instanceof NotFoundError) {
-            return res.status(404).json(error.message);
+            return res.status(error.status).json(error.message);
+        } else if (error instanceof DeleteError) {
+            return res.status(error.status).json(error.message);
         } else {
             return res.status(500).json(error);
         }
@@ -47,7 +50,7 @@ locationTypesRouter.put('/', async (req: express.Request, res: express.Response)
         return res.status(200).json(locationType);
     } catch (error) {
         if (error instanceof NotFoundError) {
-            return res.status(404).json(error.message);
+            return res.status(error.status).json(error.message);
         } else {
             return res.status(500).json(error);
         }

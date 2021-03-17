@@ -53,42 +53,28 @@ export const createUser = async (props: UsersProps) => {
 
 // Удалить пользователя
 export const deleteUser = async (id: number) => {
-    try {
-        // Проверка, есть ли пользователь
-        const user = await getTreeRepository(User).findOne(id);
-        if (!user) {
-            throw new NotFoundError('');
-        }
+    // Проверка, есть ли пользователь
+    const user = await getRepository(User).findOne(id);
+    console.log(user);
 
-        return await getRepository(User).delete(id);
-    } catch (error) {
-        if (error instanceof NotFoundError) {
-            throw new NotFoundError('Такого пользователя не найдено');
-        } else {
-            throw new Error(error.message);
-        }
+    if (!user) {
+        throw new NotFoundError(404, 'Такого пользователя не найдено');
     }
+
+    return await getRepository(User).delete(id);
 };
 
 // Обновить пользователя
 export const updateUser = async (props: UsersProps) => {
-    try {
-        const { id, login, firstname, lastname, middlename, role } = props;
+    const { id, login, firstname, lastname, middlename, role } = props;
 
-        const usersRepository = getRepository(User);
-        const user = await usersRepository.findOne(id);
-        // Проверка, есть ли пользователь
-        if (!user) {
-            throw new NotFoundError('');
-        }
-
-        usersRepository.merge(user, { login, firstname, lastname, middlename, role });
-        return await usersRepository.save(user);
-    } catch (error) {
-        if (error instanceof NotFoundError) {
-            throw new NotFoundError('Такого пользователя не найдено');
-        } else {
-            throw new Error(error.message);
-        }
+    const usersRepository = getRepository(User);
+    const user = await usersRepository.findOne(id);
+    // Проверка, есть ли пользователь
+    if (!user) {
+        throw new NotFoundError(404, 'Такого пользователя не найдено');
     }
+
+    usersRepository.merge(user, { login, firstname, lastname, middlename, role });
+    return await usersRepository.save(user);
 };

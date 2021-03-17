@@ -1,3 +1,4 @@
+import { DeleteError } from './../errors/deleteError';
 import { NotFoundError } from './../errors/notFoundError';
 import * as express from 'express';
 import * as specializationsService from '../services/specializations.service';
@@ -32,7 +33,9 @@ specializationsRouter.delete('/:id', async (req: express.Request, res: express.R
         return res.status(200).json({ specialization });
     } catch (error) {
         if (error instanceof NotFoundError) {
-            return res.status(404).json(error.message);
+            return res.status(error.status).json(error.message);
+        } else if (error instanceof DeleteError) {
+            res.status(error.status).json(error.message);
         } else {
             return res.status(500).json(error);
         }
@@ -51,7 +54,7 @@ specializationsRouter.put('/', async (req: express.Request, res: express.Respons
         return res.status(200).json({ specialization });
     } catch (error) {
         if (error instanceof NotFoundError) {
-            return res.status(404).json(error.message);
+            return res.status(error.status).json(error.message);
         } else {
             return res.status(500).json(error);
         }

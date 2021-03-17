@@ -1,3 +1,5 @@
+import { DeleteError } from './../errors/deleteError';
+import { Order } from './../models/Order';
 import { NotFoundError } from './../errors/notFoundError';
 import { User } from './../models/User';
 import { getRepository } from 'typeorm';
@@ -39,41 +41,31 @@ export const createMaster = async (props: MasterProps) => {
 
 // Удалить мастера
 export const deleteMaster = async (id: number) => {
-    try {
-        // Проверка, есть ли мастер
-        const master = await getRepository(Master).findOne(id);
-        if (!master) {
-            throw new NotFoundError('');
-        }
-
-        return await getRepository(Master).delete(id);
-    } catch (error) {
-        if (error instanceof NotFoundError) {
-            throw new NotFoundError('Такого мастера не найдено');
-        } else {
-            throw new Error(error.message);
-        }
+    // Проверка, есть ли мастер
+    const master = await getRepository(Master).findOne(id);
+    if (!master) {
+        throw new NotFoundError(404, 'Такого мастера не найдено');
     }
+
+    // Проверка, есть ли ешё у мастера заказы
+    const orders = await getRepository(Order).find({ where: { master: id } });
+    if (orders.length > 0) {
+        throw new DeleteError(400, 'У этого мастера ещё есть заказы');
+    }
+
+    return await getRepository(Master).delete(id);
 };
 
 // Обновить мастера
 export const updateMaster = async (props: MasterProps) => {
-    try {
-        const { id, user, specialization, location } = props;
-        const mastersRepository = getRepository(Master);
-        const master = await mastersRepository.findOne(id);
-        // Проверка, есть ли мастер
-        if (!master) {
-            throw new NotFoundError('');
-        }
-
-        mastersRepository.merge(master, { user, specialization, location });
-        return await mastersRepository.save(master);
-    } catch (error) {
-        if (error instanceof NotFoundError) {
-            throw new NotFoundError('Такого мастера не найдено');
-        } else {
-            throw new Error(error.message);
-        }
+    const { id, user, specialization, location } = props;
+    const mastersRepository = getRepository(Master);
+    const master = await mastersRepository.findOne(id);
+    // Проверка, есть ли мастер
+    if (!master) {
+        throw new NotFoundError(404, 'Такого мастера не найдено');
     }
+
+    mastersRepository.merge(master, { user, specialization, location });
+    return await mastersRepository.save(master);
 };

@@ -37,42 +37,26 @@ export const createSchedule = async (props: ScheduleProps) => {
 
 // Удалить расписание
 export const deleteSchedule = async (id: number) => {
-    try {
-        // Проверка, есть ли расписание
-        const schedule = await getRepository(Schedule).findOne(id);
-        if (!schedule) {
-            throw new NotFoundError('');
-        }
-
-        return await getRepository(Schedule).delete(id);
-    } catch (error) {
-        if (error instanceof NotFoundError) {
-            throw new NotFoundError('Такой роли не найдено');
-        } else {
-            throw new Error(error.message);
-        }
+    // Проверка, есть ли расписание
+    const schedule = await getRepository(Schedule).findOne(id);
+    if (!schedule) {
+        throw new NotFoundError(404, 'Такого расписания не найдено');
     }
+
+    return await getRepository(Schedule).delete(id);
 };
 
 // Обновить расписание
 export const updateSchedule = async (props: ScheduleProps) => {
-    try {
-        const { id, working_hours, status, master } = props;
+    const { id, working_hours, status, master } = props;
 
-        const scheduleRepository = getRepository(Schedule);
-        const schedule = await scheduleRepository.findOne(id);
+    const scheduleRepository = getRepository(Schedule);
+    const schedule = await scheduleRepository.findOne(id);
 
-        if (!schedule) {
-            throw new NotFoundError('');
-        }
-
-        scheduleRepository.merge(schedule, { working_hours, status, master });
-        return await scheduleRepository.save(schedule);
-    } catch (error) {
-        if (error instanceof NotFoundError) {
-            throw new NotFoundError('Такой роли не найдено');
-        } else {
-            throw new Error(error.message);
-        }
+    if (!schedule) {
+        throw new NotFoundError(404, 'Такого расписания не найдено');
     }
+
+    scheduleRepository.merge(schedule, { working_hours, status, master });
+    return await scheduleRepository.save(schedule);
 };

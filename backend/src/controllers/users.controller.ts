@@ -10,6 +10,15 @@ const generateJwt = (id: number, login: string, role: number) => {
     return jwt.sign({ id, login, role }, process.env.SECRET_KEY, { expiresIn: '24h' });
 };
 
+// Получить одного пользователя
+usersRouter.get('/', async (req, res) => {
+    try {
+        const { login } = req.body;
+        const user = await usersService.getOneUser(login);
+        res.status(200).json({ user });
+    } catch (error) {}
+});
+
 // Регистрация пользователя
 usersRouter.post('/registration', async (req: express.Request, res: express.Response) => {
     try {
@@ -80,7 +89,7 @@ usersRouter.delete('/:id', async (req: express.Request, res: express.Response) =
         return res.status(200).json({ user });
     } catch (error) {
         if (error instanceof NotFoundError) {
-            return res.status(404).json(error.message);
+            return res.status(error.status).json(error.message);
         } else {
             return res.status(500).json(error.message);
         }
@@ -94,7 +103,7 @@ usersRouter.put('/', async (req: express.Request, res: express.Response) => {
         return res.status(200).json({ user });
     } catch (error) {
         if (error instanceof NotFoundError) {
-            return res.status(404).json(error.message);
+            return res.status(error.status).json(error.message);
         } else {
             return res.status(500).json(error.message);
         }

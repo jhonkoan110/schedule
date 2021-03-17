@@ -1,5 +1,13 @@
 import { ServiceCatalog } from './ServiceCatalog';
-import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+    Column,
+    Entity,
+    JoinColumn,
+    ManyToOne,
+    OneToMany,
+    OneToOne,
+    PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Master } from './Master';
 
 @Entity()
@@ -35,6 +43,6 @@ export class Order {
     @JoinColumn()
     master: Master;
 
-    @OneToMany(() => ServiceCatalog, (service) => service.id)
-    services: ServiceCatalog[];
+    @ManyToOne(() => ServiceCatalog, (service) => service.orders)
+    service: ServiceCatalog;
 }

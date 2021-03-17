@@ -1,3 +1,5 @@
+import { DeleteError } from './../errors/deleteError';
+import { ServiceCatalog } from './../models/ServiceCatalog';
 import { NotFoundError } from './../errors/notFoundError';
 import { getRepository, Not } from 'typeorm';
 import { Master } from '../models/Master';
@@ -14,112 +16,91 @@ export interface OrderProps {
     commentary: string;
     photo: string;
     master: Master;
+    service: ServiceCatalog;
 }
 
 // Получить все заказы
 export const getOrders = async () => {
-    try {
-        return await getRepository(Order).find();
-    } catch (error) {
-        throw new Error(error.message);
-    }
+    return await getRepository(Order).find();
 };
 
 // Создать заказ
 export const createOrder = async (props: OrderProps) => {
-    try {
-        const {
-            user_id,
-            description,
-            start_date,
-            end_date,
-            status,
-            status_color,
-            commentary,
-            photo,
-            master,
-        } = props;
+    const {
+        user_id,
+        description,
+        start_date,
+        end_date,
+        status,
+        status_color,
+        commentary,
+        photo,
+        master,
+        service,
+    } = props;
 
-        const order = new Order();
-        const newOrder = {
-            ...order,
-            user_id,
-            description,
-            start_date,
-            end_date,
-            status,
-            status_color,
-            commentary,
-            photo,
-            master,
-        };
+    const order = new Order();
+    const newOrder = {
+        ...order,
+        user_id,
+        description,
+        start_date,
+        end_date,
+        status,
+        status_color,
+        commentary,
+        photo,
+        master,
+        service,
+    };
 
-        const ordersRepository = getRepository(Order);
-        return await ordersRepository.save(newOrder);
-    } catch (error) {
-        throw new Error(error.message);
-    }
+    const ordersRepository = getRepository(Order);
+    return await ordersRepository.save(newOrder);
 };
 
 // Удалить заказ
 export const deleteOrder = async (id: number) => {
-    try {
-        // Проверка, есть ли заказ
-        const order = await getRepository(Order).findOne(id);
-        if (!order) {
-            throw new NotFoundError('');
-        }
-
-        return await getRepository(Order).delete(id);
-    } catch (error) {
-        if (error instanceof NotFoundError) {
-            throw new NotFoundError('Такого заказа не найдено');
-        } else {
-            throw new Error(error.message);
-        }
+    // Проверка, есть ли заказ
+    const order = await getRepository(Order).findOne(id);
+    if (!order) {
+        throw new NotFoundError(404, 'Такого заказа не найдено');
     }
+
+    return await getRepository(Order).delete(id);
 };
 
 // Обновить заказ
 export const updateOrder = async (props: OrderProps) => {
-    try {
-        const {
-            id,
-            user_id,
-            description,
-            start_date,
-            end_date,
-            status,
-            status_color,
-            commentary,
-            photo,
-            master,
-        } = props;
+    const {
+        id,
+        user_id,
+        description,
+        start_date,
+        end_date,
+        status,
+        status_color,
+        commentary,
+        photo,
+        master,
+    } = props;
 
-        const ordersRepository = getRepository(Order);
-        const order = await ordersRepository.findOne(id);
-        // Проверка, есть ли заказ
-        if (!order) {
-            throw new NotFoundError('');
-        }
-
-        ordersRepository.merge(order, {
-            user_id,
-            description,
-            start_date,
-            end_date,
-            status,
-            status_color,
-            commentary,
-            photo,
-            master,
-        });
-        return await ordersRepository.save(order);
-    } catch (error) {
-        if (error instanceof NotFoundError) {
-            throw new NotFoundError('Такого заказа не найдено');
-        } else {
-            throw new Error(error.message);
-        }
+    const ordersRepository = getRepository(Order);
+    const order = await ordersRepository.findOne(id);
+    // Проверка, есть ли заказ
+    if (!order) {
+        throw new NotFoundError(404, 'Такого заказа не найдено');
     }
+
+    ordersRepository.merge(order, {
+        user_id,
+        description,
+        start_date,
+        end_date,
+        status,
+        status_color,
+        commentary,
+        photo,
+        master,
+    });
+    return await ordersRepository.save(order);
 };

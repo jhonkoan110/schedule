@@ -24,14 +24,19 @@ locationsRouter.post('/', async (req: express.Request, res: express.Response) =>
 });
 
 // Удалить локацию
-locationsRouter.post('/:id', async (req: express.Request, res: express.Response) => {
+locationsRouter.delete('/:id', async (req: express.Request, res: express.Response) => {
     try {
         const { id } = req.params;
+        console.log(id);
+
         const location = await locationsService.deleteLocation(Number(id));
+
         return res.status(200).json({ location });
     } catch (error) {
+        console.log(error);
+
         if (error instanceof NotFoundError) {
-            return res.status(404).json(error.message);
+            return res.status(error.status).json(error.message);
         } else {
             return res.status(500).json(error);
         }
@@ -45,9 +50,9 @@ locationsRouter.put('/', async (req: express.Request, res: express.Response) => 
         return res.status(200).json({ location });
     } catch (error) {
         if (error instanceof NotFoundError) {
-            return res.status(404).json(error.message);
+            return res.status(error.status).json(error.message);
         } else {
-            return res.status(500).json(error);
+            return res.status(500).json(error.message);
         }
     }
 });

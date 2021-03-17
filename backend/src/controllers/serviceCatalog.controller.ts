@@ -1,3 +1,4 @@
+import { DeleteError } from './../errors/deleteError';
 import { NotFoundError } from './../errors/notFoundError';
 import * as express from 'express';
 import * as serviceCatalogService from '../services/serviceCatalog.service';
@@ -32,6 +33,8 @@ serviceCatalogRouter.delete('/:id', async (req: express.Request, res: express.Re
     } catch (error) {
         if (error instanceof NotFoundError) {
             return res.status(404).json(error.message);
+        } else if (error instanceof DeleteError) {
+            res.status(error.status).json(error.message);
         } else {
             return res.status(500).json(error);
         }

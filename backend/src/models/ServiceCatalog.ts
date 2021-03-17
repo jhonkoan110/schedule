@@ -1,5 +1,5 @@
 import { Order } from './Order';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class ServiceCatalog {
@@ -18,6 +18,6 @@ export class ServiceCatalog {
     @Column()
     specialization: string;
 
-    @ManyToOne(() => Order, (order) => order.services)
-    order: Order;
+    @OneToMany(() => Order, (order) => order.service)
+    orders: Order;
 }
