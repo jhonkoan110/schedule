@@ -1,4 +1,3 @@
-import { DeleteError } from './../errors/deleteError';
 import { ServiceCatalog } from './../models/ServiceCatalog';
 import { NotFoundError } from './../errors/notFoundError';
 import { AbstractRepository, EntityRepository, getRepository, Not, TreeChildren } from 'typeorm';

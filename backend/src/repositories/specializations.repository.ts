@@ -2,7 +2,6 @@ import { DeleteError } from './../errors/deleteError';
 import { NotFoundError } from './../errors/notFoundError';
 import { Specialization } from './../models/Specialization';
 import { AbstractRepository, EntityRepository, getCustomRepository } from 'typeorm';
-import { throws } from 'assert';
 import { MasterRepository } from './master.repository';
 
 export interface SpecializationProps {

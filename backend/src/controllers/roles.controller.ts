@@ -2,17 +2,11 @@ import { DeleteError } from './../errors/deleteError';
 import * as express from 'express';
 import * as rolesService from '../services/roles.service';
 import { RoleProps } from '../repositories/roles.repository';
-import checkRoleMiddleware from '../middlewares/checkRoleMIddleware';
 import { NotFoundError } from '../errors/notFoundError';
 const rolesRouter = express.Router();
 
 // Получить все роли
 rolesRouter.get('/', async (req, res) => {
-    // rolesService
-    //     .getRoles()
-    //     .then((roles) => res.status(200).json({ roles }))
-    //     .catch((error) => res.status(500).json({ error }));
-
     try {
         const roles = await rolesService.getRoles();
         return res.status(200).json({ roles });

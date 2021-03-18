@@ -1,6 +1,5 @@
 import { getCustomRepository } from 'typeorm';
 import { RoleProps, RoleRepository } from './../repositories/roles.repository';
-import * as rolesRepository from '../repositories/roles.repository';
 
 // Получить все роли
 export const getRoles = async () => {
@@ -13,12 +12,6 @@ export const createRole = async (props: RoleProps) => {
     const roleRepository = getCustomRepository(RoleRepository);
     return await roleRepository.createAndSave(props);
 };
-
-// Получитель пользователей по роли
-// export const getUsersByRoleId = async (id: number) => {
-//     const roleRepository = getCustomRepository(RoleRepository);
-//     return await roleRepository.delete(id)
-// };
 
 // Удалить роль
 export const deleteRole = async (id: number) => {

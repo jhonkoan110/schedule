@@ -1,6 +1,5 @@
 import { Master } from './../models/Master';
 import { DeleteError } from './../errors/deleteError';
-import { Order } from './../models/Order';
 import { NotFoundError } from './../errors/notFoundError';
 import { User } from './../models/User';
 import { AbstractRepository, EntityRepository, getRepository, getCustomRepository } from 'typeorm';

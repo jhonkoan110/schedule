@@ -1,6 +1,6 @@
 import { NotFoundError } from './../errors/notFoundError';
 import { Schedule } from './../models/Schedule';
-import { AbstractRepository, EntityRepository, getRepository } from 'typeorm';
+import { AbstractRepository, EntityRepository } from 'typeorm';
 import { Master } from './../models/Master';
 
 export interface ScheduleProps {

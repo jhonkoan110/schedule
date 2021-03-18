@@ -1,6 +1,5 @@
 import { getCustomRepository } from 'typeorm';
 import { LocationProps, LocationRepository } from './../repositories/location.repository';
-import * as locationsRepository from '../repositories/location.repository';
 
 // Получить все локации
 export const getLocations = async () => {

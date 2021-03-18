@@ -41,15 +41,18 @@ usersRouter.post('/registration', async (req: express.Request, res: express.Resp
 // Авторизация пользователя
 usersRouter.post('/login', async (req: express.Request, res: express.Response) => {
     const { login, password } = req.body;
+    // Проверка, существует ли пользователь
     const user = await usersService.getOneUser(login);
     if (!user) {
         return res.status(404).json('Такого пользователя не существует');
     }
+    // Проверка пароля
     const comparePassword = bcrypt.compareSync(password, user.password);
     if (!comparePassword) {
         return res.status(400).json('Неверный пароль');
     }
 
+    // Если пользователь существует и пароль верный, сгенерировать токен и отправить на клиент
     const token = generateJwt(user.id, user.login, Number(user.role));
     return res.status(200).json({ token, user });
 });
