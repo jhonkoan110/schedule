@@ -1,29 +1,30 @@
+import { Rights, Names } from './../initialState/roles';
 import { Roles } from '../initialState/roles';
 
 export const RoleSeed = [
     {
         id: Roles.Admin,
-        name: 'Администратор',
-        rights: 'Полные права',
+        name: Names.Admin,
+        rights: Rights.Admin,
     },
     {
         id: Roles.Client,
-        name: 'Клиент',
-        rights: 'Ограниченные права',
+        name: Names.Client,
+        rights: Rights.Client,
     },
     {
         id: Roles.Master,
-        name: 'Мастер',
-        rights: 'Ограниченные права',
+        name: Names.Master,
+        rights: Rights.Master,
     },
     {
         id: Roles.Operator,
-        name: 'Оператор',
-        rights: 'Ограниченные права',
+        name: Names.Operator,
+        rights: Rights.Operator,
     },
     {
         id: Roles.ResponsibleForMasters,
-        name: 'Ответственный по мастерам',
-        rights: 'Ограниченные права',
+        name: Names.ResponsibleForMasters,
+        rights: Rights.ResponsibleForMasters,
     },
 ];
