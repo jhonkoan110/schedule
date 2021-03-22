@@ -1,5 +1,3 @@
-import { UsersProps } from './../repositories/users.repository';
-import { checkRole } from './../middlewares/CheckRole';
 import { ErrorHelper } from './../errors/ErrorHelper';
 import { NotFoundError } from '../errors/NotFoundError';
 import * as bcrypt from 'bcrypt';

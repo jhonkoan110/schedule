@@ -39,11 +39,11 @@ export class Order {
     @Column()
     photo: string;
 
-    @OneToOne(() => Master)
+    @OneToOne(() => Master, { eager: true })
     @JoinColumn()
     master: Master;
 
-    @ManyToOne(() => ServiceCatalog, (service) => service.orders)
+    @ManyToOne(() => ServiceCatalog, (service) => service.orders, { eager: true })
     @JoinColumn({ name: 'serviceId' })
     service: ServiceCatalog;
 }

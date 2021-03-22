@@ -12,7 +12,7 @@ export class Schedule {
     @Column()
     status: string;
 
-    @OneToOne(() => Master)
+    @OneToOne(() => Master, { eager: true })
     @JoinColumn()
     master: Master;
 }

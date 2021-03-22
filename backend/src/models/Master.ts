@@ -17,14 +17,14 @@ export class Master {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @OneToOne(() => User)
+    @OneToOne(() => User, { eager: true })
     @JoinColumn()
     user: User;
 
-    @ManyToOne(() => Specialization, (specialization) => specialization.masters)
+    @ManyToOne(() => Specialization, (specialization) => specialization.masters, { eager: true })
     specialization: Specialization;
 
-    @ManyToMany(() => Location, (location) => location.masters)
+    @ManyToMany(() => Location, (location) => location.masters, { eager: true })
     @JoinTable()
     location: Location;
 }

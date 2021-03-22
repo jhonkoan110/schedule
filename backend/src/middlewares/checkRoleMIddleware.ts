@@ -1,4 +1,7 @@
+import { Permission } from './../models/Permission';
+import { AccessError } from './../errors/AccessError';
 import * as jwt from 'jsonwebtoken';
+import { Rights } from '../seeds/roles.seed';
 
 // Проверка роли
 const checkRoleMiddleware = (roles) => (req, res, next) => {
@@ -14,8 +17,6 @@ const checkRoleMiddleware = (roles) => (req, res, next) => {
         }
         // Если токен есть, получить его тело
         const decoded = jwt.verify(token, process.env.SECRET_KEY);
-        // console.log(roles);
-        // console.log(decoded);
 
         // Если роль токена не совпадает с ролью того, кто делает запрос, вернуть ошибку
         if (!roles.includes(decoded.role)) {
@@ -23,11 +24,32 @@ const checkRoleMiddleware = (roles) => (req, res, next) => {
         }
         // Если проверки прошли, продолжить выполнение запроса
         req.user = decoded;
-        console.log(decoded);
 
         next();
     } catch (err) {
         res.status(500).json(err);
+    }
+};
+
+export const defineRole = (role: Permission) => {
+    switch (Number(role)) {
+        case 1:
+            return Rights.Admin;
+
+        case 2:
+            return Rights.Client;
+
+        case 3:
+            return Rights.Master;
+
+        case 4:
+            return Rights.Operator;
+
+        case 5:
+            return Rights.ResponsibleForMasters;
+
+        default:
+            throw new AccessError(403, 'Нет доступа');
     }
 };
 
