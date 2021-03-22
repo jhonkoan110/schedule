@@ -1,4 +1,7 @@
-import { NotFoundError } from './../errors/notFoundError';
+import { UsersProps } from './../repositories/users.repository';
+import { checkRole } from './../middlewares/CheckRole';
+import { ErrorHelper } from './../errors/ErrorHelper';
+import { NotFoundError } from '../errors/NotFoundError';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 import * as express from 'express';
@@ -16,14 +19,22 @@ usersRouter.get('/one_user', async (req, res) => {
         const { login } = req.body;
         const user = await usersService.getOneUser(login);
         res.status(200).json({ user });
-    } catch (error) {}
+    } catch (error) {
+        if (error instanceof NotFoundError) {
+            res.status(error.status).json(error.message);
+        } else {
+            res.status(500).json(error);
+        }
+    }
 });
 
 // Регистрация пользователя
 usersRouter.post('/registration', async (req: express.Request, res: express.Response) => {
     try {
         const user = req.body;
+
         const candidate = await usersService.getOneUser(user.login);
+
         if (candidate) {
             return res.status(400).json('Пользователь с таким логином уже существует');
         }
@@ -39,10 +50,12 @@ usersRouter.post('/registration', async (req: express.Request, res: express.Resp
 });
 
 // Авторизация пользователя
-usersRouter.post('/login', async (req: express.Request, res: express.Response) => {
+usersRouter.post('/login', authMiddleware, async (req: express.Request, res: express.Response) => {
     const { login, password } = req.body;
     // Проверка, существует ли пользователь
     const user = await usersService.getOneUser(login);
+    console.log(user);
+
     if (!user) {
         return res.status(404).json('Такого пользователя не существует');
     }
@@ -53,7 +66,7 @@ usersRouter.post('/login', async (req: express.Request, res: express.Response) =
     }
 
     // Если пользователь существует и пароль верный, сгенерировать токен и отправить на клиент
-    const token = generateJwt(user.id, user.login, Number(user.role));
+    const token = generateJwt(user.id, user.login, +user.role.id);
     return res.status(200).json({ token, user });
 });
 
@@ -91,11 +104,7 @@ usersRouter.delete('/:id', async (req: express.Request, res: express.Response) =
         const user = await usersService.deleteUser(Number(id));
         return res.status(200).json({ user });
     } catch (error) {
-        if (error instanceof NotFoundError) {
-            return res.status(error.status).json(error.message);
-        } else {
-            return res.status(500).json(error.message);
-        }
+        ErrorHelper.deleteHandle(res, error);
     }
 });
 
@@ -105,11 +114,7 @@ usersRouter.put('/', async (req: express.Request, res: express.Response) => {
         const user = await usersService.updateUser(req.body);
         return res.status(200).json({ user });
     } catch (error) {
-        if (error instanceof NotFoundError) {
-            return res.status(error.status).json(error.message);
-        } else {
-            return res.status(500).json(error.message);
-        }
+        ErrorHelper.notFoundHandle(res, error);
     }
 });
 

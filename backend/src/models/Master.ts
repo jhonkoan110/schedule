@@ -1,5 +1,14 @@
 import { Location } from './Location';
-import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+    Column,
+    Entity,
+    JoinColumn,
+    JoinTable,
+    ManyToMany,
+    ManyToOne,
+    OneToOne,
+    PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Specialization } from './Specialization';
 import { User } from './User';
 
@@ -15,6 +24,7 @@ export class Master {
     @ManyToOne(() => Specialization, (specialization) => specialization.masters)
     specialization: Specialization;
 
-    @ManyToOne(() => Location, (location) => location.masters)
+    @ManyToMany(() => Location, (location) => location.masters)
+    @JoinTable()
     location: Location;
 }

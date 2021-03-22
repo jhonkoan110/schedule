@@ -1,5 +1,5 @@
-import { DeleteError } from './../errors/deleteError';
-import { NotFoundError } from './../errors/notFoundError';
+import { DeleteError } from '../errors/DeleteError';
+import { NotFoundError } from '../errors/NotFoundError';
 import { Specialization } from './../models/Specialization';
 import { AbstractRepository, EntityRepository, getCustomRepository } from 'typeorm';
 import { MasterRepository } from './master.repository';

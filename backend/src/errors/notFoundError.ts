@@ -1,7 +1,13 @@
-import CustomError from './CustomError';
+export class NotFoundError extends Error {
+    private _status: number;
 
-export class NotFoundError extends CustomError {
-    constructor(public status: number, public message: string) {
-        super();
+    constructor(status: number, message: string) {
+        super(message);
+        this._status = status;
+        this.name = 'NotFoundError';
+    }
+
+    public get status() {
+        return this._status;
     }
 }

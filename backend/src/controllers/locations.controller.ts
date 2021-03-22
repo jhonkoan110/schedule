@@ -1,5 +1,6 @@
 import * as express from 'express';
-import { NotFoundError } from '../errors/notFoundError';
+import { ErrorHelper } from '../errors/ErrorHelper';
+import { NotFoundError } from '../errors/NotFoundError';
 import * as locationsService from '../services/locations.service';
 const locationsRouter = express.Router();
 
@@ -33,13 +34,7 @@ locationsRouter.delete('/:id', async (req: express.Request, res: express.Respons
 
         return res.status(200).json({ location });
     } catch (error) {
-        console.log(error);
-
-        if (error instanceof NotFoundError) {
-            return res.status(error.status).json(error.message);
-        } else {
-            return res.status(500).json(error);
-        }
+        ErrorHelper.deleteHandle(res, error);
     }
 });
 
@@ -49,11 +44,7 @@ locationsRouter.put('/', async (req: express.Request, res: express.Response) => 
         const location = await locationsService.updateLocation(req.body);
         return res.status(200).json({ location });
     } catch (error) {
-        if (error instanceof NotFoundError) {
-            return res.status(error.status).json(error.message);
-        } else {
-            return res.status(500).json(error.message);
-        }
+        ErrorHelper.notFoundHandle(res, error);
     }
 });
 

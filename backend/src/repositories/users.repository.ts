@@ -1,6 +1,6 @@
-import { NotFoundError } from './../errors/notFoundError';
+import { NotFoundError } from '../errors/NotFoundError';
 import { User } from './../models/User';
-import { AbstractRepository, EntityRepository, getRepository, getTreeRepository } from 'typeorm';
+import { AbstractRepository, EntityRepository } from 'typeorm';
 import { Role } from './../models/Role';
 
 export interface UsersProps {
@@ -22,7 +22,11 @@ export class UserRepository extends AbstractRepository<User> {
 
     // Получить одного пользователя
     async findUserByLogin(login: string) {
-        return await this.repository.findOne(login);
+        const user = await this.repository.findOne({ where: { login } });
+        if (!user) {
+            throw new NotFoundError(404, 'Пользователь с таким логином не найден');
+        }
+        return user;
     }
 
     // Получить пользователей по роли
@@ -34,6 +38,7 @@ export class UserRepository extends AbstractRepository<User> {
     async createAndSave(props: UsersProps) {
         const { login, password, firstname, lastname, middlename, role } = props;
         const user = new User();
+        // console.log(user);
 
         user.login = login;
         user.password = password;

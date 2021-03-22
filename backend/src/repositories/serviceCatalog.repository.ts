@@ -1,6 +1,6 @@
 import { ServiceCatalog } from './../models/ServiceCatalog';
-import { DeleteError } from './../errors/deleteError';
-import { NotFoundError } from './../errors/notFoundError';
+import { DeleteError } from '../errors/DeleteError';
+import { NotFoundError } from '../errors/NotFoundError';
 import { AbstractRepository, EntityRepository, getRepository, getCustomRepository } from 'typeorm';
 import { OrderRepository } from './orders.repository';
 

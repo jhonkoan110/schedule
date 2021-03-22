@@ -1,5 +1,5 @@
 import { ServiceCatalog } from './../models/ServiceCatalog';
-import { NotFoundError } from './../errors/notFoundError';
+import { NotFoundError } from '../errors/NotFoundError';
 import { AbstractRepository, EntityRepository, getRepository, Not, TreeChildren } from 'typeorm';
 import { Master } from '../models/Master';
 import { Order } from '../models/Order';

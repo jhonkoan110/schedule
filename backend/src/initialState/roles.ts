@@ -6,18 +6,14 @@ export enum Roles {
     ResponsibleForMasters, // Ответственный по мастерам
 }
 
-export enum Rights {
-    Admin = 'Полные права',
-    Operator = 'Ограниченные права',
-    Client = 'Ограниченные права',
-    Master = 'Ограниченные права',
-    ResponsibleForMasters = 'Ограниченные права',
-}
-
-export enum Names {
-    Admin = 'Администратор',
-    Operator = 'Оператор',
-    Client = 'Клиент',
-    Master = 'Мастер',
-    ResponsibleForMasters = 'Ответственный по мастерам',
+export enum EntitiesAccess {
+    Roles = 'Roles',
+    Location = 'Location',
+    Masters = 'Masters',
+    Orders = 'Orders',
+    Schedule = 'Schedule',
+    ServiceCatalog = 'ServiceCatalog',
+    Specializations = 'Specializations',
+    Users = 'Users',
+    LocationTypes = 'LocationTypes',
 }

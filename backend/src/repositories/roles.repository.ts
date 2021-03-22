@@ -1,13 +1,14 @@
+import { Permission } from './../models/Permission';
 import { UserRepository } from './users.repository';
 import { Role } from './../models/Role';
 import { AbstractRepository, EntityRepository, getCustomRepository } from 'typeorm';
-import { NotFoundError } from '../errors/notFoundError';
-import { DeleteError } from '../errors/deleteError';
+import { NotFoundError } from '../errors/NotFoundError';
+import { DeleteError } from '../errors/DeleteError';
 
 export interface RoleProps {
     id?: number;
     name: string;
-    rights: string;
+    permissions: Array<Permission>;
 }
 
 @EntityRepository(Role)
@@ -24,10 +25,10 @@ export class RoleRepository extends AbstractRepository<Role> {
 
     // Создать роль
     async createAndSave(props: RoleProps) {
-        const { name, rights } = props;
+        const { name, permissions } = props;
         const role = new Role();
         role.name = name;
-        role.rights = rights;
+        role.permissions = permissions;
 
         return await this.repository.save(role);
     }
@@ -55,7 +56,7 @@ export class RoleRepository extends AbstractRepository<Role> {
 
     // Обновить роль
     async updateAndSave(props: RoleProps) {
-        const { id, name, rights } = props;
+        const { id, name, permissions } = props;
 
         // Проверка есть ли такая роль
         const role = await this.repository.findOne(id);
@@ -64,7 +65,7 @@ export class RoleRepository extends AbstractRepository<Role> {
         }
 
         // Если роль есть, обновить её
-        this.repository.merge(role, { name, rights });
+        this.repository.merge(role, { name, permissions });
         const result = await this.repository.save(role);
 
         return result;

@@ -1,4 +1,4 @@
-import { NotFoundError } from './../errors/notFoundError';
+import { NotFoundError } from '../errors/NotFoundError';
 import { Schedule } from './../models/Schedule';
 import { AbstractRepository, EntityRepository } from 'typeorm';
 import { Master } from './../models/Master';

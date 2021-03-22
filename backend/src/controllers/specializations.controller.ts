@@ -1,18 +1,33 @@
-import { DeleteError } from './../errors/deleteError';
-import { NotFoundError } from './../errors/notFoundError';
+import { RoleRequest } from './../types/Request';
+import { Permissions, PermissionSeed } from './../seeds/permissions.seed';
+import { Roles, EntitiesAccess } from './../initialState/roles';
+import { ErrorHelper } from './../errors/ErrorHelper';
 import * as express from 'express';
 import * as specializationsService from '../services/specializations.service';
+import { checkRole } from '../middlewares/CheckRole';
+import { Rights, RoleSeed } from '../seeds/roles.seed';
+import checkRoleMiddleware from '../middlewares/checkRoleMIddleware';
 const specializationsRouter = express.Router();
 
 // Получить все спец-и
-specializationsRouter.get('/', async (req, res) => {
-    try {
-        const specializations = await specializationsService.getSpecializations();
-        return res.status(200).json({ specializations });
-    } catch (error) {
-        return res.status(500).json(error);
-    }
-});
+specializationsRouter.get(
+    '/',
+    checkRoleMiddleware([Roles.Admin]),
+    async (req: RoleRequest, res: express.Response) => {
+        try {
+            checkRole(
+                Rights.Admin,
+                Permissions.Specialization,
+                Permissions.Location,
+                Permissions.Master,
+            );
+            const specializations = await specializationsService.getSpecializations();
+            return res.status(200).json({ specializations });
+        } catch (error) {
+            ErrorHelper.accessHandle(res, error);
+        }
+    },
+);
 
 // Создать спец-ю
 specializationsRouter.post('/', async (req: express.Request, res: express.Response) => {
@@ -32,13 +47,7 @@ specializationsRouter.delete('/:id', async (req: express.Request, res: express.R
         const specialization = await specializationsService.deleteSpecialization(Number(id));
         return res.status(200).json({ specialization });
     } catch (error) {
-        if (error instanceof NotFoundError) {
-            return res.status(error.status).json(error.message);
-        } else if (error instanceof DeleteError) {
-            res.status(error.status).json(error.message);
-        } else {
-            return res.status(500).json(error);
-        }
+        ErrorHelper.deleteHandle(res, error);
     }
 });
 
@@ -53,11 +62,7 @@ specializationsRouter.put('/', async (req: express.Request, res: express.Respons
         });
         return res.status(200).json({ specialization });
     } catch (error) {
-        if (error instanceof NotFoundError) {
-            return res.status(error.status).json(error.message);
-        } else {
-            return res.status(500).json(error);
-        }
+        ErrorHelper.notFoundHandle(res, error);
     }
 });
 

@@ -1,4 +1,5 @@
-import { NotFoundError } from './../errors/notFoundError';
+import { ErrorHelper } from './../errors/ErrorHelper';
+import { NotFoundError } from '../errors/NotFoundError';
 import * as express from 'express';
 import * as scheduleService from '../services/schedule.service';
 
@@ -31,11 +32,7 @@ schdeuleRouter.delete('/:id', async (req: express.Request, res: express.Response
         const schedule = await scheduleService.deleteSchedule(Number(id));
         return res.status(200).json({ schedule });
     } catch (error) {
-        if (error instanceof NotFoundError) {
-            return res.status(error.status).json(error.message);
-        } else {
-            return res.status(500).json(error.message);
-        }
+        ErrorHelper.deleteHandle(res, error);
     }
 });
 
@@ -45,11 +42,7 @@ schdeuleRouter.put('/', async (req: express.Request, res: express.Response) => {
         const schedule = await scheduleService.updateSchedule(req.body);
         return res.status(200).json({ schedule });
     } catch (error) {
-        if (error instanceof NotFoundError) {
-            return res.status(error.status).json(error.message);
-        } else {
-            return res.status(500).json(error.message);
-        }
+        ErrorHelper.notFoundHandle(res, error);
     }
 });
 

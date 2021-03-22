@@ -1,4 +1,4 @@
-import { NotFoundError } from './../errors/notFoundError';
+import { NotFoundError } from '../errors/NotFoundError';
 import { LocationType } from './../models/LocationType';
 import { AbstractRepository, EntityRepository } from 'typeorm';
 import { Location } from '../models/Location';

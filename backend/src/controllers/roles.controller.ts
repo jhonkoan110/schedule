@@ -1,8 +1,16 @@
-import { DeleteError } from './../errors/deleteError';
+import { Roles } from './../initialState/roles';
+import { Rights } from './../seeds/roles.seed';
+import { Permissions } from './../seeds/permissions.seed';
+import { DeleteError } from '../errors/DeleteError';
 import * as express from 'express';
 import * as rolesService from '../services/roles.service';
 import { RoleProps } from '../repositories/roles.repository';
-import { NotFoundError } from '../errors/notFoundError';
+import { NotFoundError } from '../errors/NotFoundError';
+import { EntitiesAccess } from '../initialState/roles';
+import { ErrorHelper } from '../errors/ErrorHelper';
+import { checkRole } from '../middlewares/CheckRole';
+import { Permission } from '../models/Permission';
+
 const rolesRouter = express.Router();
 
 // Получить все роли
@@ -15,16 +23,23 @@ rolesRouter.get('/', async (req, res) => {
     }
 });
 
-// promise.all
-
 // Создать роль
 rolesRouter.post('/', async (req, res) => {
     try {
+        checkRole(Rights.Admin, Permissions.Role);
+        if (!req.body.roles) {
+            res.status(403).json({ message: 'Нет прав' });
+        }
+
+        if (!req.body.roles.some(EntitiesAccess.Roles)) {
+            res.status(403).json({ message: 'Нет прав' });
+        }
+
         const props: RoleProps = req.body;
         const role = await rolesService.createRole(props);
         return res.status(200).json({ role });
     } catch (err) {
-        return res.status(500).json({ err });
+        ErrorHelper.accessHandle(res, err);
     }
 });
 
@@ -35,24 +50,18 @@ rolesRouter.delete('/:id', async (req: express.Request, res: express.Response) =
         const role = await rolesService.deleteRole(+id);
         res.status(200).json({ role });
     } catch (err) {
-        if (err instanceof NotFoundError) {
-            res.status(404).json(err);
-        } else if (err instanceof DeleteError) {
-            res.status(400).json(err.message);
-        } else {
-            res.status(500).json(err.message);
-        }
+        ErrorHelper.deleteHandle(res, err);
     }
 });
 
 // Обновить роль
 rolesRouter.put('/', async (req: express.Request, res: express.Response) => {
     try {
-        const { id, name, rights } = req.body;
-        const role = await rolesService.updateRole({ id, name, rights });
+        const { id, name, permissions } = req.body;
+        const role = await rolesService.updateRole({ id, name, permissions });
         return res.status(200).json({ role });
     } catch (err) {
-        return res.status(500).json({ err });
+        ErrorHelper.notFoundHandle(res, err);
     }
 });
 

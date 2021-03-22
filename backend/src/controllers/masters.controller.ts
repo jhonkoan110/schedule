@@ -1,5 +1,6 @@
-import { DeleteError } from './../errors/deleteError';
-import { NotFoundError } from './../errors/notFoundError';
+import { ErrorHelper } from './../errors/ErrorHelper';
+import { DeleteError } from '../errors/DeleteError';
+import { NotFoundError } from '../errors/NotFoundError';
 import * as express from 'express';
 import * as mastersService from '../services/master.service';
 const mastersRouter = express.Router();
@@ -31,13 +32,7 @@ mastersRouter.delete('/:id', async (req: express.Request, res: express.Response)
         const master = await mastersService.deleteMaster(Number(id));
         return res.status(200).json({ master });
     } catch (error) {
-        if (error instanceof NotFoundError) {
-            return res.status(error.status).json(error.message);
-        } else if (error instanceof DeleteError) {
-            return res.status(error.status).json(error.message);
-        } else {
-            return res.status(500).json(error.message);
-        }
+        ErrorHelper.deleteHandle(res, error);
     }
 });
 
@@ -47,11 +42,7 @@ mastersRouter.put('/', async (req: express.Request, res: express.Response) => {
         const master = await mastersService.updateMaster(req.body);
         return res.status(200).json({ master });
     } catch (error) {
-        if (error instanceof NotFoundError) {
-            return res.status(404).json(error.message);
-        } else {
-            return res.status(500).json(error.message);
-        }
+        ErrorHelper.notFoundHandle(res, error);
     }
 });
 

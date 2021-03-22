@@ -1,4 +1,12 @@
-import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+    Column,
+    Entity,
+    JoinColumn,
+    OneToMany,
+    OneToOne,
+    PrimaryGeneratedColumn,
+    ManyToOne,
+} from 'typeorm';
 import { LocationType } from './LocationType';
 import { Master } from './Master';
 
@@ -16,11 +24,14 @@ export class Location {
     @OneToMany(() => Master, (master) => master.location)
     masters: Master[];
 
-    @OneToOne(() => LocationType)
+    @ManyToOne(() => LocationType, (locationType) => locationType.id, {
+        eager: true,
+        nullable: false,
+    })
     @JoinColumn()
     location_type: LocationType;
 
-    @OneToOne(() => Location)
+    @ManyToOne(() => Location, (location) => location.id, { nullable: true })
     @JoinColumn()
     parent: Location;
 }

@@ -1,5 +1,6 @@
-import { DeleteError } from './../errors/deleteError';
-import { NotFoundError } from './../errors/notFoundError';
+import { ErrorHelper } from './../errors/ErrorHelper';
+import { DeleteError } from '../errors/DeleteError';
+import { NotFoundError } from '../errors/NotFoundError';
 import * as express from 'express';
 import * as serviceCatalogService from '../services/serviceCatalog.service';
 const serviceCatalogRouter = express.Router();
@@ -31,13 +32,7 @@ serviceCatalogRouter.delete('/:id', async (req: express.Request, res: express.Re
         const serviceCatalog = await serviceCatalogService.deleteServiceCatalog(Number(id));
         return res.status(200).json({ serviceCatalog });
     } catch (error) {
-        if (error instanceof NotFoundError) {
-            return res.status(404).json(error.message);
-        } else if (error instanceof DeleteError) {
-            res.status(error.status).json(error.message);
-        } else {
-            return res.status(500).json(error);
-        }
+        ErrorHelper.deleteHandle(res, error);
     }
 });
 
@@ -47,11 +42,7 @@ serviceCatalogRouter.put('/', async (req: express.Request, res: express.Response
         const serviceCatalog = await serviceCatalogService.updateServicaCatalog(req.body);
         return res.status(200).json({ serviceCatalog });
     } catch (error) {
-        if (error instanceof NotFoundError) {
-            return res.status(404).json(error.message);
-        } else {
-            return res.status(500).json(error);
-        }
+        ErrorHelper.notFoundHandle(res, error);
     }
 });
 

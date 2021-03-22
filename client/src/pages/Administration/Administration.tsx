@@ -7,14 +7,6 @@ const Administration: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
     const classes = useAdministrationStyles();
 
-    // const showMastersHandler = () => {
-    //     dispatch(getMasterList());
-    // };
-
-    // const openModalHandler = () => {
-    //     setIsOpen(true);
-    // };
-
     const closeModalHandler = () => {
         setIsOpen(false);
     };

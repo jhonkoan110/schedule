@@ -44,5 +44,6 @@ export class Order {
     master: Master;
 
     @ManyToOne(() => ServiceCatalog, (service) => service.orders)
+    @JoinColumn({ name: 'serviceId' })
     service: ServiceCatalog;
 }

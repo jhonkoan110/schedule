@@ -1,6 +1,6 @@
 import { LocationRepository } from './location.repository';
-import { DeleteError } from './../errors/deleteError';
-import { NotFoundError } from './../errors/notFoundError';
+import { DeleteError } from '../errors/DeleteError';
+import { NotFoundError } from '../errors/NotFoundError';
 import { LocationType } from './../models/LocationType';
 import { AbstractRepository, EntityRepository, getCustomRepository } from 'typeorm';
 import { Location } from '../models/Location';
