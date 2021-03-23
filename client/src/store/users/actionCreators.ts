@@ -1,9 +1,9 @@
 import { USER_LIST_FETCHING, USER_LIST_FETCHED, USER_LIST_FETCHED_ERR } from './actionTypes';
 
 // Список пользователей
-export const userListFetching = (isListLoading: boolean) => ({
+export const userListFetching = (isLoading: boolean) => ({
     type: USER_LIST_FETCHING,
-    payload: isListLoading,
+    payload: isLoading,
 });
 
 export const userListFetched = (users: Array<Object>) => ({

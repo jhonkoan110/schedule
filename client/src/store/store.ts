@@ -1,9 +1,12 @@
 import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import authReducer from './auth/reducer';
+import locationTypesReducer from './locationTypes/reducer';
 import mastersReducer from './masters/reducer';
 import ordersReducer from './orders/reducer';
+import rolesReducer from './roles/reducer';
 import signupReducer from './signup/reducer';
+import specializationsReducer from './specializtions/reducer';
 import usersReducer from './users/reducer';
 
 const rootReducer = combineReducers({
@@ -12,6 +15,9 @@ const rootReducer = combineReducers({
     auth: authReducer,
     signup: signupReducer,
     orderList: ordersReducer,
+    specializationList: specializationsReducer,
+    locationTypeList: locationTypesReducer,
+    roleList: rolesReducer,
 });
 
 declare global {

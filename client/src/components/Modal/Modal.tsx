@@ -1,33 +1,52 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+} from '@material-ui/core';
 import React from 'react';
 import CloseIcon from '@material-ui/icons/Close';
 import useModalStyles from './modalStyles';
 
 interface ModalProps {
+    header: string;
     isOpen: boolean;
-    closeModal: () => void;
+    isEdit: boolean;
+    closeModal: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+    save: (e:  React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 
-const Modal: React.FC<ModalProps> = ({ isOpen, closeModal, children }) => {
+const Modal: React.FC<ModalProps> = ({
+    header,
+    isOpen,
+    closeModal,
+    save,
+    children,
+    isEdit
+}) => {
     const classes = useModalStyles();
 
     return (
-        <Dialog open={isOpen} aria-labelledby="form-dialog-title">
-            <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
+        <Dialog fullWidth={true} open={isOpen} aria-labelledby="form-dialog-title">
+            <DialogTitle id="form-dialog-title">{header}</DialogTitle>
             <Button
                 color="secondary"
                 variant="contained"
                 className={classes.closeBtn}
                 style={{ position: 'absolute', right: '1rem', top: '1rem' }}
-                onClick={closeModal}>
+                onClick={closeModal}
+            >
                 <CloseIcon />
             </Button>
-            <DialogContent>{children}</DialogContent>
+            <DialogContent className={classes.content}>
+                {children}
+            </DialogContent>
             <DialogActions>
                 <Button color="primary" onClick={closeModal}>
-                    Cancel
+                    Отменить
                 </Button>
-                <Button color="primary">Subscribe</Button>
+                <Button  color="primary" onClick={save}>{isEdit ? 'Сохранить' : 'Да'}</Button>
             </DialogActions>
         </Dialog>
     );

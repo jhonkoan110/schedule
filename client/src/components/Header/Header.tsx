@@ -1,4 +1,10 @@
-import { AppBar, Breadcrumbs, Button, ButtonGroup, makeStyles, Toolbar } from '@material-ui/core';
+import {
+    AppBar,
+    Breadcrumbs,
+    Button,
+    ButtonGroup,
+    Toolbar,
+} from '@material-ui/core';
 import HomeIcon from '@material-ui/icons/Home';
 import React from 'react';
 import DateRangeIcon from '@material-ui/icons/DateRange';
@@ -14,7 +20,9 @@ const Header = () => {
     const dispatch = useDispatch();
     const authData = useSelector((state: AppStateType) => state.auth.authData);
 
-    const logoutHandler = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    const logoutHandler = (
+        e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+    ) => {
         localStorage.clear();
         dispatch(authDataFetched(null));
     };
@@ -23,15 +31,27 @@ const Header = () => {
         <AppBar className={classes.appBar} position="static">
             <Toolbar className={classes.toolbar}>
                 <Breadcrumbs className={classes.link} aria-label="breadcrumb">
-                    <NavLink to="/orders" className={classes.link} activeClassName="active">
+                    <NavLink
+                        to="/orders"
+                        className={classes.link}
+                        activeClassName="active"
+                    >
                         <HomeIcon className={classes.icon} />
                         Мои заказы
                     </NavLink>
-                    <NavLink to="/schedule" className={classes.link} color="inherit">
+                    <NavLink
+                        to="/schedule"
+                        className={classes.link}
+                        color="inherit"
+                    >
                         <DateRangeIcon className={classes.icon} />
                         Расписание
                     </NavLink>
-                    <NavLink to="/administration" className={classes.link} color="inherit">
+                    <NavLink
+                        to="/administration"
+                        className={classes.link}
+                        color="inherit"
+                    >
                         <SupervisorAccountIcon className={classes.icon} />
                         Администрирование
                     </NavLink>
@@ -42,13 +62,17 @@ const Header = () => {
                             <Button variant="contained">Войти</Button>
                         </NavLink>
                         <NavLink to="registration">
-                            <Button variant="contained">Зарегистрироваться</Button>
+                            <Button variant="contained">
+                                Зарегистрироваться
+                            </Button>
                         </NavLink>
                     </ButtonGroup>
                 ) : (
                     <ButtonGroup>
                         <NavLink className={classes.loginButton} to="login">
-                            <Button variant="contained">{authData.user.login}</Button>
+                            <Button variant="contained">
+                                {authData.user.login}
+                            </Button>
                         </NavLink>
                         <NavLink to="registration">
                             <Button variant="contained" onClick={logoutHandler}>

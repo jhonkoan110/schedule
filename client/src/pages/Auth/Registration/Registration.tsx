@@ -5,7 +5,6 @@ import {
     CardContent,
     CardHeader,
     Grid,
-    Link,
     TextField,
     Typography,
 } from '@material-ui/core';
@@ -103,7 +102,8 @@ const Registration = () => {
                     <Button
                         className={classes.loginButton}
                         variant="contained"
-                        onClick={registrationClickHandler}>
+                        onClick={registrationClickHandler}
+                    >
                         Зарегистрироваться
                     </Button>
                 </CardActions>

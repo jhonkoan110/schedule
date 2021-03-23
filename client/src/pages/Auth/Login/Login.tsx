@@ -5,7 +5,6 @@ import {
     CardContent,
     CardHeader,
     Grid,
-    Link,
     TextField,
     Typography,
 } from '@material-ui/core';
@@ -33,7 +32,9 @@ const Login = () => {
         });
     };
 
-    const loginHandler = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    const loginHandler = (
+        e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+    ) => {
         dispatch(login(authData));
     };
 
@@ -66,12 +67,14 @@ const Login = () => {
                 </CardContent>
                 <CardActions className={classes.cardActions}>
                     <Typography variant="body2">
-                        Нет аккаунта? <NavLink to="/registration">Регистрация</NavLink>
+                        Нет аккаунта?{' '}
+                        <NavLink to="/registration">Регистрация</NavLink>
                     </Typography>
                     <Button
                         className={classes.loginButton}
                         variant="contained"
-                        onClick={loginHandler}>
+                        onClick={loginHandler}
+                    >
                         Войти
                     </Button>
                 </CardActions>
