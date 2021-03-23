@@ -33,7 +33,7 @@ const MyOrders: React.FC = () => {
             <CardHeader title="Мои заказы"></CardHeader>
             <CardContent>
                 <ScheduleComponent>
-                    <Inject services={[Day, Week, WorkWeek, Month, Agenda]} />
+                    <Inject services={[Day]} />
                 </ScheduleComponent>
             </CardContent>
         </Card>

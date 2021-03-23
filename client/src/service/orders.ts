@@ -3,7 +3,12 @@ import { ordersFetching, ordersFetched, ordersFetchedErr } from './../store/orde
 export const getOrders = () => (dispatch: any) => {
     dispatch(ordersFetching(true));
 
-    fetch('http://localhost:7000/api/orders/')
+    fetch('http://localhost:7000/api/orders/', {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('user-token')}`
+        }
+    })
         .then((response) => {
             if (!response.ok) {
                 throw Error(response.statusText);

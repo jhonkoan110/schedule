@@ -23,9 +23,9 @@ export class UserRepository extends AbstractRepository<User> {
     // Получить одного пользователя
     async findUserByLogin(login: string) {
         const user = await this.repository.findOne({ where: { login } });
-        if (!user) {
-            throw new NotFoundError(404, 'Пользователь с таким логином не найден');
-        }
+        // if (!user) {
+        //     throw new NotFoundError(404, 'Пользователь с таким логином не найден');
+        // }
         return user;
     }
 
@@ -38,7 +38,7 @@ export class UserRepository extends AbstractRepository<User> {
     async createAndSave(props: UsersProps) {
         const { login, password, firstname, lastname, middlename, role } = props;
         const user = new User();
-        // console.log(user);
+        console.log(user);
 
         user.login = login;
         user.password = password;

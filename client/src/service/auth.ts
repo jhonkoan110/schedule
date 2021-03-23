@@ -19,6 +19,7 @@ export const login = (loginData: LoginData) => (dispatch: any) => {
         headers: {
             'Content-Type': 'application/json',
         },
+        
         body: JSON.stringify(loginData),
     })
         .then((response) => {
@@ -49,7 +50,7 @@ export const login = (loginData: LoginData) => (dispatch: any) => {
                 const temp = response.json();
                 temp.then((error) => {
                     dispatch(authDataFetching(false));
-                    dispatch(authDataFetchedErr(error));
+                    dispatch(authDataFetchedErr(error.message));
                 });
             }
 

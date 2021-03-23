@@ -8,7 +8,9 @@ import authMiddleware from '../middlewares/authMiddleware';
 const usersRouter = express.Router();
 
 const generateJwt = (id: number, login: string, role: number) => {
-    return jwt.sign({ id, login, role }, process.env.SECRET_KEY, { expiresIn: '24h' });
+    return jwt.sign({ id, login, role }, process.env.SECRET_KEY, {
+        expiresIn: '24h',
+    });
 };
 
 // Получить одного пользователя
@@ -27,46 +29,62 @@ usersRouter.get('/one_user', async (req, res) => {
 });
 
 // Регистрация пользователя
-usersRouter.post('/registration', async (req: express.Request, res: express.Response) => {
-    try {
-        const user = req.body;
+usersRouter.post(
+    '/registration',
+    async (req: express.Request, res: express.Response) => {
+        try {
+            const user = req.body;
 
-        const candidate = await usersService.getOneUser(user.login);
+            const candidate = await usersService.getOneUser(user.login);
+            console.log('user', user);
 
-        if (candidate) {
-            return res.status(400).json('Пользователь с таким логином уже существует');
+            if (candidate) {
+                return res
+                    .status(400)
+                    .json('Пользователь с таким логином уже существует');
+            }
+
+            const hashPassword = await bcrypt.hash(user.password, 5);
+
+            const newUser = await usersService.createUser({
+                ...user,
+                password: hashPassword,
+            });
+            const token = generateJwt(
+                newUser.id,
+                newUser.login,
+                Number(newUser.role)
+            );
+            return res.status(200).json({ token });
+        } catch (error) {
+            res.status(500).json(error);
+        }
+    }
+);
+
+// Авторизация пользователя(Вход)
+usersRouter.post(
+    '/login',
+    async (req: express.Request, res: express.Response) => {
+        const { login, password } = req.body;
+        // Проверка, существует ли пользователь
+        const user = await usersService.getOneUser(login);
+        console.log(user);
+
+        if (!user) {
+            return res.status(404).json('Такого пользователя не существует');
+        }
+        // Проверка пароля
+        const comparePassword = bcrypt.compareSync(password, user.password);
+        if (!comparePassword) {
+            return res.status(400).json('Неверный пароль');
         }
 
-        const hashPassword = await bcrypt.hash(user.password, 5);
-
-        const newUser = await usersService.createUser({ ...user, password: hashPassword });
-        const token = generateJwt(newUser.id, newUser.login, Number(newUser.role));
-        return res.status(200).json({ token });
-    } catch (error) {
-        console.log(error);
+        // Если пользователь существует и пароль верный, сгенерировать токен и отправить на клиент
+        const token = generateJwt(user.id, user.login, +user.role.id);
+        return res.status(200).json({ token, user });
     }
-});
-
-// Авторизация пользователя
-usersRouter.post('/login', authMiddleware, async (req: express.Request, res: express.Response) => {
-    const { login, password } = req.body;
-    // Проверка, существует ли пользователь
-    const user = await usersService.getOneUser(login);
-    console.log(user);
-
-    if (!user) {
-        return res.status(404).json('Такого пользователя не существует');
-    }
-    // Проверка пароля
-    const comparePassword = bcrypt.compareSync(password, user.password);
-    if (!comparePassword) {
-        return res.status(400).json('Неверный пароль');
-    }
-
-    // Если пользователь существует и пароль верный, сгенерировать токен и отправить на клиент
-    const token = generateJwt(user.id, user.login, +user.role.id);
-    return res.status(200).json({ token, user });
-});
+);
 
 // Проверка, авторизован ли пользователь
 usersRouter.get('/auth', authMiddleware, async (req, res: express.Response) => {
@@ -96,15 +114,18 @@ usersRouter.post('/', async (req: express.Request, res: express.Response) => {
 });
 
 // Удалить пользователя
-usersRouter.delete('/:id', async (req: express.Request, res: express.Response) => {
-    try {
-        const { id } = req.params;
-        const user = await usersService.deleteUser(Number(id));
-        return res.status(200).json({ user });
-    } catch (error) {
-        ErrorHelper.deleteHandle(res, error);
+usersRouter.delete(
+    '/:id',
+    async (req: express.Request, res: express.Response) => {
+        try {
+            const { id } = req.params;
+            const user = await usersService.deleteUser(Number(id));
+            return res.status(200).json({ user });
+        } catch (error) {
+            ErrorHelper.deleteHandle(res, error);
+        }
     }
-});
+);
 
 // Обновить пользователя
 usersRouter.put('/', async (req: express.Request, res: express.Response) => {
