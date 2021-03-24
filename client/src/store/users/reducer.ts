@@ -1,6 +1,7 @@
 import { USER_LIST_FETCHED, USER_LIST_FETCHED_ERR, USER_LIST_FETCHING } from './actionTypes';
+import { UserInitialState } from './types';
 
-const initialState = {
+const initialState: UserInitialState = {
     users: [],
     isLoading: false,
     error: null,

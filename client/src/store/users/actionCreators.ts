@@ -11,7 +11,7 @@ export const userListFetched = (users: Array<Object>) => ({
     payload: users,
 });
 
-export const userListFetchedErr = (error: string) => ({
+export const userListFetchedErr = (error: string | null) => ({
     type: USER_LIST_FETCHED_ERR,
     payload: error,
 });

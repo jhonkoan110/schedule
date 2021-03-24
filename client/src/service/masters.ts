@@ -1,18 +1,49 @@
-import { masterListFetching, masterListFetched } from './../store/masters/actionCreators';
+import {
+    mastersFetched,
+    mastersFetchedErr,
+    mastersFetching,
+} from '../store/masters/actionCreators';
 
-export const getMasterList = () => (dispatch: any) => {
-    dispatch(masterListFetching(true));
+// Получить всех мастеров
+export const getAllMasters = () => (dispatch: any) => {
+    dispatch(mastersFetching(true));
 
-    fetch('https://api.github.com/users')
+    fetch('http://localhost:7000/api/masters/', {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('user-token')}`,
+        },
+    })
         .then((response) => {
             if (!response.ok) {
-                throw new Error('Не удалось получить список мастеров');
+                throw new Error(response.statusText);
             }
 
-            dispatch(masterListFetching(false));
+            dispatch(mastersFetching(false));
             return response;
         })
         .then((response) => response.json())
-        .then((masters) => dispatch(masterListFetched(masters)))
-        .catch((error) => console.log(error));
+        .then((data) => dispatch(mastersFetched(data.masters)))
+        .catch((err) => dispatch(mastersFetchedErr(err.message)));
+};
+
+// Удалить мастеров
+export const deleteMaster = (id: number) => (dispatch: any) => {
+    dispatch(mastersFetching(true));
+
+    fetch(`http://localhost:7000/api/masters/${id}`, {
+        method: 'DELETE',
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('user-token')}`,
+        },
+    })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error(response.statusText);
+            }
+
+            dispatch(mastersFetching(false));
+            return response;
+        })
+        .then(() => dispatch(getAllMasters()))
+        .catch((err) => dispatch(mastersFetchedErr(err.message)));
 };

@@ -2,7 +2,11 @@ import { LocationRepository } from './location.repository';
 import { DeleteError } from '../errors/DeleteError';
 import { NotFoundError } from '../errors/NotFoundError';
 import { LocationType } from './../models/LocationType';
-import { AbstractRepository, EntityRepository, getCustomRepository } from 'typeorm';
+import {
+    AbstractRepository,
+    EntityRepository,
+    getCustomRepository,
+} from 'typeorm';
 import { Location } from '../models/Location';
 
 export interface LocationTypeProps {
@@ -15,6 +19,11 @@ export class LocationTypeRepository extends AbstractRepository<LocationType> {
     // Получить все типы
     async findAll() {
         return await this.repository.find();
+    }
+
+    // Получить один тип по id
+    async findOneById(id: number) {
+        return await this.repository.findOne(id);
     }
 
     // Создать тип
@@ -35,7 +44,9 @@ export class LocationTypeRepository extends AbstractRepository<LocationType> {
 
         // Проверка, есть ли ешё локации у этого типа
         const locationRepository = getCustomRepository(LocationRepository);
-        const locations: Array<Location> = await locationRepository.getAllByType(id);
+        const locations: Array<Location> = await locationRepository.getAllByType(
+            id
+        );
         console.log(locations);
 
         if (locations.length > 0) {

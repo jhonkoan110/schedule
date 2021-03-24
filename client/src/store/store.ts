@@ -1,10 +1,12 @@
 import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import authReducer from './auth/reducer';
+import locationsReducer from './locations/reducer';
 import locationTypesReducer from './locationTypes/reducer';
 import mastersReducer from './masters/reducer';
 import ordersReducer from './orders/reducer';
 import rolesReducer from './roles/reducer';
+import serviceCatalogReducer from './serviceCatalog/reducer';
 import signupReducer from './signup/reducer';
 import specializationsReducer from './specializtions/reducer';
 import usersReducer from './users/reducer';
@@ -18,6 +20,8 @@ const rootReducer = combineReducers({
     specializationList: specializationsReducer,
     locationTypeList: locationTypesReducer,
     roleList: rolesReducer,
+    locationList: locationsReducer,
+    serviceCatalogList: serviceCatalogReducer,
 });
 
 declare global {
@@ -31,6 +35,9 @@ export type AppStateType = ReturnType<RootReducerType>;
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-const store = createStore(rootReducer, composeEnhancers(applyMiddleware(thunk)));
+const store = createStore(
+    rootReducer,
+    composeEnhancers(applyMiddleware(thunk))
+);
 
 export default store;

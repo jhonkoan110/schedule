@@ -1,7 +1,11 @@
 import { Permission } from './../models/Permission';
 import { UserRepository } from './users.repository';
 import { Role } from './../models/Role';
-import { AbstractRepository, EntityRepository, getCustomRepository } from 'typeorm';
+import {
+    AbstractRepository,
+    EntityRepository,
+    getCustomRepository,
+} from 'typeorm';
 import { NotFoundError } from '../errors/NotFoundError';
 import { DeleteError } from '../errors/DeleteError';
 
@@ -16,6 +20,11 @@ export class RoleRepository extends AbstractRepository<Role> {
     // Инициализировать роли по умолчанию
     async initiate(roles: Array<RoleProps>) {
         return await this.repository.save(roles);
+    }
+
+    // Получить одну роль по id
+    async findRoleById(id: number) {
+        return await this.repository.findOne(id);
     }
 
     // Получить все роли

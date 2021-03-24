@@ -1,7 +1,12 @@
 import { NotFoundError } from '../errors/NotFoundError';
 import { LocationType } from './../models/LocationType';
-import { AbstractRepository, EntityRepository } from 'typeorm';
+import {
+    AbstractRepository,
+    EntityRepository,
+    getCustomRepository,
+} from 'typeorm';
 import { Location } from '../models/Location';
+import { LocationTypeRepository } from './locationTypes.repository';
 
 export interface LocationProps {
     id?: number;
@@ -59,6 +64,13 @@ export class LocationRepository extends AbstractRepository<Location> {
         }
 
         this.repository.merge(location, { location_type, name, coordinates });
+        const locationTypeRepository = getCustomRepository(
+            LocationTypeRepository
+        );
+        const currentLocationType = await locationTypeRepository.findOneById(
+            +location_type
+        );
+        location.location_type = currentLocationType;
 
         return await this.repository.save(location);
     }

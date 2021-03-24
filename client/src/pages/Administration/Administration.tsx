@@ -6,6 +6,10 @@ import EntityList from '../../components/SpecializationList/SpecializationList';
 import { Route } from 'react-router';
 import LocationTypeList from '../../components/LocationTypeList/LocationTypeList';
 import UserList from '../../components/UserList/UserList';
+import LocationList from '../../components/Locations/LocationList/LocationList';
+import ServiceCatalogList from '../../components/ServiceCatalog/ServiceCatalogList/ServiceCatalogList';
+import OrderList from '../../components/Orders/OrderList/OrderList';
+import MasterList from '../../components/Masters/MasterList/MasterList';
 
 const Administration: React.FC = () => {
     const classes = useAdministrationStyles();
@@ -32,6 +36,18 @@ const Administration: React.FC = () => {
                     </Route>
                     <Route exact path="/administration/users">
                         <UserList />
+                    </Route>
+                    <Route exact path="/administration/locations">
+                        <LocationList />
+                    </Route>
+                    <Route exact path="/administration/services">
+                        <ServiceCatalogList />
+                    </Route>
+                    <Route exact path="/administration/orders">
+                        <OrderList />
+                    </Route>
+                    <Route exact path="/administration/masters">
+                        <MasterList />
                     </Route>
                 </Grid>
             </Grid>

@@ -33,30 +33,38 @@ const AdminList: React.FC = () => {
                     <ListItemText primary="Пользователи" />
                 </ListItem>
             </NavLink>
-            <ListItem button>
-                <ListItemIcon>
-                    <AssignmentIndIcon />
-                </ListItemIcon>
-                <ListItemText primary="Мастера" />
-            </ListItem>
-            <ListItem button>
-                <ListItemIcon>
-                    <RoomServiceIcon />
-                </ListItemIcon>
-                <ListItemText primary="Услуги" />
-            </ListItem>
-            <ListItem button>
-                <ListItemIcon>
-                    <CallIcon />
-                </ListItemIcon>
-                <ListItemText primary="Заказы" />
-            </ListItem>
-            <ListItem button>
-                <ListItemIcon>
-                    <LocationOnIcon />
-                </ListItemIcon>
-                <ListItemText primary="Локации" />
-            </ListItem>
+            <NavLink to="/administration/masters">
+                <ListItem button>
+                    <ListItemIcon>
+                        <AssignmentIndIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Мастера" />
+                </ListItem>
+            </NavLink>
+            <NavLink to="/administration/services">
+                <ListItem button>
+                    <ListItemIcon>
+                        <RoomServiceIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Услуги" />
+                </ListItem>
+            </NavLink>
+            <NavLink to="/administration/orders">
+                <ListItem button>
+                    <ListItemIcon>
+                        <CallIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Заказы" />
+                </ListItem>
+            </NavLink>
+            <NavLink to="/administration/locations">
+                <ListItem button>
+                    <ListItemIcon>
+                        <LocationOnIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Локации" />
+                </ListItem>
+            </NavLink>
             <NavLink to="/administration/location_types">
                 <ListItem button>
                     <ListItemIcon>

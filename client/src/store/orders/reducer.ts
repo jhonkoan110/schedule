@@ -1,31 +1,20 @@
-import { ORDERS_FETCHED, ORDERS_FETCHING, ORDERS_FETCHED_ERR } from './actionTypes';
+import {
+    ORDERS_FETCHED,
+    ORDERS_FETCHING,
+    ORDERS_FETCHED_ERR,
+} from './actionTypes';
+import { OrdersInitialState } from './types';
 
-export interface IOrder {
-    id?: number;
-    master_id: number;
-    user_id: number;
-    description: string;
-    start_date: string;
-    end_date: string;
-    status: string;
-    statusColor: string;
-    commentary: string;
-    photo: string;
-}
-
-interface IInitialState {
-    orders: Array<IOrder>;
-    error: null | string;
-    isLoading: boolean;
-}
-
-const initialState: IInitialState = {
+const initialState: OrdersInitialState = {
     orders: [],
     error: null,
     isLoading: false,
 };
 
-const ordersReducer = (state = initialState, action: any): IInitialState => {
+const ordersReducer = (
+    state = initialState,
+    action: any
+): OrdersInitialState => {
     switch (action.type) {
         case ORDERS_FETCHING: {
             return { ...state, isLoading: action.payload };

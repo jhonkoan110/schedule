@@ -95,7 +95,7 @@ const InfoModal: React.FC<InfoModalProps> = ({
         };
 
         console.log(updatedSpec);
-        
+
         dispatch(updateSpecialization(updatedSpec));
         setIsOpenEditModal(false);
     };
@@ -137,40 +137,44 @@ const InfoModal: React.FC<InfoModalProps> = ({
                 </DialogContent>
             </Dialog>
 
-            <DeleteModal
-                isOpen={isOpenDeleteModal}
-                header="Удаление специализации"
-                text={name}
-                closeModal={closeDeleteModalHandler}
-                apply={() => deleteSpecizaliztionHandler(id)}
-            />
+            {isOpenDeleteModal && (
+                <DeleteModal
+                    isOpen={isOpenDeleteModal}
+                    header="Удаление специализации"
+                    text={name}
+                    closeModal={closeDeleteModalHandler}
+                    apply={() => deleteSpecizaliztionHandler(id)}
+                />
+            )}
 
-            <Modal
-                isOpen={isOpenEditModal}
-                header="Редактирование специализации"
-                isEdit={true}
-                closeModal={closeEditModalHandler}
-                save={updateSpecializationHandler}
-            >
-                <TextField
-                    id="name"
-                    label="Название"
-                    className={classes.input}
-                    required
-                    variant="outlined"
-                    value={specializationData.name}
-                    onChange={editModalChangeHandler}
-                />
-                <TextField
-                    id="icon"
-                    label="Иконка"
-                    className={classes.input}
-                    required
-                    variant="outlined"
-                    value={specializationData.icon}
-                    onChange={editModalChangeHandler}
-                />
-            </Modal>
+            {isOpenEditModal && (
+                <Modal
+                    isOpen={isOpenEditModal}
+                    header="Редактирование специализации"
+                    isEdit={true}
+                    closeModal={closeEditModalHandler}
+                    save={updateSpecializationHandler}
+                >
+                    <TextField
+                        id="name"
+                        label="Название"
+                        className={classes.input}
+                        required
+                        variant="outlined"
+                        value={specializationData.name}
+                        onChange={editModalChangeHandler}
+                    />
+                    <TextField
+                        id="icon"
+                        label="Иконка"
+                        className={classes.input}
+                        required
+                        variant="outlined"
+                        value={specializationData.icon}
+                        onChange={editModalChangeHandler}
+                    />
+                </Modal>
+            )}
         </>
     );
 };

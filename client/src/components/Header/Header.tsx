@@ -6,7 +6,7 @@ import {
     Toolbar,
 } from '@material-ui/core';
 import HomeIcon from '@material-ui/icons/Home';
-import React from 'react';
+import React, { useEffect } from 'react';
 import DateRangeIcon from '@material-ui/icons/DateRange';
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 import { NavLink } from 'react-router-dom';
@@ -14,6 +14,7 @@ import useStyles from './style';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppStateType } from '../../store/store';
 import { authDataFetched } from '../../store/auth/actionCreators';
+import { checkAuth } from '../../service/auth';
 
 const Header = () => {
     const classes = useStyles();
@@ -26,6 +27,10 @@ const Header = () => {
         localStorage.clear();
         dispatch(authDataFetched(null));
     };
+
+    // useEffect(() => {
+    //     dispatch(checkAuth())
+    // }, []);
 
     return (
         <AppBar className={classes.appBar} position="static">

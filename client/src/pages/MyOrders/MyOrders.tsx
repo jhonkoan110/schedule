@@ -6,16 +6,15 @@ import {
     Inject,
 } from '@syncfusion/ej2-react-schedule';
 import { useDispatch, useSelector } from 'react-redux';
-import { getOrders } from '../../service/orders';
 import { AppStateType } from '../../store/store';
 const MyOrders: React.FC = () => {
     const dispatch = useDispatch();
     // const orders = useSelector((state: AppStateType) => state.orderList.orders);
     const isLoading = useSelector((state: AppStateType) => state.orderList.isLoading);
 
-    useEffect(() => {
-        dispatch(getOrders());
-    }, []);
+    // useEffect(() => {
+    //     dispatch(getOrders());
+    // }, []);
 
     if (isLoading) {
         return <Card>Loading...</Card>;

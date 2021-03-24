@@ -10,3 +10,9 @@ export interface IUser {
         name: string;
     };
 }
+
+export interface UserInitialState {
+    error: null | string;
+    isLoading: boolean;
+    users: IUser[]
+}

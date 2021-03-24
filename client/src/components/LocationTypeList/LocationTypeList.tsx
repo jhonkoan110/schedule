@@ -123,31 +123,35 @@ const LocationTypeList: React.FC<LocationTypeListProps> = () => {
                 })}
             </List>
 
-            <Modal
-                header="Добавить тип локации"
-                isOpen={isOpenAddModal}
-                isEdit={true}
-                closeModal={closeAddModalHandler}
-                save={saveLocationType}
-            >
-                <TextField
-                    id="name"
-                    label="Название"
-                    className={classes.input}
-                    required
-                    variant="outlined"
-                    value={locationTypeData.name}
-                    onChange={changeHandler}
-                />
-            </Modal>
+            {isOpenAddModal && (
+                <Modal
+                    header="Добавить тип локации"
+                    isOpen={isOpenAddModal}
+                    isEdit={true}
+                    closeModal={closeAddModalHandler}
+                    save={saveLocationType}
+                >
+                    <TextField
+                        id="name"
+                        label="Название"
+                        className={classes.input}
+                        required
+                        variant="outlined"
+                        value={locationTypeData.name}
+                        onChange={changeHandler}
+                    />
+                </Modal>
+            )}
 
-            <InfoModal
-                id={locationTypeData.id}
-                name={locationTypeData.name}
-                header="Информация о типе локации"
-                isOpen={isOpenInfoModal}
-                closeModal={closeInfoModalHandler}
-            />
+            {isOpenInfoModal && (
+                <InfoModal
+                    id={locationTypeData.id}
+                    name={locationTypeData.name}
+                    header="Информация о типе локации"
+                    isOpen={isOpenInfoModal}
+                    closeModal={closeInfoModalHandler}
+                />
+            )}
         </>
     );
 };

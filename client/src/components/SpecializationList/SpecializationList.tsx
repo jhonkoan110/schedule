@@ -94,7 +94,7 @@ const EntityList = () => {
     }
 
     if (error) {
-        return <Typography variant='body1'>{error}</Typography>
+        return <Typography variant="body1">{error}</Typography>;
     }
 
     return (
@@ -129,41 +129,45 @@ const EntityList = () => {
                 })}
             </List>
 
-            <Modal
-                header="Добавить специализацию"
-                isOpen={isOpenModal}
-                isEdit={true}
-                closeModal={closeModalHandler}
-                save={saveSpecializationHandler}
-            >
-                <TextField
-                    id="name"
-                    label="Название"
-                    className={classes.input}
-                    required
-                    variant="outlined"
-                    value={specializationData.name}
-                    onChange={modalChangeHandler}
-                />
-                <TextField
-                    id="icon"
-                    label="Иконка"
-                    className={classes.input}
-                    required
-                    variant="outlined"
-                    value={specializationData.icon}
-                    onChange={modalChangeHandler}
-                />
-            </Modal>
+            {isOpenModal && (
+                <Modal
+                    header="Добавить специализацию"
+                    isOpen={isOpenModal}
+                    isEdit={true}
+                    closeModal={closeModalHandler}
+                    save={saveSpecializationHandler}
+                >
+                    <TextField
+                        id="name"
+                        label="Название"
+                        className={classes.input}
+                        required
+                        variant="outlined"
+                        value={specializationData.name}
+                        onChange={modalChangeHandler}
+                    />
+                    <TextField
+                        id="icon"
+                        label="Иконка"
+                        className={classes.input}
+                        required
+                        variant="outlined"
+                        value={specializationData.icon}
+                        onChange={modalChangeHandler}
+                    />
+                </Modal>
+            )}
 
-            <InfoModal
-                header="Информация по специализации"
-                isOpen={isInfoModalOpen}
-                id={specializationData.id}
-                name={specializationData.name}
-                icon={specializationData.icon}
-                closeModal={closeInfoModalHandler}
-            />
+            {isInfoModalOpen && (
+                <InfoModal
+                    header="Информация по специализации"
+                    isOpen={isInfoModalOpen}
+                    id={specializationData.id}
+                    name={specializationData.name}
+                    icon={specializationData.icon}
+                    closeModal={closeInfoModalHandler}
+                />
+            )}
         </>
     );
 };

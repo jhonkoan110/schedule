@@ -1,7 +1,8 @@
 import { NotFoundError } from '../errors/NotFoundError';
 import { User } from './../models/User';
-import { AbstractRepository, EntityRepository } from 'typeorm';
+import { AbstractRepository, EntityRepository, getCustomRepository } from 'typeorm';
 import { Role } from './../models/Role';
+import { RoleRepository } from './roles.repository';
 
 export interface UsersProps {
     id?: number;
@@ -73,6 +74,9 @@ export class UserRepository extends AbstractRepository<User> {
         }
 
         this.repository.merge(user, { login, firstname, lastname, middlename, role });
+        const roleRepository = getCustomRepository(RoleRepository);
+        const currentRole = await roleRepository.findRoleById(+role)
+        user.role = currentRole;
         return await this.repository.save(user);
     }
 }

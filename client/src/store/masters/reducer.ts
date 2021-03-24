@@ -1,23 +1,35 @@
-import { MASTER_LIST_FETCHING, MASTER_LIST_FETCHED } from './actionTypes';
+import {
+    MASTERS_FETCHED,
+    MASTERS_FETCHED_ERR,
+    MASTERS_FETCHING,
+} from './actionTypes';
+import { MastersInitialState } from './types';
 
-const initialState = {
+const initialState: MastersInitialState = {
     masters: [],
-    isListLoading: false,
-    listError: null,
+    error: null,
+    isLoading: false,
 };
 
-const mastersReducer = (state = initialState, action: any) => {
+const mastersReducer = (
+    state = initialState,
+    action: any
+): MastersInitialState => {
     switch (action.type) {
-        case MASTER_LIST_FETCHING: {
-            return { ...state, isListLoading: action.payload };
+        case MASTERS_FETCHING: {
+            return { ...state, isLoading: action.payload };
         }
 
-        case MASTER_LIST_FETCHED: {
+        case MASTERS_FETCHED: {
             return { ...state, masters: action.payload };
         }
 
+        case MASTERS_FETCHED_ERR: {
+            return { ...state, error: action.payload };
+        }
+
         default:
-            return { ...state };
+            return state;
     }
 };
 

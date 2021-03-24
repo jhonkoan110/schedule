@@ -5,6 +5,11 @@ import * as jwt from 'jsonwebtoken';
 import * as express from 'express';
 import * as usersService from '../services/users.service';
 import authMiddleware from '../middlewares/authMiddleware';
+import checkRoleMiddleware, { defineRole } from '../middlewares/checkRoleMIddleware';
+import { Roles } from '../initialState/roles';
+import { RoleRequest } from '../types/Request';
+import { checkRole } from '../middlewares/CheckRole';
+import { Permissions } from '../seeds/permissions.seed';
 const usersRouter = express.Router();
 
 const generateJwt = (id: number, login: string, role: number) => {
@@ -94,8 +99,11 @@ usersRouter.get('/auth', authMiddleware, async (req, res: express.Response) => {
 });
 
 // Получить пользователей
-usersRouter.get('/', async (req: express.Request, res: express.Response) => {
+usersRouter.get('/', checkRoleMiddleware([Roles.Admin]), async (req: RoleRequest, res: express.Response) => {
     try {
+        // Проверка роли
+        const role = defineRole(req.user.role);
+        checkRole(role, Permissions.Role);
         const users = await usersService.getUsers();
         return res.status(200).json({ users });
     } catch (error) {

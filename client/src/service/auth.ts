@@ -19,34 +19,11 @@ export const login = (loginData: LoginData) => (dispatch: any) => {
         headers: {
             'Content-Type': 'application/json',
         },
-        
+
         body: JSON.stringify(loginData),
     })
         .then((response) => {
             if (!response.ok) {
-                // switch (response.status) {
-                //     case 404: {
-                //         const temp = response.json();
-                //         temp.then((error) => {
-                //             dispatch(authDataFetching(false));
-                //             dispatch(authDataFetchedErr(error));
-                //         });
-                //         break;
-                //     }
-
-                //     case 400: {
-                //         const temp = response.json();
-                //         temp.then((error) => {
-                //             dispatch(authDataFetching(false));
-                //             dispatch(authDataFetchedErr(error));
-                //         });
-                //         break;
-                //     }
-
-                //     default: {
-                //         throw new Error('Ошибка сервера');
-                //     }
-                // }
                 const temp = response.json();
                 temp.then((error) => {
                     dispatch(authDataFetching(false));
@@ -61,9 +38,39 @@ export const login = (loginData: LoginData) => (dispatch: any) => {
         .then((data) => {
             dispatch(authDataFetched(data));
             localStorage.setItem('user-token', data.token);
+            localStorage.setItem('user-login', data.user.login);
+            localStorage.setItem('user-role', data.user.role.id);
         })
         .catch((error) => {
             dispatch(authDataFetching(false));
             dispatch(authDataFetchedErr(error.error));
+        });
+};
+
+// Проверка авторизации
+export const checkAuth = () => (dispatch: any) => {
+    dispatch(authDataFetching(true));
+
+    fetch('http://localhost:7000/api/users/auth', {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('user-token')}`,
+        },
+    })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error(response.statusText);
+            }
+
+            dispatch(authDataFetching(false));
+            return response;
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            dispatch(authDataFetched(data));
+            localStorage.setItem('user-token', data.token);
+        })
+        .catch((err) => {
+            dispatch(authDataFetching(false));
+            dispatch(authDataFetchedErr(err.error));
         });
 };

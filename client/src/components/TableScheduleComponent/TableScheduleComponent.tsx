@@ -7,11 +7,10 @@ import {
     TableHead,
     TableRow,
 } from '@material-ui/core';
-import { IOrder } from '../../store/orders/reducer';
 import React from 'react';
 
 interface IProps {
-    orders: Array<IOrder>;
+    orders: Array<any>;
 }
 
 const TableScheduleComponent: React.FC<IProps> = ({ orders }) => {
@@ -40,7 +39,7 @@ const TableScheduleComponent: React.FC<IProps> = ({ orders }) => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {orders.map((order: IOrder) => {
+                    {orders.map((order: any) => {
                         return (
                             <TableRow key={order.id}>
                                 <TableCell align="right">{order.commentary}</TableCell>

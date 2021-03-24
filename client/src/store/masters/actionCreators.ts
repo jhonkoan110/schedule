@@ -1,17 +1,26 @@
-import { MASTER_LIST_FETCHING, MASTER_LIST_FETCHED, MASTER_LIST_FETCHED_ERR } from './actionTypes';
+import {
+    MASTERS_FETCHED,
+    MASTERS_FETCHED_ERR,
+    MASTERS_FETCHING,
+} from './actionTypes';
 
-// ======================= Для списка мастеров =======================
-export const masterListFetching = (isListLoading: boolean) => ({
-    type: MASTER_LIST_FETCHING,
-    payload: isListLoading,
-});
+export const mastersFetching = (isLoading: boolean) => {
+    return {
+        type: MASTERS_FETCHING,
+        payload: isLoading,
+    };
+};
 
-export const masterListFetched = (masters: any) => ({
-    type: MASTER_LIST_FETCHED,
-    payload: masters,
-});
+export const mastersFetched = (masters: any) => {
+    return {
+        type: MASTERS_FETCHED,
+        payload: masters,
+    };
+};
 
-export const masterListFetchedErr = (error: string) => ({
-    type: MASTER_LIST_FETCHED_ERR,
-    payload: error,
-});
+export const mastersFetchedErr = (error: string) => {
+    return {
+        type: MASTERS_FETCHED_ERR,
+        payload: error,
+    };
+};

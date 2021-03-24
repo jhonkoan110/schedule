@@ -83,7 +83,7 @@ const InfoModal: React.FC<InfoModalProps> = ({
             name: locationTypeName,
         };
         console.log(updatedLocationType);
-        
+
         dispatch(updateLocationType(updatedLocationType));
     };
 
@@ -120,31 +120,35 @@ const InfoModal: React.FC<InfoModalProps> = ({
                 </DialogContent>
             </Dialog>
 
-            <DeleteModal
-                header="Удаление типа локации"
-                isOpen={isOpenDeleteModal}
-                text={name}
-                closeModal={closeDeleteModalHandler}
-                apply={() => deleteLocationTypeHandler(id)}
-            />
-
-            <Modal
-                header="Редактировать тип локации"
-                isOpen={isOpenEditModal}
-                isEdit={true}
-                closeModal={closeEditModalHandler}
-                save={updateLocationTypeHandler}
-            >
-                <TextField
-                    id="name"
-                    label="Название"
-                    className={classes.input}
-                    required
-                    variant="outlined"
-                    value={locationTypeName}
-                    onChange={editModalChangeHandler}
+            {isOpenDeleteModal && (
+                <DeleteModal
+                    header="Удаление типа локации"
+                    isOpen={isOpenDeleteModal}
+                    text={name}
+                    closeModal={closeDeleteModalHandler}
+                    apply={() => deleteLocationTypeHandler(id)}
                 />
-            </Modal>
+            )}
+
+            {isOpenEditModal && (
+                <Modal
+                    header="Редактировать тип локации"
+                    isOpen={isOpenEditModal}
+                    isEdit={true}
+                    closeModal={closeEditModalHandler}
+                    save={updateLocationTypeHandler}
+                >
+                    <TextField
+                        id="name"
+                        label="Название"
+                        className={classes.input}
+                        required
+                        variant="outlined"
+                        value={locationTypeName}
+                        onChange={editModalChangeHandler}
+                    />
+                </Modal>
+            )}
         </>
     );
 };

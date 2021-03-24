@@ -24,7 +24,7 @@ export class Master {
     @ManyToOne(() => Specialization, (specialization) => specialization.masters, { eager: true })
     specialization: Specialization;
 
-    @ManyToMany(() => Location, (location) => location.masters, { eager: true })
+    @ManyToMany(() => Location, (location) => location.id, { eager: true })
     @JoinTable()
-    location: Location;
+    location: Location[];
 }
