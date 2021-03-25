@@ -6,6 +6,10 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     },
     input: {
         marginBottom: '1rem'
+    },
+    actions: {
+        marginBottom: '1rem',
+        marginRight:'1rem'
     }
 }))
 

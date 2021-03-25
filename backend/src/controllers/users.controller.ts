@@ -5,7 +5,9 @@ import * as jwt from 'jsonwebtoken';
 import * as express from 'express';
 import * as usersService from '../services/users.service';
 import authMiddleware from '../middlewares/authMiddleware';
-import checkRoleMiddleware, { defineRole } from '../middlewares/checkRoleMIddleware';
+import checkRoleMiddleware, {
+    defineRole,
+} from '../middlewares/checkRoleMIddleware';
 import { Roles } from '../initialState/roles';
 import { RoleRequest } from '../types/Request';
 import { checkRole } from '../middlewares/CheckRole';
@@ -32,6 +34,38 @@ usersRouter.get('/one_user', async (req, res) => {
         }
     }
 });
+
+// Получить пользователя по id
+usersRouter.get(
+    '/:id',
+    checkRoleMiddleware([Roles.Admin, Roles.Client]),
+    async (req: RoleRequest, res) => {
+        try {
+            // Проверка роли
+            const role = defineRole(req.user.role);
+            checkRole(role, Permissions.User);
+
+            const { id } = req.params;
+            const user = await usersService.getUserById(+id);
+            // Пользователь без поля "пароль"
+            const userWithoutPassword = {
+                id: user.id,
+                login: user.login,
+                firstname: user.firstname,
+                lastname: user.lastname,
+                middlename: user.middlename,
+                role: {
+                    id: user.role.id,
+                    name: user.role.name,
+                },
+                orders: user.orders,
+            };
+            res.status(200).json({ user: userWithoutPassword });
+        } catch (error) {
+            ErrorHelper.notFoundHandle(res, error);
+        }
+    }
+);
 
 // Регистрация пользователя
 usersRouter.post(
@@ -99,17 +133,21 @@ usersRouter.get('/auth', authMiddleware, async (req, res: express.Response) => {
 });
 
 // Получить пользователей
-usersRouter.get('/', checkRoleMiddleware([Roles.Admin]), async (req: RoleRequest, res: express.Response) => {
-    try {
-        // Проверка роли
-        const role = defineRole(req.user.role);
-        checkRole(role, Permissions.Role);
-        const users = await usersService.getUsers();
-        return res.status(200).json({ users });
-    } catch (error) {
-        return res.status(500).json(error);
+usersRouter.get(
+    '/',
+    checkRoleMiddleware([Roles.Admin]),
+    async (req: RoleRequest, res: express.Response) => {
+        try {
+            // Проверка роли
+            const role = defineRole(req.user.role);
+            checkRole(role, Permissions.Role);
+            const users = await usersService.getUsers();
+            return res.status(200).json({ users });
+        } catch (error) {
+            return res.status(500).json(error);
+        }
     }
-});
+);
 
 // Создать пользователя
 usersRouter.post('/', async (req: express.Request, res: express.Response) => {

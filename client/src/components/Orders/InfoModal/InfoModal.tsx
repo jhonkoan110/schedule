@@ -1,6 +1,7 @@
 import {
     Button,
     Dialog,
+    DialogActions,
     DialogContent,
     DialogTitle,
     List,
@@ -12,8 +13,8 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { deleteOrder, updateOrder } from '../../../service/orders';
 import DeleteModal from '../../Modal/DeleteModal/DeleteModal';
+import useStyles from '../../Modal/infoModalStyle';
 import Modal from '../../Modal/Modal';
-import useStyles from './infoModalStyle';
 
 interface InfoModalProps {
     order: any;
@@ -75,7 +76,7 @@ const InfoModal: React.FC<InfoModalProps> = ({
     // Обновить заказ
     const updateOrderHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
         dispatch(updateOrder(orderData));
-    }
+    };
 
     return (
         <>
@@ -122,21 +123,23 @@ const InfoModal: React.FC<InfoModalProps> = ({
                             <ListItemText primary={order.photo} />
                         </ListItem>
                     </List>
-                    <Button
-                        className={classes.buttonMargin}
-                        variant="contained"
-                        color="primary"
-                        onClick={openEditModalHandler}
-                    >
-                        Редактировать
-                    </Button>
-                    <Button
-                        variant="contained"
-                        color="secondary"
-                        onClick={openDeleteModalHandler}
-                    >
-                        Удалить
-                    </Button>
+                    <DialogActions className={classes.actions}>
+                        <Button
+                            className={classes.buttonMargin}
+                            variant="contained"
+                            color="primary"
+                            onClick={openEditModalHandler}
+                        >
+                            Редактировать
+                        </Button>
+                        <Button
+                            variant="contained"
+                            color="secondary"
+                            onClick={openDeleteModalHandler}
+                        >
+                            Удалить
+                        </Button>
+                    </DialogActions>
                 </DialogContent>
             </Dialog>
 

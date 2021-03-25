@@ -1,6 +1,7 @@
 import {
     Button,
     Dialog,
+    DialogActions,
     DialogContent,
     DialogTitle,
     List,
@@ -12,7 +13,7 @@ import { useDispatch } from 'react-redux';
 import { deleteUser } from '../../../service/users';
 import { IUser } from '../../../store/users/types';
 import DeleteModal from '../../Modal/DeleteModal/DeleteModal';
-import useStyles from './infoModalStyle';
+import useStyles from '../../Modal/infoModalStyle';
 
 interface InfoModalProps {
     user: IUser;
@@ -84,21 +85,23 @@ const InfoModal: React.FC<InfoModalProps> = ({
                             <ListItemText primary={user.role.name} />
                         </ListItem>
                     </List>
-                    <Button
-                        className={classes.buttonMargin}
-                        variant="contained"
-                        color="primary"
-                        onClick={() => {}}
-                    >
-                        Редактировать
-                    </Button>
-                    <Button
-                        variant="contained"
-                        color="secondary"
-                        onClick={openDeleteModalHandler}
-                    >
-                        Удалить
-                    </Button>
+                    <DialogActions className={classes.actions}>
+                        <Button
+                            className={classes.buttonMargin}
+                            variant="contained"
+                            color="primary"
+                            onClick={() => {}}
+                        >
+                            Редактировать
+                        </Button>
+                        <Button
+                            variant="contained"
+                            color="secondary"
+                            onClick={openDeleteModalHandler}
+                        >
+                            Удалить
+                        </Button>
+                    </DialogActions>
                 </DialogContent>
             </Dialog>
 

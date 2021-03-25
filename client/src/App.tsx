@@ -1,33 +1,44 @@
-import React from 'react';
-import { Route, Switch } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Redirect, Route, Switch, useHistory } from 'react-router-dom';
 import Header from './components/Header/Header';
-import Administration from './pages/Administration/Administration';
+import Main from './components/Main/Main';
 import Login from './pages/Auth/Login/Login';
 import Registration from './pages/Auth/Registration/Registration';
-import MyOrders from './pages/MyOrders/MyOrders';
-import Schedule from './pages/Schedule/Schedule';
+import { AppStateType } from './store/store';
 
 const App: React.FC = () => {
+    const dispatch = useDispatch();
+    const authData = useSelector((state: AppStateType) => state.auth.authData);
+
+    // если не авторизован, то редирект на страницу login. если авторизован, то на layout
+
     return (
         <>
             <Header />
-            <Switch>
-                <Route path="/orders">
-                    <MyOrders />
-                </Route>
-                <Route path="/schedule">
-                    <Schedule />
-                </Route>
-                <Route path="/administration">
-                    <Administration />
-                </Route>
-                <Route path="/registration">
-                    <Registration />
-                </Route>
-                <Route path="/login">
-                    <Login />
-                </Route>
-            </Switch>
+            {authData ? (
+                <Switch>
+                    <Route path="/">
+                        <Main />
+                    </Route>
+                    <Redirect to="/" />
+                </Switch>
+            ) : (
+                <Switch>
+                    <Route path="/login">
+                        <Login />
+                    </Route>
+                    <Route path="/registration">
+                        <Registration />
+                    </Route>
+                    <Redirect to="/login" />
+                </Switch>
+            )}
+
+                {/* <Route  path="/registration">
+                    {authData ? <Main /> : <Login />}
+                </Route> */}
+
         </>
     );
 };

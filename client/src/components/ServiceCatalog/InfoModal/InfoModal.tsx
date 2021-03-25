@@ -1,6 +1,7 @@
 import {
     Button,
     Dialog,
+    DialogActions,
     DialogContent,
     DialogTitle,
     List,
@@ -10,11 +11,14 @@ import {
 } from '@material-ui/core';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { deleteServiceCatalog, updateServiceCatalog } from '../../../service/serviceCatalog';
+import {
+    deleteServiceCatalog,
+    updateServiceCatalog,
+} from '../../../service/serviceCatalog';
 import { IServiceCatalog } from '../../../store/serviceCatalog/types';
 import DeleteModal from '../../Modal/DeleteModal/DeleteModal';
+import useStyles from '../../Modal/infoModalStyle';
 import Modal from '../../Modal/Modal';
-import useStyles from './infoModalStyle';
 
 interface InfoModalProps {
     serviceCatalog: IServiceCatalog;
@@ -73,9 +77,11 @@ const InfoModal: React.FC<InfoModalProps> = ({
     };
 
     // Обновить услугу
-    const updateServiceCatalogHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const updateServiceCatalogHandler = (
+        e: React.MouseEvent<HTMLButtonElement>
+    ) => {
         dispatch(updateServiceCatalog(service));
-    }
+    };
 
     return (
         <>
@@ -109,21 +115,23 @@ const InfoModal: React.FC<InfoModalProps> = ({
                             />
                         </ListItem>
                     </List>
-                    <Button
-                        className={classes.buttonMargin}
-                        variant="contained"
-                        color="primary"
-                        onClick={openEditModalHandler}
-                    >
-                        Редактировать
-                    </Button>
-                    <Button
-                        variant="contained"
-                        color="secondary"
-                        onClick={openDeleteModalHandler}
-                    >
-                        Удалить
-                    </Button>
+                    <DialogActions className={classes.actions}>
+                        <Button
+                            className={classes.buttonMargin}
+                            variant="contained"
+                            color="primary"
+                            onClick={openEditModalHandler}
+                        >
+                            Редактировать
+                        </Button>
+                        <Button
+                            variant="contained"
+                            color="secondary"
+                            onClick={openDeleteModalHandler}
+                        >
+                            Удалить
+                        </Button>
+                    </DialogActions>
                 </DialogContent>
             </Dialog>
 

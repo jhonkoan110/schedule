@@ -10,7 +10,7 @@ import {
 } from '@material-ui/core';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useHistory } from 'react-router-dom';
 import { login } from '../../../service/auth';
 import { AppStateType } from '../../../store/store';
 import useStyles from './style';
@@ -19,6 +19,7 @@ const Login = () => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const error = useSelector((state: AppStateType) => state.auth.error);
+    const history = useHistory();
 
     const [authData, setAuthData] = useState({
         login: '',
@@ -36,6 +37,7 @@ const Login = () => {
         e: React.MouseEvent<HTMLButtonElement, MouseEvent>
     ) => {
         dispatch(login(authData));
+        history.goBack();
     };
 
     return (

@@ -4,6 +4,7 @@ import authReducer from './auth/reducer';
 import locationsReducer from './locations/reducer';
 import locationTypesReducer from './locationTypes/reducer';
 import mastersReducer from './masters/reducer';
+import myOrdersReducer from './myOrders/reducer';
 import ordersReducer from './orders/reducer';
 import rolesReducer from './roles/reducer';
 import serviceCatalogReducer from './serviceCatalog/reducer';
@@ -22,6 +23,7 @@ const rootReducer = combineReducers({
     roleList: rolesReducer,
     locationList: locationsReducer,
     serviceCatalogList: serviceCatalogReducer,
+    myOrderList: myOrdersReducer
 });
 
 declare global {

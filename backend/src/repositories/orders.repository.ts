@@ -1,12 +1,19 @@
 import { ServiceCatalog } from './../models/ServiceCatalog';
 import { NotFoundError } from '../errors/NotFoundError';
-import { AbstractRepository, EntityRepository, getRepository, Not, TreeChildren } from 'typeorm';
+import {
+    AbstractRepository,
+    EntityRepository,
+    getRepository,
+    Not,
+    TreeChildren,
+} from 'typeorm';
 import { Master } from '../models/Master';
 import { Order } from '../models/Order';
+import { User } from '../models/User';
 
 export interface OrderProps {
     id?: number;
-    user_id: number;
+    user: User;
     description: string;
     start_date: string;
     end_date: string;
@@ -35,10 +42,15 @@ export class OrderRepository extends AbstractRepository<Order> {
         return await this.repository.find({ where: { service: id } });
     }
 
+    // Получить заказы по id пользователя
+    async findOrdersByUserId(id: number) {
+        return await this.repository.find({ where: { user: id } });
+    }
+
     // Создать заказ
     async createAndSave(props: OrderProps) {
         const {
-            user_id,
+            user,
             description,
             start_date,
             end_date,
@@ -53,7 +65,7 @@ export class OrderRepository extends AbstractRepository<Order> {
         const order = new Order();
         const newOrder = {
             ...order,
-            user_id,
+            user,
             description,
             start_date,
             end_date,
@@ -83,7 +95,7 @@ export class OrderRepository extends AbstractRepository<Order> {
     async updateAndSave(props: OrderProps) {
         const {
             id,
-            user_id,
+            user,
             description,
             start_date,
             end_date,
@@ -101,7 +113,7 @@ export class OrderRepository extends AbstractRepository<Order> {
         }
 
         this.repository.merge(order, {
-            user_id,
+            user,
             description,
             start_date,
             end_date,

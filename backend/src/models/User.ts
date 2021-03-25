@@ -1,4 +1,13 @@
-import { Column, Entity, JoinColumn, JoinTable, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+    Column,
+    Entity,
+    JoinColumn,
+    JoinTable,
+    ManyToOne,
+    OneToMany,
+    PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Order } from './Order';
 import { Role } from './Role';
 
 @Entity()
@@ -20,6 +29,9 @@ export class User {
 
     @Column()
     middlename: string;
+
+    @OneToMany(() => Order, (order) => order.id)
+    orders: Order[];
 
     @ManyToOne(() => Role, (role) => role.id, { eager: true })
     @JoinColumn()

@@ -1,6 +1,7 @@
 import {
     Button,
     Dialog,
+    DialogActions,
     DialogContent,
     DialogTitle,
     List,
@@ -11,7 +12,7 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { deleteMaster } from '../../../service/masters';
 import DeleteModal from '../../Modal/DeleteModal/DeleteModal';
-import useStyles from './infoModalStyles';
+import useStyles from '../../Modal/infoModalStyle';
 
 interface InfoModalProps {
     master: any;
@@ -75,6 +76,7 @@ const InfoModal: React.FC<InfoModalProps> = ({
                         </ListItem>
                     </List>
 
+                    <DialogActions className={classes.actions}>
                     <Button
                         className={classes.buttonMargin}
                         variant="contained"
@@ -90,6 +92,7 @@ const InfoModal: React.FC<InfoModalProps> = ({
                     >
                         Удалить
                     </Button>
+                </DialogActions>
                 </DialogContent>
             </Dialog>
 

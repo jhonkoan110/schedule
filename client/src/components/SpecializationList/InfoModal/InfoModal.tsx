@@ -1,6 +1,7 @@
 import {
     Button,
     Dialog,
+    DialogActions,
     DialogContent,
     DialogTitle,
     Divider,
@@ -17,8 +18,8 @@ import {
 } from '../../../service/specializations';
 import { ISpecialization } from '../../../store/specializtions/types';
 import DeleteModal from '../../Modal/DeleteModal/DeleteModal';
+import useStyles from '../../Modal/infoModalStyle';
 import Modal from '../../Modal/Modal';
-import useStyles from './infoModalStyle';
 
 interface InfoModalProps {
     header: string;
@@ -60,7 +61,7 @@ const InfoModal: React.FC<InfoModalProps> = ({
     };
 
     // Открыть модальное окно редактирования
-    const openEditModalhandler = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const openEditModalHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
         setIsOpenEditModal(true);
     };
 
@@ -114,16 +115,16 @@ const InfoModal: React.FC<InfoModalProps> = ({
                         <ListItem button>
                             <ListItemText primary={name} />
                         </ListItem>
-                        <Divider />
-                        <ListItem button divider>
+                        <ListItem button>
                             <ListItemText primary={icon} />
                         </ListItem>
                     </List>
+                    <DialogActions className={classes.actions}>
                     <Button
                         className={classes.buttonMargin}
                         variant="contained"
                         color="primary"
-                        onClick={openEditModalhandler}
+                        onClick={openEditModalHandler}
                     >
                         Редактировать
                     </Button>
@@ -134,6 +135,7 @@ const InfoModal: React.FC<InfoModalProps> = ({
                     >
                         Удалить
                     </Button>
+                </DialogActions>
                 </DialogContent>
             </Dialog>
 

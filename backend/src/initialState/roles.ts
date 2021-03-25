@@ -1,8 +1,8 @@
 export enum Roles {
     Admin = 1,
-    Operator,
     Client,
     Master,
+    Operator,
     ResponsibleForMasters, // Ответственный по мастерам
 }
 

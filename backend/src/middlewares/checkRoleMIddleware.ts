@@ -29,6 +29,8 @@ const checkRoleMiddleware = (roles: number[]) => (req, res: Response, next) => {
         // Если токен есть, получить его тело
         const decoded = jwt.verify(token, process.env.SECRET_KEY);
         console.log(decoded);
+        console.log('roles', roles);
+        
 
         // Если роль токена не совпадает с ролью того, кто делает запрос, вернуть ошибку
         if (!roles.includes(decoded.role)) {

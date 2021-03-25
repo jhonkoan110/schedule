@@ -9,14 +9,12 @@ import {
     PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Master } from './Master';
+import { User } from './User';
 
 @Entity()
 export class Order {
     @PrimaryGeneratedColumn()
     id: number;
-
-    @Column()
-    user_id: number;
 
     @Column()
     description: string;
@@ -43,7 +41,13 @@ export class Order {
     @JoinColumn()
     master: Master;
 
-    @ManyToOne(() => ServiceCatalog, (service) => service.orders, { eager: true })
+    @ManyToOne(() => ServiceCatalog, (service) => service.orders, {
+        eager: true
+    })
     @JoinColumn({ name: 'serviceId' })
     service: ServiceCatalog;
+
+    @ManyToOne(() => User, (user) => user.orders, {eager: true})
+    @JoinColumn()
+    user: User;
 }

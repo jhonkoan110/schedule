@@ -1,15 +1,21 @@
 import {
     Button,
+    FormControl,
+    InputLabel,
     List,
     ListItem,
     ListItemText,
+    MenuItem,
+    Select,
     TextField,
     Typography,
 } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createOrder, getAllOrders } from '../../../service/orders';
+import { getAllUsers } from '../../../service/users';
 import { AppStateType } from '../../../store/store';
+import { IUser } from '../../../store/users/types';
 import Loader from '../../Loader/Loader';
 import Modal from '../../Modal/Modal';
 import InfoModal from '../InfoModal/InfoModal';
@@ -22,6 +28,7 @@ const OrderList: React.FC<OrderListProps> = () => {
     const dispatch = useDispatch();
 
     const orders = useSelector((state: AppStateType) => state.orderList.orders);
+    const users = useSelector((state: AppStateType) => state.usersList.users);
     const isLoading = useSelector(
         (state: AppStateType) => state.orderList.isLoading
     );
@@ -29,6 +36,9 @@ const OrderList: React.FC<OrderListProps> = () => {
 
     const [isOpenAddModal, setIsOpenAddModal] = useState(false);
     const [isOpenInfoModal, setIsOpenInfoModal] = useState(false);
+
+    const [user, setUser] = useState<string | number>('');
+    const [isOpenSelectUser, setIsOpenSelectUser] = useState(false);
 
     const [orderData, setOrderData] = useState({
         id: 0,
@@ -62,7 +72,11 @@ const OrderList: React.FC<OrderListProps> = () => {
 
     // Добавить заказ
     const createOrderHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
-        dispatch(createOrder(orderData));
+        const newOrder = {
+            ...orderData,
+            user,
+        };
+        dispatch(createOrder(newOrder));
         setIsOpenAddModal(false);
     };
 
@@ -77,9 +91,25 @@ const OrderList: React.FC<OrderListProps> = () => {
         setIsOpenInfoModal(true);
     };
 
+    // Закрыть селект типа
+    const closeSelectTypeHandler = () => {
+        setIsOpenSelectUser(false);
+    };
+
+    // Открыть селект типа
+    const openSelectTypeHandler = () => {
+        setIsOpenSelectUser(true);
+    };
+
+    // Обработка селекта типа
+    const changeSelectTypeHandler = (event: any) => {
+        setUser(event.target.value);
+    };
+
     // Загрузить все заказы
     useEffect(() => {
         dispatch(getAllOrders());
+        dispatch(getAllUsers());
     }, []);
 
     if (isLoading) {
@@ -187,6 +217,29 @@ const OrderList: React.FC<OrderListProps> = () => {
                         value={orderData.photo}
                         onChange={addModalChangeHandler}
                     />
+                    <FormControl>
+                        <InputLabel id="user_id_label">Пользователь</InputLabel>
+                        <Select
+                            labelId="user_id_label"
+                            id="user-open-select"
+                            open={isOpenSelectUser}
+                            onClose={closeSelectTypeHandler}
+                            onOpen={openSelectTypeHandler}
+                            value={user}
+                            onChange={changeSelectTypeHandler}
+                        >
+                            <MenuItem value="">
+                                <em>None</em>
+                            </MenuItem>
+                            {users.map((item: IUser) => {
+                                return (
+                                    <MenuItem key={item.id} value={item.id}>
+                                        {item.login}
+                                    </MenuItem>
+                                );
+                            })}
+                        </Select>
+                    </FormControl>
                 </Modal>
             )}
 

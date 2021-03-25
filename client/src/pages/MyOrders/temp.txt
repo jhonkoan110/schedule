@@ -1,0 +1,82 @@
+ <Modal
+                    header="Создание заказа"
+                    isOpen={isOpenAddModal}
+                    isEdit={false}
+                    closeModal={closeAddModalHandler}
+                    save={createOrderHandler}
+                >
+                    <TextField
+                        id="description"
+                        label="Описание заказа"
+                        // className={classes.input}
+                        required
+                        variant="outlined"
+                        value={orderData.description}
+                        onChange={addModalChangeHandler}
+                    />
+                    <TextField
+                        id="start_date"
+                        label="Дата начала"
+                        // className={classes.input}
+                        required
+                        variant="outlined"
+                        value={orderData.start_date}
+                        onChange={addModalChangeHandler}
+                    />
+                    <TextField
+                        id="end_date"
+                        label="Дата окончания"
+                        // className={classes.input}
+                        required
+                        variant="outlined"
+                        value={orderData.end_date}
+                        onChange={addModalChangeHandler}
+                    />
+                    {/* <TextField
+                        id="status"
+                        label="Статус заказа"
+                        // className={classes.input}
+                        required
+                        variant="outlined"
+                        value={orderData.status}
+                        onChange={addModalChangeHandler}
+                    /> */}
+                    {/* <TextField
+                        id="status_color"
+                        label="Цвет статуса"
+                        // className={classes.input}
+                        required
+                        variant="outlined"
+                        value={orderData.status_color}
+                        onChange={addModalChangeHandler}
+                    /> */}
+                    <TextField
+                        id="commentary"
+                        label="Комментарий"
+                        // className={classes.input}
+                        required
+                        variant="outlined"
+                        value={orderData.commentary}
+                        onChange={addModalChangeHandler}
+                    />
+                    {/* <TextField
+                        id="photo"
+                        label="Фото"
+                        // className={classes.input}
+                        required
+                        variant="outlined"
+                        value={orderData.photo}
+                        onChange={addModalChangeHandler}
+                    /> */}
+                    <Button variant="contained" component="label">
+                        Загрузить фото
+                        <input
+                            type="file"
+                            hidden
+                            onChange={(e) => imageChangeHandler(e)}
+                        />
+                    </Button>
+                    <Card>
+                        {<img src={imagePreviewUrl} />}
+                    </Card>
+                </Modal>

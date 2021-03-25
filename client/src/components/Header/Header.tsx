@@ -15,8 +15,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppStateType } from '../../store/store';
 import { authDataFetched } from '../../store/auth/actionCreators';
 import { checkAuth } from '../../service/auth';
+import { ADMIN } from '../../constants/constants';
 
-const Header = () => {
+interface HeaderProps {}
+
+const Header: React.FC<HeaderProps> = () => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const authData = useSelector((state: AppStateType) => state.auth.authData);
@@ -28,9 +31,26 @@ const Header = () => {
         dispatch(authDataFetched(null));
     };
 
-    // useEffect(() => {
-    //     dispatch(checkAuth())
-    // }, []);
+    if (!authData) {
+        return (
+            <AppBar className={classes.appBar} position="static">
+                <Toolbar
+                    style={{ display: 'flex', justifyContent: 'flex-end' }}
+                >
+                    <ButtonGroup>
+                        <NavLink className={classes.loginButton} to="login">
+                            <Button variant="contained">Войти</Button>
+                        </NavLink>
+                        <NavLink to="registration">
+                            <Button variant="contained">
+                                Зарегистрироваться
+                            </Button>
+                        </NavLink>
+                    </ButtonGroup>
+                </Toolbar>
+            </AppBar>
+        );
+    }
 
     return (
         <AppBar className={classes.appBar} position="static">
@@ -52,40 +72,31 @@ const Header = () => {
                         <DateRangeIcon className={classes.icon} />
                         Расписание
                     </NavLink>
-                    <NavLink
-                        to="/administration"
-                        className={classes.link}
-                        color="inherit"
-                    >
-                        <SupervisorAccountIcon className={classes.icon} />
-                        Администрирование
-                    </NavLink>
+
+                    {authData.user.role.name === ADMIN ? (
+                        <NavLink
+                            to="/administration"
+                            className={classes.link}
+                            color="inherit"
+                        >
+                            <SupervisorAccountIcon className={classes.icon} />
+                            Администрирование
+                        </NavLink>
+                    ) : null}
                 </Breadcrumbs>
-                {!authData ? (
-                    <ButtonGroup>
-                        <NavLink className={classes.loginButton} to="login">
-                            <Button variant="contained">Войти</Button>
-                        </NavLink>
-                        <NavLink to="registration">
-                            <Button variant="contained">
-                                Зарегистрироваться
-                            </Button>
-                        </NavLink>
-                    </ButtonGroup>
-                ) : (
-                    <ButtonGroup>
-                        <NavLink className={classes.loginButton} to="login">
-                            <Button variant="contained">
-                                {authData.user.login}
-                            </Button>
-                        </NavLink>
-                        <NavLink to="registration">
-                            <Button variant="contained" onClick={logoutHandler}>
-                                Выйти
-                            </Button>
-                        </NavLink>
-                    </ButtonGroup>
-                )}
+
+                <ButtonGroup>
+                    <NavLink className={classes.loginButton} to="profile">
+                        <Button variant="contained">
+                            {authData.user.login}
+                        </Button>
+                    </NavLink>
+                    <NavLink to="login">
+                        <Button variant="contained" onClick={logoutHandler}>
+                            Выйти
+                        </Button>
+                    </NavLink>
+                </ButtonGroup>
             </Toolbar>
         </AppBar>
     );

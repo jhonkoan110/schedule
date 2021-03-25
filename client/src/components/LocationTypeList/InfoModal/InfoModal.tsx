@@ -1,6 +1,7 @@
 import {
     Button,
     Dialog,
+    DialogActions,
     DialogContent,
     DialogTitle,
     List,
@@ -16,9 +17,9 @@ import {
 } from '../../../service/locationTypes';
 import { ILocationTypes } from '../../../store/locationTypes/types';
 import DeleteModal from '../../Modal/DeleteModal/DeleteModal';
+import useStyles from '../../Modal/infoModalStyle';
 import Modal from '../../Modal/Modal';
 import EditModal from '../../SpecializationList/EditModal/EditModal';
-import useStyles from './infoModalStyle';
 
 interface InfoModalProps {
     id: number;
@@ -102,21 +103,23 @@ const InfoModal: React.FC<InfoModalProps> = ({
                             <ListItemText primary={name} />
                         </ListItem>
                     </List>
-                    <Button
-                        className={classes.buttonMargin}
-                        variant="contained"
-                        color="primary"
-                        onClick={openEditModalHandler}
-                    >
-                        Редактировать
-                    </Button>
-                    <Button
-                        variant="contained"
-                        color="secondary"
-                        onClick={openDeleteModalHandler}
-                    >
-                        Удалить
-                    </Button>
+                    <DialogActions className={classes.actions}>
+                        <Button
+                            className={classes.buttonMargin}
+                            variant="contained"
+                            color="primary"
+                            onClick={openEditModalHandler}
+                        >
+                            Редактировать
+                        </Button>
+                        <Button
+                            variant="contained"
+                            color="secondary"
+                            onClick={openDeleteModalHandler}
+                        >
+                            Удалить
+                        </Button>
+                    </DialogActions>
                 </DialogContent>
             </Dialog>
 

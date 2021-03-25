@@ -34,7 +34,7 @@ const Modal: React.FC<ModalProps> = ({
                 color="secondary"
                 variant="contained"
                 className={classes.closeBtn}
-                style={{ position: 'absolute', right: '1rem', top: '1rem' }}
+                style={{ position: 'absolute', right: '1.5rem', top: '1rem' }}
                 onClick={closeModal}
             >
                 <CloseIcon />
@@ -42,11 +42,11 @@ const Modal: React.FC<ModalProps> = ({
             <DialogContent className={classes.content}>
                 {children}
             </DialogContent>
-            <DialogActions>
-                <Button color="primary" onClick={closeModal}>
+            <DialogActions className={classes.actions}>
+                <Button color="secondary" variant='contained' onClick={closeModal}>
                     Отменить
                 </Button>
-                <Button  color="primary" onClick={save}>{isEdit ? 'Сохранить' : 'Да'}</Button>
+                <Button  color="primary" variant='contained'  onClick={save}>{isEdit ? 'Сохранить' : 'Подтвердить'}</Button>
             </DialogActions>
         </Dialog>
     );

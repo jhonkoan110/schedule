@@ -1,6 +1,10 @@
 import { NotFoundError } from '../errors/NotFoundError';
 import { User } from './../models/User';
-import { AbstractRepository, EntityRepository, getCustomRepository } from 'typeorm';
+import {
+    AbstractRepository,
+    EntityRepository,
+    getCustomRepository,
+} from 'typeorm';
 import { Role } from './../models/Role';
 import { RoleRepository } from './roles.repository';
 
@@ -21,12 +25,18 @@ export class UserRepository extends AbstractRepository<User> {
         return await this.repository.find();
     }
 
-    // Получить одного пользователя
+    // Получить одного пользователя по логину
     async findUserByLogin(login: string) {
         const user = await this.repository.findOne({ where: { login } });
         // if (!user) {
         //     throw new NotFoundError(404, 'Пользователь с таким логином не найден');
         // }
+        return user;
+    }
+
+    // Получить одного пользователя по id
+    async findUserById(id: number) {
+        const user = await this.repository.findOne(id);
         return user;
     }
 
@@ -37,7 +47,14 @@ export class UserRepository extends AbstractRepository<User> {
 
     // Создать пользователя
     async createAndSave(props: UsersProps) {
-        const { login, password, firstname, lastname, middlename, role } = props;
+        const {
+            login,
+            password,
+            firstname,
+            lastname,
+            middlename,
+            role,
+        } = props;
         const user = new User();
         console.log(user);
 
@@ -73,9 +90,15 @@ export class UserRepository extends AbstractRepository<User> {
             throw new NotFoundError(404, 'Такого пользователя не найдено');
         }
 
-        this.repository.merge(user, { login, firstname, lastname, middlename, role });
+        this.repository.merge(user, {
+            login,
+            firstname,
+            lastname,
+            middlename,
+            role,
+        });
         const roleRepository = getCustomRepository(RoleRepository);
-        const currentRole = await roleRepository.findRoleById(+role)
+        const currentRole = await roleRepository.findRoleById(+role);
         user.role = currentRole;
         return await this.repository.save(user);
     }

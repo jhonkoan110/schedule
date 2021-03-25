@@ -25,7 +25,27 @@ ordersRouter.get(
         } catch (error) {
             return res.status(500).json(error);
         }
-    },
+    }
+);
+
+// Получить заказы по id пользователя
+ordersRouter.get(
+    '/:id',
+    checkRoleMiddleware([Roles.Admin, Roles.Client]),
+    async (req: RoleRequest, res: express.Response) => {
+        try {
+            // Проверка роли
+            const role = defineRole(req.user.role);
+            
+            checkRole(role, Permissions.Order);
+
+            const { id } = req.params;
+            const orders = await ordersService.getOrdersByUserId(+id);
+            res.status(200).json({ orders });
+        } catch (error) {
+            ErrorHelper.notFoundHandle(res, error);
+        }
+    }
 );
 
 // Создать заказ
@@ -50,7 +70,7 @@ ordersRouter.post(
         } catch (error) {
             return res.status(500).json(error);
         }
-    },
+    }
 );
 
 // Удалить заказ
@@ -69,7 +89,7 @@ ordersRouter.delete(
         } catch (error) {
             ErrorHelper.deleteHandle(res, error);
         }
-    },
+    }
 );
 
 // Обновить заказ
@@ -87,7 +107,7 @@ ordersRouter.put(
         } catch (error) {
             ErrorHelper.notFoundHandle(res, error);
         }
-    },
+    }
 );
 
 export default ordersRouter;

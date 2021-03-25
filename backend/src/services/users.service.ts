@@ -1,10 +1,17 @@
 import { UserRepository, UsersProps } from './../repositories/users.repository';
 import { getCustomRepository } from 'typeorm';
+import * as ordersService from '../services/orders.service';
 
-// Получить одлного пользователя
+// Получить одного пользователя по логину
 export const getOneUser = async (login: string) => {
     const userRepository = getCustomRepository(UserRepository);
     return await userRepository.findUserByLogin(login);
+};
+
+// Получить пользователя по id
+export const getUserById = async (id: number) => {
+    return await getCustomRepository(UserRepository).findUserById(id);
+
 };
 
 // Получить всех пользоваталей

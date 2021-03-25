@@ -12,6 +12,10 @@ const useStyles = makeStyles(() => ({
     content: {
         display: 'flex',
         flexDirection:'column'
+    },
+    actions: {
+        marginRight: '1rem',
+        marginBottom: '1rem'
     }
 }));
 

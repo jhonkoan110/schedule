@@ -1,6 +1,7 @@
 import {
     Button,
     Dialog,
+    DialogActions,
     DialogContent,
     DialogTitle,
     FormControl,
@@ -80,7 +81,6 @@ const InfoModal: React.FC<InfoModalProps> = ({
             ...locationData,
             [e.target.id]: e.target.value,
         });
-        
     };
 
     // Закрыть селект типа
@@ -143,6 +143,8 @@ const InfoModal: React.FC<InfoModalProps> = ({
                             />
                         </ListItem>
                     </List>
+                </DialogContent>
+                <DialogActions className={classes.actions}>
                     <Button
                         className={classes.buttonMargin}
                         variant="contained"
@@ -158,7 +160,7 @@ const InfoModal: React.FC<InfoModalProps> = ({
                     >
                         Удалить
                     </Button>
-                </DialogContent>
+                </DialogActions>
             </Dialog>
 
             {isOpenDeleteModal && (
