@@ -1,35 +1,32 @@
 import {
-    Box,
     Button,
-    Card,
     CardContent,
     CardHeader,
     Divider,
     List,
     ListItem,
     ListItemText,
-    makeStyles,
     TextField,
-    Theme,
     Typography,
 } from '@material-ui/core';
-import React, { useEffect, useState } from 'react';
-import { ScheduleComponent, Day, Inject } from '@syncfusion/ej2-react-schedule';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppStateType } from '../../store/store';
 import Block from '../../components/Block/Block';
 import { getOrdersByUserId } from '../../service/myOrders';
-import Loader from '../../components/Loader/Loader';
 import Modal from '../../components/Modal/Modal';
+import React, { useState, useEffect } from 'react';
+import useStyles from './myOrdersStyles';
+import Address from '../../components/Address/Address';
+import Loader from '../../components/Loader/Loader';
+import ImageAdder from '../../components/ImageUploader/ImageUploader';
 
 // ==================================================== TABS ==================================
-
-
 
 // ==================================================== TABS END ==================================
 
 const MyOrders: React.FC = () => {
     const dispatch = useDispatch();
+    const classes = useStyles();
 
     const myOrders = useSelector(
         (state: AppStateType) => state.myOrderList.myOrders
@@ -39,6 +36,13 @@ const MyOrders: React.FC = () => {
     );
     const error = useSelector((state: AppStateType) => state.myOrderList.error);
     const authData = useSelector((state: AppStateType) => state.auth.authData);
+
+    // Адрес
+    const [address, setAddress] = useState({
+        district: '',
+        street: '',
+        house: '',
+    });
 
     // Стейт заказа
     const [orderData, setOrderData] = useState({
@@ -71,11 +75,10 @@ const MyOrders: React.FC = () => {
             // The file's text will be printed here
             if (event.target) {
                 console.log(event.target.result);
-                setFile(temp)
-                setImagePreviewUrl(event.target.result)
+                setFile(temp);
+                setImagePreviewUrl(event.target.result);
             } else {
                 console.log('null blyat');
-                
             }
         };
 
@@ -87,6 +90,7 @@ const MyOrders: React.FC = () => {
         //     console.log(e.target.result)
         // };
     };
+
 
     // Сделать заказ
     const createOrderHandler = (e: any) => {
@@ -112,6 +116,8 @@ const MyOrders: React.FC = () => {
             ...orderData,
             [e.target.id]: e.target.value,
         });
+        console.log(orderData);
+        
     };
 
     // Загрузить заказы по id пользователя
@@ -124,6 +130,11 @@ const MyOrders: React.FC = () => {
     }
 
     if (error) {
+        return (
+            <Block>
+                <Typography variant="h4">{error}</Typography>
+            </Block>
+        );
     }
 
     return (
@@ -138,7 +149,6 @@ const MyOrders: React.FC = () => {
                                 onClick={openAddModalHandler}
                                 variant="contained"
                                 color="primary"
-                                // className={classes.addButton}
                             >
                                 Сделать заказ
                             </Button>
@@ -151,24 +161,47 @@ const MyOrders: React.FC = () => {
                                     // onClick={() => selectLocationHandler(item)}
                                 >
                                     <ListItemText primary={item.description} />
+                                    <ListItemText primary={item.status} />
                                 </ListItem>
                             );
                         })}
                     </List>
                 </CardContent>
+                <Divider />
             </Block>
 
-            
-                <Modal
-                    header="Создание заказа"
-                    isOpen={isOpenAddModal}
-                    isEdit={false}
-                    closeModal={closeAddModalHandler}
-                    save={createOrderHandler}
-                >
-                    
-                </Modal>
-            
+            <Modal
+                header="Создание заказа"
+                isOpen={isOpenAddModal}
+                isEdit={false}
+                closeModal={closeAddModalHandler}
+                save={createOrderHandler}
+            >
+                <TextField
+                    id="description"
+                    label="Описание заказа"
+                    className={classes.input}
+                    required
+                    variant="outlined"
+                    value={orderData.description}
+                    onChange={addModalChangeHandler}
+                />
+                <form noValidate>
+                    <TextField
+                        className={classes.input}
+                        variant="outlined"
+                        id="start_date"
+                        label="Дата начала"
+                        type="datetime-local"
+                        onChange={addModalChangeHandler}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                    />
+                </form>
+                <Address transferAddress={setAddress} />
+                <ImageAdder />
+            </Modal>
         </>
     );
 };

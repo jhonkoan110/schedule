@@ -16,6 +16,9 @@ const useStyles = makeStyles(() => ({
     actions: {
         marginRight: '1rem',
         marginBottom: '1rem'
+    },
+    modalHeader: {
+        marginBottom: '1rem'
     }
 }));
 

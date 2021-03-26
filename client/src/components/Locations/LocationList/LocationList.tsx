@@ -45,11 +45,13 @@ const LocationList: React.FC<LocationListProps> = () => {
         name: '',
     });
     const [location_type, setLocation_type] = useState<string | number>('');
-    // const [parent, setParent] = useState<string | number>('');
+    const [selectedParent, setSelectedParent] = useState<any>('');
+    const [parents, setParents] = useState(locatioTypes);
 
     const [isOpenInfoModal, setIsOpenInfoModal] = useState(false);
     const [isOpenAddModal, setIsOpenAddModal] = useState(false);
     const [isSelectTypeOpen, setIsSelectTypeOpen] = useState(false);
+    const [isSelectParentOpen, setIsSelectParentOpen] = useState(false);
     const [selectedLocation, setSelectedLocation] = useState<ILocation>({
         id: 0,
         coordinates: '',
@@ -57,8 +59,8 @@ const LocationList: React.FC<LocationListProps> = () => {
         parent: 0,
         location_type: {
             id: 0,
-            name: ''
-        }
+            name: '',
+        },
     });
 
     // Отркыть окно добавления
@@ -88,11 +90,50 @@ const LocationList: React.FC<LocationListProps> = () => {
     const openSelectTypeHandler = () => {
         setIsSelectTypeOpen(true);
     };
+    // Закрыть селект родителя
+    const closeSelectParentHandler = () => {
+        setIsSelectParentOpen(false);
+    };
+
+    // Открыть селект родителя
+    const openSelectParentHandler = () => {
+        setIsSelectParentOpen(true);
+    };
 
     // Обработка селекта типа
-    const changeSelectTypeHandler = (event: any) => {
+    const changeSelectTypeHandler = async (event: any) => {
         console.log(event.target.value);
         setLocation_type(event.target.value);
+    };
+
+    // Обработка нажатия на элемент списка locationTypes
+    const clickLocationTypeHandler = (id: string | number) => {
+        switch (id) {
+            // Если тип локации выбран "дом"
+            case 7: {
+                const streets = locations.filter(
+                    (item: ILocation) => item.location_type.name === 'Улица'
+                );
+                setParents(streets);
+                break;
+            }
+
+            // Если выбран тип локации "Улица"
+            case 3: {
+                const districts = locations.filter(
+                    (item: ILocation) => item.location_type.name === 'Район'
+                );
+                setParents(districts);
+                break;
+            }
+            default:
+                setParents([])
+        }
+    };
+
+    // Обработка селекта родителя
+    const changeSelectParentHandler = (event: any) => {
+        setSelectedParent(event.target.value);
     };
 
     // Создать локацию
@@ -103,9 +144,9 @@ const LocationList: React.FC<LocationListProps> = () => {
             coordinates: locationData.coordinates,
             location_type: {
                 id: +location_type,
-                name:''
+                name: '',
             },
-            parent: null,
+            parent: selectedParent || null,
         };
 
         dispatch(createLocation(newLocation));
@@ -199,11 +240,44 @@ const LocationList: React.FC<LocationListProps> = () => {
                             onOpen={openSelectTypeHandler}
                             value={location_type}
                             onChange={changeSelectTypeHandler}
+                            defaultValue=""
                         >
                             <MenuItem value="">
                                 <em>None</em>
                             </MenuItem>
                             {locatioTypes.map((item: ILocationTypes) => {
+                                return (
+                                    <MenuItem
+                                        key={item.id}
+                                        value={item.id}
+                                        onClick={() =>
+                                            clickLocationTypeHandler(item.id)
+                                        }
+                                    >
+                                        {item.name}
+                                    </MenuItem>
+                                );
+                            })}
+                        </Select>
+                    </FormControl>
+                    <FormControl>
+                        <InputLabel id="parent_id_label">
+                            Родитель локации
+                        </InputLabel>
+                        <Select
+                            labelId="parent_id_label"
+                            id="parent-open-select"
+                            open={isSelectParentOpen}
+                            onClose={closeSelectParentHandler}
+                            onOpen={openSelectParentHandler}
+                            value={selectedParent}
+                            onChange={changeSelectParentHandler}
+                            defaultValue=""
+                        >
+                            <MenuItem value="">
+                                <em>None</em>
+                            </MenuItem>
+                            {parents.map((item: ILocationTypes) => {
                                 return (
                                     <MenuItem key={item.id} value={item.id}>
                                         {item.name}
@@ -212,31 +286,6 @@ const LocationList: React.FC<LocationListProps> = () => {
                             })}
                         </Select>
                     </FormControl>
-                    {/* <FormControl>
-                        <InputLabel id="parent_id_label">
-                            Родитель локации
-                        </InputLabel>
-                        <Select
-                            labelId="parent_id_label"
-                            id="parent-open-select"
-                            open={isSelectTypeOpen}
-                            onClose={closeSelectTypeHandler}
-                            onOpen={openSelectTypeHandler}
-                            value={location_type}
-                            onChange={changeSelectTypeHandler}
-                        >
-                            <MenuItem value="">
-                                <em>None</em>
-                            </MenuItem>
-                            {locatioTypes.map((item: ILocationTypes) => {
-                                return (
-                                    <MenuItem key={item.id} value={item.id}>
-                                        {item.name}
-                                    </MenuItem>
-                                );
-                            })}
-                        </Select>
-                    </FormControl> */}
                 </Modal>
             )}
 

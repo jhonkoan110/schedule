@@ -4,6 +4,7 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle,
+    Divider,
 } from '@material-ui/core';
 import React from 'react';
 import CloseIcon from '@material-ui/icons/Close';
@@ -30,6 +31,7 @@ const Modal: React.FC<ModalProps> = ({
     return (
         <Dialog fullWidth={true} open={isOpen} aria-labelledby="form-dialog-title">
             <DialogTitle id="form-dialog-title">{header}</DialogTitle>
+            <Divider className={classes.modalHeader} />
             <Button
                 color="secondary"
                 variant="contained"

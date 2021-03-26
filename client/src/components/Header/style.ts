@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => {
             display: 'flex',
             color: '#fff',
             '&.active': {
-                color: '#f3a5d7',
+                color: '#bdbdbd ',
             },
         },
         activeLink: {

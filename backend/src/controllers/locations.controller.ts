@@ -23,9 +23,28 @@ locationsRouter.get(
             const locations = await locationsService.getLocations();
             return res.status(200).json({ locations });
         } catch (error) {
-            return res.status(500).json(error);
+            return res.status(500).json(error.message);
         }
-    },
+    }
+);
+
+// Получить одну локацию по Id
+locationsRouter.get(
+    '/:location_id',
+    checkRoleMiddleware([Roles.Admin]),
+    async (req: RoleRequest, res: express.Response) => {
+        try {
+            // Проверка роли
+            const role = defineRole(req.user.role);
+            checkRole(role, Permissions.Location);
+
+            const { location_id } = req.params;
+            const location = await locationsService.getOneLocationById(
+                +location_id
+            );
+            return res.status(200).json({ location });
+        } catch (error) {}
+    }
 );
 
 // Создать локацию
@@ -43,7 +62,7 @@ locationsRouter.post(
         } catch (error) {
             return res.status(500).json(error);
         }
-    },
+    }
 );
 
 // Удалить локацию
@@ -63,7 +82,7 @@ locationsRouter.delete(
         } catch (error) {
             ErrorHelper.deleteHandle(res, error);
         }
-    },
+    }
 );
 
 // Обновить локацию
@@ -81,7 +100,7 @@ locationsRouter.put(
         } catch (error) {
             ErrorHelper.notFoundHandle(res, error);
         }
-    },
+    }
 );
 
 export default locationsRouter;

@@ -10,7 +10,7 @@ import { LocationTypeRepository } from './locationTypes.repository';
 
 export interface LocationProps {
     id?: number;
-    parent?: number;
+    parent?: null | Location;
     location_type: LocationType;
     name: string;
     coordinates: string;
@@ -20,7 +20,9 @@ export interface LocationProps {
 export class LocationRepository extends AbstractRepository<Location> {
     // Получить все локации
     async findAll() {
-        return await this.repository.find();
+        return await this.getTreeRepositoryFor(Location).find({
+            relations: ['masters', 'location_type', 'children'],
+        });
     }
 
     // Получить локации по id типа
@@ -28,14 +30,22 @@ export class LocationRepository extends AbstractRepository<Location> {
         return await this.repository.find({ where: { location_type: id } });
     }
 
+    // Получить локацию по id
+    async findOneById(id: number) {
+        return await this.getTreeRepositoryFor(Location).findOne(id, {
+            relations: ['parent'],
+        });
+    }
+
     // Создать локацию
     async createAndSave(props: LocationProps) {
-        const { location_type, name, coordinates } = props;
+        const { location_type, name, coordinates, parent } = props;
         const location = new Location();
 
         location.location_type = location_type;
         location.name = name;
         location.coordinates = coordinates;
+        location.parent = parent;
 
         return await this.repository.save(location);
     }
@@ -54,7 +64,7 @@ export class LocationRepository extends AbstractRepository<Location> {
 
     // Обновить локацию
     async updateAndSave(props: LocationProps) {
-        const { id, location_type, name, coordinates } = props;
+        const { id, location_type, name, coordinates, parent } = props;
 
         // Проверка, есть ли такая локация
         const location = await this.repository.findOne(id);
@@ -63,7 +73,12 @@ export class LocationRepository extends AbstractRepository<Location> {
             throw new NotFoundError(404, 'Такой локации не найдено');
         }
 
-        this.repository.merge(location, { location_type, name, coordinates });
+        this.repository.merge(location, {
+            location_type,
+            name,
+            coordinates,
+            parent,
+        });
         const locationTypeRepository = getCustomRepository(
             LocationTypeRepository
         );

@@ -1,10 +1,18 @@
 import { getCustomRepository } from 'typeorm';
-import { LocationProps, LocationRepository } from './../repositories/location.repository';
+import {
+    LocationProps,
+    LocationRepository,
+} from './../repositories/location.repository';
 
 // Получить все локации
 export const getLocations = async () => {
     const locationReposiory = getCustomRepository(LocationRepository);
     return await locationReposiory.findAll();
+};
+
+// Получить локацию по id
+export const getOneLocationById = async (id: number) => {
+    return await getCustomRepository(LocationRepository).findOneById(id);
 };
 
 // Создать локацию
