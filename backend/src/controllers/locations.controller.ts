@@ -13,7 +13,13 @@ const locationsRouter = express.Router();
 // Получить все локации
 locationsRouter.get(
     '/',
-    checkRoleMiddleware([Roles.Admin]),
+    checkRoleMiddleware([
+        Roles.Admin,
+        Roles.Client,
+        Roles.Operator,
+        Roles.Master,
+        Roles.ResponsibleForMasters,
+    ]),
     async (req: RoleRequest, res: express.Response) => {
         try {
             // Проверка роли
@@ -31,7 +37,13 @@ locationsRouter.get(
 // Получить одну локацию по Id
 locationsRouter.get(
     '/:location_id',
-    checkRoleMiddleware([Roles.Admin]),
+    checkRoleMiddleware([
+        Roles.Admin,
+        Roles.Client,
+        Roles.Operator,
+        Roles.Master,
+        Roles.ResponsibleForMasters,
+    ]),
     async (req: RoleRequest, res: express.Response) => {
         try {
             // Проверка роли

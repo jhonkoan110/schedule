@@ -1,18 +1,26 @@
 import {
     Button,
+    FormControl,
+    InputLabel,
     List,
     ListItem,
     ListItemText,
+    MenuItem,
+    Select,
     TextField,
     Typography,
 } from '@material-ui/core';
+import moment, { Moment } from 'moment';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { getAllMasters } from '../../../service/masters';
 import {
     createServiceCatalog,
     getAllServiceCatalogs,
 } from '../../../service/serviceCatalog';
+import { getAllSpecializations } from '../../../service/specializations';
 import { IServiceCatalog } from '../../../store/serviceCatalog/types';
+import { ISpecialization } from '../../../store/specializtions/types';
 import { AppStateType } from '../../../store/store';
 import Loader from '../../Loader/Loader';
 import Modal from '../../Modal/Modal';
@@ -35,6 +43,18 @@ const ServiceCatalogList: React.FC<ServiceCatalogListProps> = () => {
         (state: AppStateType) => state.serviceCatalogList.serviceCatalog
     );
 
+    const specializations = useSelector(
+        (state: AppStateType) => state.specializationList.specializations
+    );
+
+    const [
+        isSelectSpecializationOpen,
+        setIsSelectSpecializationOpen,
+    ] = useState(false);
+    const [selectedSpecialization, setSelectedSpecialization] = useState<
+        string | number
+    >('');
+
     const [isOpenAddModal, setIsOpenAddModal] = useState(false);
     const [isOpenInfoModal, setIsOpenInfoModal] = useState(false);
     const [
@@ -45,7 +65,7 @@ const ServiceCatalogList: React.FC<ServiceCatalogListProps> = () => {
         duration: '',
         name: '',
         price: 0,
-        specialization: '',
+        specialization: 0,
     });
 
     // Открыть окно добавления
@@ -55,7 +75,7 @@ const ServiceCatalogList: React.FC<ServiceCatalogListProps> = () => {
             duration: '',
             name: '',
             price: 0,
-            specialization: '',
+            specialization: 0,
         });
         setIsOpenAddModal(true);
     };
@@ -75,6 +95,7 @@ const ServiceCatalogList: React.FC<ServiceCatalogListProps> = () => {
             ...serviceCatalogData,
             [e.target.id]: e.target.value,
         });
+        console.log(serviceCatalogData);
     };
 
     // Выбрать услугу
@@ -83,23 +104,43 @@ const ServiceCatalogList: React.FC<ServiceCatalogListProps> = () => {
         setIsOpenInfoModal(true);
     };
 
+    // Закрыть селект специализации
+    const closeSelectSpecializationHandler = () => {
+        setIsSelectSpecializationOpen(false);
+    };
+
+    // Открыть селект специализации
+    const openSelectSpecializationHandler = () => {
+        setIsSelectSpecializationOpen(true);
+    };
+
+    // Обработка селекта специализации
+    const changeSelectSpecializationHandler = (event: any) => {
+        setSelectedSpecialization(event.target.value);
+    };
+
     // Создать услугу
     const createServiceCatalogHandler = (
         e: React.MouseEvent<HTMLButtonElement>
     ) => {
-        dispatch(createServiceCatalog(serviceCatalogData));
+        const newService = {
+            ...serviceCatalogData,
+            specialization: +selectedSpecialization,
+        };
+        dispatch(createServiceCatalog(newService));
         setServiceCatalogData({
             id: 0,
             duration: '',
             name: '',
             price: 0,
-            specialization: '',
+            specialization: 0,
         });
     };
 
     // Загрузить все услуги
     useEffect(() => {
         dispatch(getAllServiceCatalogs());
+        dispatch(getAllSpecializations());
     }, []);
 
     if (isLoading) {
@@ -162,24 +203,49 @@ const ServiceCatalogList: React.FC<ServiceCatalogListProps> = () => {
                         value={serviceCatalogData.price}
                         onChange={addModalChangeHandler}
                     />
-                    <TextField
-                        id="duration"
-                        label="Длительность"
-                        className={classes.input}
-                        required
-                        variant="outlined"
-                        value={serviceCatalogData.duration}
-                        onChange={addModalChangeHandler}
-                    />
-                    <TextField
-                        id="specialization"
-                        label="Специализация"
-                        className={classes.input}
-                        required
-                        variant="outlined"
-                        value={serviceCatalogData.specialization}
-                        onChange={addModalChangeHandler}
-                    />
+                    <form noValidate style={{ width: '100%' }}>
+                        <TextField
+                            style={{ width: '100%', marginBottom: '1rem' }}
+                            id="duration"
+                            label="Сколько по времени выполняется услуга"
+                            type="time"
+                            onChange={addModalChangeHandler}
+                            value={serviceCatalogData.duration}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                            inputProps={{
+                                step: 300, // 5 min
+                            }}
+                        />
+                    </form>
+                    <FormControl style={{ width: '100%' }}>
+                        <InputLabel id="master_label">
+                            Выбрать специализацию
+                        </InputLabel>
+                        <Select
+                            style={{ marginBottom: '1rem ' }}
+                            labelId="master_label"
+                            id="master-open-select"
+                            open={isSelectSpecializationOpen}
+                            onClose={closeSelectSpecializationHandler}
+                            onOpen={openSelectSpecializationHandler}
+                            value={selectedSpecialization}
+                            onChange={changeSelectSpecializationHandler}
+                            defaultValue=""
+                        >
+                            <MenuItem value="">
+                                <em>None</em>
+                            </MenuItem>
+                            {specializations.map((item: ISpecialization) => {
+                                return (
+                                    <MenuItem key={item.id} value={item.id}>
+                                        {item.name}
+                                    </MenuItem>
+                                );
+                            })}
+                        </Select>
+                    </FormControl>
                 </Modal>
             )}
 

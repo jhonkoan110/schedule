@@ -11,7 +11,7 @@ const serviceCatalogRouter = express.Router();
 // Получить все услуги
 serviceCatalogRouter.get(
     '/',
-    checkRoleMiddleware([Roles.Admin]),
+    checkRoleMiddleware([Roles.Admin, Roles.Operator]),
     async (req: RoleRequest, res: express.Response) => {
         try {
             // Проверка роли

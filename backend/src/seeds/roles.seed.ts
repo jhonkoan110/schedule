@@ -10,7 +10,7 @@ export const Rights = {
         Permissions.Specialization,
         Permissions.Location,
     ],
-    Client: [Permissions.Order],
+    Client: [Permissions.Order, Permissions.Location, Permissions.LocationType],
     Master: [Permissions.Schedule, Permissions.Order],
     ResponsibleForMasters: [Permissions.Specialization, Permissions.Location, Permissions.Master],
 };

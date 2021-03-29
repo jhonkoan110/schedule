@@ -2,8 +2,8 @@ export interface IServiceCatalog {
     id: number;
     name: string;
     price: number;
-    duration: string;
-    specialization: string;
+    duration: any;
+    specialization: any;
 }
 
 export interface InitialStateType {

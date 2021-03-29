@@ -15,7 +15,7 @@ interface ModalProps {
     isOpen: boolean;
     isEdit: boolean;
     closeModal: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
-    save: (e:  React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+    save?: (e:  React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 
 const Modal: React.FC<ModalProps> = ({

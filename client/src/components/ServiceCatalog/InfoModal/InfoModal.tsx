@@ -100,7 +100,9 @@ const InfoModal: React.FC<InfoModalProps> = ({
                     </List>
                     <List component="nav" aria-label="mailbox folders">
                         <ListItem button>
-                            <ListItemText primary={serviceCatalog.price} />
+                            <ListItemText
+                                primary={serviceCatalog.price + '₽'}
+                            />
                         </ListItem>
                     </List>
                     <List component="nav" aria-label="mailbox folders">
@@ -111,7 +113,7 @@ const InfoModal: React.FC<InfoModalProps> = ({
                     <List component="nav" aria-label="mailbox folders">
                         <ListItem button>
                             <ListItemText
-                                primary={serviceCatalog.specialization}
+                                primary={serviceCatalog.specialization.name}
                             />
                         </ListItem>
                     </List>

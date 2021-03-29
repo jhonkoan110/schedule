@@ -38,6 +38,8 @@ const checkRoleMiddleware = (roles: number[]) => (req, res: Response, next) => {
         }
         // Если проверки прошли, продолжить выполнение запроса
         req.user = decoded;
+        console.log('reqUser',req.user);
+        
 
         next();
     } catch (err) {

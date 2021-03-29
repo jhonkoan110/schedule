@@ -13,7 +13,13 @@ const locationTypesRouter = express.Router();
 // Получить все типы локации
 locationTypesRouter.get(
     '/',
-    checkRoleMiddleware([Roles.Admin]),
+    checkRoleMiddleware([
+        Roles.Admin,
+        Roles.Client,
+        Roles.Operator,
+        Roles.Master,
+        Roles.ResponsibleForMasters,
+    ]),
     async (req: RoleRequest, res: express.Response) => {
         try {
             // Проверка роли
@@ -25,7 +31,7 @@ locationTypesRouter.get(
         } catch (error) {
             return res.status(500).json(error);
         }
-    },
+    }
 );
 
 // Создать тип локации
@@ -39,12 +45,14 @@ locationTypesRouter.post(
             checkRole(role, Permissions.LocationType);
 
             const { name } = req.body;
-            const locationType = await locationTypesService.createLocationType(name);
+            const locationType = await locationTypesService.createLocationType(
+                name
+            );
             return res.status(200).json({ locationType });
         } catch (error) {
             return res.status(500).json(error);
         }
-    },
+    }
 );
 
 // Удалить тип локации
@@ -58,12 +66,14 @@ locationTypesRouter.delete(
             checkRole(role, Permissions.LocationType);
 
             const { id } = req.params;
-            const locationType = await locationTypesService.deleteLocationType(Number(id));
+            const locationType = await locationTypesService.deleteLocationType(
+                Number(id)
+            );
             return res.status(200).json({ locationType });
         } catch (error) {
             ErrorHelper.deleteHandle(res, error);
         }
-    },
+    }
 );
 
 // Обновить тип локации
@@ -76,12 +86,14 @@ locationTypesRouter.put(
             const role = defineRole(req.user.role);
             checkRole(role, Permissions.LocationType);
 
-            const locationType = await locationTypesService.updateLocationType(req);
+            const locationType = await locationTypesService.updateLocationType(
+                req
+            );
             return res.status(200).json(locationType);
         } catch (error) {
             ErrorHelper.notFoundHandle(res, error);
         }
-    },
+    }
 );
 
 export default locationTypesRouter;

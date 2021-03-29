@@ -12,7 +12,7 @@ const mastersRouter = express.Router();
 // Получить всех мастеров
 mastersRouter.get(
     '/',
-    checkRoleMiddleware([Roles.Admin]),
+    checkRoleMiddleware([Roles.Admin, Roles.Operator]),
     async (req: RoleRequest, res: express.Response) => {
         try {
             const role = defineRole(req.user.role);

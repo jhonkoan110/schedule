@@ -13,7 +13,7 @@ const imageToBase64 = require('image-to-base64');
 // Получить все заказы
 ordersRouter.get(
     '/',
-    checkRoleMiddleware([Roles.Admin]),
+    checkRoleMiddleware([Roles.Admin, Roles.Operator]),
     async (req: RoleRequest, res: express.Response) => {
         try {
             // Проверка роли
@@ -51,7 +51,7 @@ ordersRouter.get(
 // Создать заказ
 ordersRouter.post(
     '/',
-    checkRoleMiddleware([Roles.Admin]),
+    checkRoleMiddleware([Roles.Admin, Roles.Client]),
     async (req: RoleRequest, res: express.Response) => {
         try {
             // Проверка роли
@@ -95,7 +95,7 @@ ordersRouter.delete(
 // Обновить заказ
 ordersRouter.put(
     '/',
-    checkRoleMiddleware([Roles.Admin]),
+    checkRoleMiddleware([Roles.Admin, Roles.Operator]),
     async (req: RoleRequest, res: express.Response) => {
         try {
             // Проверка роли

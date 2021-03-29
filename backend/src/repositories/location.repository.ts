@@ -32,9 +32,11 @@ export class LocationRepository extends AbstractRepository<Location> {
 
     // Получить локацию по id
     async findOneById(id: number) {
-        return await this.getTreeRepositoryFor(Location).findOne(id, {
-            relations: ['parent'],
-        });
+        const location = await this.repository.findOne(id)
+        return await this.getTreeRepositoryFor(Location).findAncestorsTree(location)
+        // return await this.getTreeRepositoryFor(Location).findOne(id, {
+        //     relations: ['parent'],
+        // });
     }
 
     // Создать локацию

@@ -7,6 +7,9 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         autocomplete: {
             marginBottom: '.5rem'
+        },
+        applyBtn: {
+            marginLeft: '-.5rem'
         }
     })
 );

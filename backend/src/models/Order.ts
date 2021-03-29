@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 import { Master } from './Master';
 import { User } from './User';
+import { Location } from './Location';
 
 @Entity()
 export class Order {
@@ -41,13 +42,17 @@ export class Order {
     @JoinColumn()
     master: Master;
 
+    @OneToOne(() => Location, { eager: true })
+    @JoinColumn()
+    location: Location;
+
     @ManyToOne(() => ServiceCatalog, (service) => service.orders, {
-        eager: true
+        eager: true,
     })
     @JoinColumn({ name: 'serviceId' })
     service: ServiceCatalog;
 
-    @ManyToOne(() => User, (user) => user.orders, {eager: true})
+    @ManyToOne(() => User, (user) => user.orders, { eager: true })
     @JoinColumn()
     user: User;
 }

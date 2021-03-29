@@ -17,6 +17,7 @@ import Loader from '../Loader/Loader';
 import useStyles from './addressStyles';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
+
 interface AddressProps {
     transferAddress: (address: any) => void;
 }
@@ -118,7 +119,9 @@ const Address: React.FC<AddressProps> = ({ transferAddress }) => {
     }
     return (
         <>
-            <Typography variant='body1' style={{marginBottom: '.5rem'}}>Укажите адрес</Typography>
+            <Typography variant="body1" style={{ marginBottom: '.5rem' }}>
+                Укажите адрес
+            </Typography>
             <Autocomplete
                 id="district"
                 options={
@@ -131,7 +134,7 @@ const Address: React.FC<AddressProps> = ({ transferAddress }) => {
                 getOptionLabel={(option: any) => option.name}
                 className={classes.autocomplete}
                 onChange={changeAddressInputHandler}
-                renderInput={(params) => (
+                renderInput={(params :any) => (
                     <TextField
                         inputRef={locationInputRef}
                         {...params}
@@ -154,7 +157,7 @@ const Address: React.FC<AddressProps> = ({ transferAddress }) => {
                 getOptionLabel={(option: any) => option.name}
                 className={classes.autocomplete}
                 onChange={changeAddressInputHandler}
-                renderInput={(params) => (
+                renderInput={(params :any) => (
                     <TextField
                         inputRef={locationInputRef}
                         {...params}
@@ -174,9 +177,12 @@ const Address: React.FC<AddressProps> = ({ transferAddress }) => {
                         : []
                 }
                 onChange={changeAddressInputHandler}
-                getOptionLabel={(option: any) => option.name}
+                getOptionLabel={(option: any) => {
+                    setAddress(option)
+                    return option.name
+                }}
                 className={classes.autocomplete}
-                renderInput={(params) => (
+                renderInput={(params :any) => (
                     <TextField
                         inputRef={locationInputRef}
                         {...params}
@@ -191,6 +197,7 @@ const Address: React.FC<AddressProps> = ({ transferAddress }) => {
                 <Button
                     variant="contained"
                     color="primary"
+                    className={classes.applyBtn}
                     onClick={() => transferAddress(address)}
                 >
                     Подтвердить адрес

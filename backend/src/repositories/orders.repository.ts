@@ -10,6 +10,7 @@ import {
 import { Master } from '../models/Master';
 import { Order } from '../models/Order';
 import { User } from '../models/User';
+import { Location } from '../models/Location';
 
 export interface OrderProps {
     id?: number;
@@ -21,8 +22,9 @@ export interface OrderProps {
     status_color: string;
     commentary: string;
     photo: string;
-    master: Master;
+    master?: Master;
     service: ServiceCatalog;
+    location: Location
 }
 
 @EntityRepository(Order)
@@ -60,6 +62,7 @@ export class OrderRepository extends AbstractRepository<Order> {
             photo,
             master,
             service,
+            location
         } = props;
 
         const order = new Order();
@@ -75,6 +78,7 @@ export class OrderRepository extends AbstractRepository<Order> {
             photo,
             master,
             service,
+            location
         };
 
         return await this.repository.save(newOrder);

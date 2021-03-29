@@ -19,6 +19,7 @@ import useStyles from './myOrdersStyles';
 import Address from '../../components/Address/Address';
 import Loader from '../../components/Loader/Loader';
 import ImageAdder from '../../components/ImageUploader/ImageUploader';
+import { createOrder } from '../../service/orders';
 
 // ==================================================== TABS ==================================
 
@@ -47,8 +48,8 @@ const MyOrders: React.FC = () => {
     // Стейт заказа
     const [orderData, setOrderData] = useState({
         id: 0,
-        master: 0,
-        user: 0,
+        master: null,
+        user: authData.user.id,
         description: '',
         start_date: '',
         end_date: '',
@@ -56,46 +57,26 @@ const MyOrders: React.FC = () => {
         status_color: '',
         commentary: '',
         photo: '',
+        location: null
     });
 
-    // Стейт файла
+    // Стейт фото пользователя
     const [file, setFile] = useState<any>('');
-    const [imagePreviewUrl, setImagePreviewUrl] = useState<any>('');
-
-    // Обработчик инпута картинки
-    const imageChangeHandler = (event: any) => {
-        // let reader = new FileReader();
-        // let test = e.target.files[0];
-        // setFile(test);
-        // console.log(file);
-
-        var temp = event.target.files[0];
-        var reader = new FileReader();
-        reader.onload = function (event) {
-            // The file's text will be printed here
-            if (event.target) {
-                console.log(event.target.result);
-                setFile(temp);
-                setImagePreviewUrl(event.target.result);
-            } else {
-                console.log('null blyat');
-            }
-        };
-
-        reader.readAsDataURL(temp);
-
-        // reader.onload = (e: any) => {
-        //     setFile(file);
-        //     setImagePreviewUrl(reader.result);
-        //     console.log(e.target.result)
-        // };
-    };
-
+    const [imagePreviewUrl, setImagePreviewUrl] = useState<string>('');
 
     // Сделать заказ
     const createOrderHandler = (e: any) => {
         console.log('handle uploading-', file);
         console.log(String(imagePreviewUrl));
+        const newOrder = {
+            ...orderData,
+            photo: String(imagePreviewUrl),
+            location: address,
+            status: 'Обработка заказа диспетчером'
+        };
+        console.log(newOrder);
+        dispatch(createOrder(newOrder));
+        dispatch(getOrdersByUserId(authData.user.id))
     };
 
     // Стейт модальных окон
@@ -117,7 +98,6 @@ const MyOrders: React.FC = () => {
             [e.target.id]: e.target.value,
         });
         console.log(orderData);
-        
     };
 
     // Загрузить заказы по id пользователя
@@ -150,7 +130,7 @@ const MyOrders: React.FC = () => {
                                 variant="contained"
                                 color="primary"
                             >
-                                Сделать заказ
+                                Заказать
                             </Button>
                         </ListItem>
                         {myOrders.map((item: any) => {
@@ -199,8 +179,21 @@ const MyOrders: React.FC = () => {
                         }}
                     />
                 </form>
+                <TextField
+                    id="commentary"
+                    label="Комментарий"
+                    className={classes.input}
+                    required
+                    variant="outlined"
+                    value={orderData.commentary}
+                    onChange={addModalChangeHandler}
+                />
                 <Address transferAddress={setAddress} />
-                <ImageAdder />
+                <ImageAdder
+                    imagePreviewUrl={imagePreviewUrl}
+                    setImagePreviewUrl={setImagePreviewUrl}
+                    setFile={setFile}
+                />
             </Modal>
         </>
     );

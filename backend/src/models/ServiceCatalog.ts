@@ -1,5 +1,6 @@
 import { Order } from './Order';
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, Timestamp } from 'typeorm';
+import { Specialization } from './Specialization';
 
 @Entity()
 export class ServiceCatalog {
@@ -15,8 +16,9 @@ export class ServiceCatalog {
     @Column()
     duration: string;
 
-    @Column()
-    specialization: string;
+    @OneToOne(() => Specialization, specialization => specialization.id, {eager:true})
+    @JoinColumn()
+    specialization: Specialization;
 
     @OneToMany(() => Order, (order) => order.service)
     orders: Order;

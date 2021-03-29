@@ -31,6 +31,8 @@ export const createServiceCatalog = (newService: IServiceCatalog) => (
     dispatch: any
 ) => {
     dispatch(serviceCatalogFetching(true));
+    console.log(newService);
+        
 
     fetch('http://localhost:7000/api/services/', {
         method: 'POST',
