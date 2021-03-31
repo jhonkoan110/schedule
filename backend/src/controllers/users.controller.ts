@@ -4,6 +4,7 @@ import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 import * as express from 'express';
 import * as usersService from '../services/users.service';
+import * as mastersService from '../services/master.service';
 import authMiddleware from '../middlewares/authMiddleware';
 import checkRoleMiddleware, {
     defineRole,
@@ -105,10 +106,14 @@ usersRouter.post(
 usersRouter.post(
     '/login',
     async (req: express.Request, res: express.Response) => {
+        let master;
         const { login, password } = req.body;
         // Проверка, существует ли пользователь
         const user = await usersService.getOneUser(login);
         console.log(user);
+        if (user.role.id === Roles.Master) {
+            master = await mastersService.getMasterByUserId(user.id);
+        }
 
         if (!user) {
             return res.status(404).json('Такого пользователя не существует');
@@ -121,7 +126,7 @@ usersRouter.post(
 
         // Если пользователь существует и пароль верный, сгенерировать токен и отправить на клиент
         const token = generateJwt(user.id, user.login, +user.role.id);
-        return res.status(200).json({ token, user });
+        return res.status(200).json({ token, user, master });
     }
 );
 

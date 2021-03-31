@@ -16,6 +16,7 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
     text,
     closeModal,
     apply,
+    children
 }) => {
     return (
         <Modal
@@ -25,7 +26,8 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
             closeModal={closeModal}
             save={apply}
         >
-            <Typography variant='body1'>Вы действительно хотите удалить {text}?</Typography>
+            <Typography variant='body1' style={{marginBottom: '1rem'}}>Вы действительно хотите удалить {text}?</Typography>
+            {children}
         </Modal>
     );
 };

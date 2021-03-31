@@ -9,6 +9,7 @@ import {
     Tree,
     TreeChildren,
     TreeParent,
+    Index,
 } from 'typeorm';
 import { LocationType } from './LocationType';
 import { Master } from './Master';
@@ -25,6 +26,9 @@ export class Location {
     @Column()
     coordinates: string;
 
+    @Column({ nullable: true })
+    location_type_id: number;
+
     @OneToMany(() => Master, (master) => master.location)
     @JoinColumn()
     masters: Master[];
@@ -33,21 +37,12 @@ export class Location {
         eager: true,
         nullable: false,
     })
-    @JoinColumn()
+    @JoinColumn({ name: 'location_type_id' })
     location_type: LocationType;
 
-    @TreeChildren()
-    children: Location[]
+    @TreeChildren({ cascade: true })
+    children: Location[];
 
     @TreeParent()
-    @JoinColumn()
-    parent: Location
-
-    // @ManyToOne(() => Location, (location) => location.id, { nullable: true })
-    // @JoinColumn()
-    // parent: Location;
-
-    // @OneToMany(() => Location, location => location.parent)
-    // @JoinColumn()
-    // children: Location[];
+    parent: Location;
 }

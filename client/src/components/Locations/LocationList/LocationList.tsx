@@ -44,8 +44,8 @@ const LocationList: React.FC<LocationListProps> = () => {
         coordinates: '',
         name: '',
     });
-    const [location_type, setLocation_type] = useState<string | number>('');
-    const [selectedParent, setSelectedParent] = useState<any>('');
+    const [location_type, setLocation_type] = useState<string | number>(0);
+    const [selectedParent, setSelectedParent] = useState<any>(0);
     const [parents, setParents] = useState(locatioTypes);
 
     const [isOpenInfoModal, setIsOpenInfoModal] = useState(false);
@@ -112,7 +112,7 @@ const LocationList: React.FC<LocationListProps> = () => {
             // Если тип локации выбран "дом"
             case 7: {
                 const streets = locations.filter(
-                    (item: ILocation) => item.location_type.name === 'Улица'
+                    (item: ILocation) => item.location_type_id === 3
                 );
                 setParents(streets);
                 break;
@@ -121,13 +121,13 @@ const LocationList: React.FC<LocationListProps> = () => {
             // Если выбран тип локации "Улица"
             case 3: {
                 const districts = locations.filter(
-                    (item: ILocation) => item.location_type.name === 'Район'
+                    (item: ILocation) => item.location_type_id === 5
                 );
                 setParents(districts);
                 break;
             }
             default:
-                setParents([])
+                setParents([]);
         }
     };
 
@@ -142,12 +142,14 @@ const LocationList: React.FC<LocationListProps> = () => {
             id: locationData.id,
             name: locationData.name,
             coordinates: locationData.coordinates,
+            location_type_id: +location_type,
             location_type: {
                 id: +location_type,
                 name: '',
             },
             parent: selectedParent || null,
         };
+        console.log(newLocation);
 
         dispatch(createLocation(newLocation));
     };
@@ -242,9 +244,16 @@ const LocationList: React.FC<LocationListProps> = () => {
                             onChange={changeSelectTypeHandler}
                             defaultValue=""
                         >
-                            <MenuItem value="">
-                                <em>None</em>
-                            </MenuItem>
+                            {!locatioTypes.length ? (
+                                <MenuItem value={0}>
+                                    <em>Нет доступных типов локаций</em>
+                                </MenuItem>
+                            ) : (
+                                <MenuItem value={0}>
+                                    <em>Выбрать тип локации</em>
+                                </MenuItem>
+                            )}
+
                             {locatioTypes.map((item: ILocationTypes) => {
                                 return (
                                     <MenuItem
@@ -274,9 +283,15 @@ const LocationList: React.FC<LocationListProps> = () => {
                             onChange={changeSelectParentHandler}
                             defaultValue=""
                         >
-                            <MenuItem value="">
-                                <em>None</em>
-                            </MenuItem>
+                            {!parents.length ? (
+                                <MenuItem value={0}>
+                                    <em>Нет доступных родителей</em>
+                                </MenuItem>
+                            ) : (
+                                <MenuItem value={0}>
+                                    <em>Выбрать родителя</em>
+                                </MenuItem>
+                            )}
                             {parents.map((item: ILocationTypes) => {
                                 return (
                                     <MenuItem key={item.id} value={item.id}>

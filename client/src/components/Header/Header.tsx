@@ -15,7 +15,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppStateType } from '../../store/store';
 import { authDataFetched } from '../../store/auth/actionCreators';
 import { checkAuth } from '../../service/auth';
-import { ADMIN, OPERATOR } from '../../constants/constants';
+import { ADMIN, CLIENT, MASTER, OPERATOR } from '../../constants/constants';
 
 interface HeaderProps {}
 
@@ -62,9 +62,12 @@ const Header: React.FC<HeaderProps> = () => {
                         activeClassName="active"
                     >
                         <HomeIcon className={classes.icon} />
-                        {authData.user.role.name === OPERATOR
-                            ? 'Обработка заказов'
-                            : 'Мои заказы'}
+                        {authData.user.role.name === ADMIN && 'Мои заказы'}
+                        {authData.user.role.name === OPERATOR &&
+                            'Обработка заказов'}
+                        {authData.user.role.name === CLIENT && 'Мои заказы'}
+                        {authData.user.role.name === MASTER &&
+                            'Назначенные заказы'}
                     </NavLink>
                     <NavLink
                         to="/schedule"

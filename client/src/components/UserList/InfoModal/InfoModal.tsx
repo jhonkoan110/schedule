@@ -80,11 +80,14 @@ const InfoModal: React.FC<InfoModalProps> = ({
                             <ListItemText primary={user.middlename} />
                         </ListItem>
                     </List>
-                    <List component="nav" aria-label="mailbox folders">
-                        <ListItem button>
-                            <ListItemText primary={user.role.name} />
-                        </ListItem>
-                    </List>
+                    {user.role && (
+                        <List component="nav" aria-label="mailbox folders">
+                            <ListItem button>
+                                <ListItemText primary={user.role.name} />
+                            </ListItem>
+                        </List>
+                    )}
+
                     <DialogActions className={classes.actions}>
                         <Button
                             className={classes.buttonMargin}

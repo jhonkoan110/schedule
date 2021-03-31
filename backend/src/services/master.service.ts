@@ -1,10 +1,18 @@
-import { MasterRepository, MasterProps } from './../repositories/master.repository';
+import {
+    MasterRepository,
+    MasterProps,
+} from './../repositories/master.repository';
 import { getCustomRepository } from 'typeorm';
 
 // Получить всех мастеров
 export const getMasters = async () => {
     const masterRepository = getCustomRepository(MasterRepository);
     return await masterRepository.findAll();
+};
+
+// Получить мастера по userID
+export const getMasterByUserId = async (id: number) => {
+    return await getCustomRepository(MasterRepository).findMasterByUserId(id);
 };
 
 // Создать мастера

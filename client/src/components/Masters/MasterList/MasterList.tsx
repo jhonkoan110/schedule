@@ -8,12 +8,15 @@ import {
 } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllMasters } from '../../../service/masters';
+import { createMaster, getAllMasters } from '../../../service/masters';
 import { AppStateType } from '../../../store/store';
 import Loader from '../../Loader/Loader';
 import Modal from '../../Modal/Modal';
 import InfoModal from '../InfoModal/infoModal';
+import LocationSelect from './LocationSelect/LocationSelect';
 import useStyles from './masterListStyles';
+import SpecializationSelect from './SpecializationSelect/SpecializationSelect';
+import UserSelect from './UserSelect/UserSelect';
 
 const MasterList: React.FC = () => {
     const classes = useStyles();
@@ -29,6 +32,10 @@ const MasterList: React.FC = () => {
 
     const [isOpenAddModal, setIsOpenAddModal] = useState(false);
     const [isOpenInfoModal, setIsOpenInfoModal] = useState(false);
+
+    const [selectedUser, setSelectedUser] = useState<any>();
+    const [selectedSpecialization, setSelectedSpecializtion] = useState<any>();
+    const [selectedLocation, setSelectedLocation] = useState<any>();
 
     const [masterData, setMasterData] = useState({
         id: 0,
@@ -55,8 +62,18 @@ const MasterList: React.FC = () => {
     // Выбрать мастера
     const selectMasterHandler = (master: any) => {
         setMasterData(master);
-        setIsOpenInfoModal(true)
-    }
+        setIsOpenInfoModal(true);
+    };
+
+    // Создать мастера
+    const createMasterHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
+        const newMaster = {
+            user: selectedUser,
+            specialization: selectedSpecialization,
+            location: selectedLocation,
+        };
+        dispatch(createMaster(newMaster));
+    };
 
     // Загрузить всех мастеров
     useEffect(() => {
@@ -103,26 +120,15 @@ const MasterList: React.FC = () => {
                     isOpen={isOpenAddModal}
                     isEdit={true}
                     closeModal={closeAddModalHandler}
-                    save={() => {}}
+                    save={createMasterHandler}
                 >
-                    <TextField
-                        id="description"
-                        label="Описание"
-                        className={classes.input}
-                        required
-                        variant="outlined"
-                        // value={orderData.description}
-                        // onChange={addModalChangeHandler}
+                    <UserSelect transferSelectedUser={setSelectedUser} />
+                    <SpecializationSelect
+                        transferSelectedSpecialization={
+                            setSelectedSpecializtion
+                        }
                     />
-                    <TextField
-                        id="start_date"
-                        label="Дата начала"
-                        className={classes.input}
-                        required
-                        variant="outlined"
-                        // value={orderData.start_date}
-                        // onChange={addModalChangeHandler}
-                    />
+                    <LocationSelect transferLocation={setSelectedLocation} />
                 </Modal>
             )}
 

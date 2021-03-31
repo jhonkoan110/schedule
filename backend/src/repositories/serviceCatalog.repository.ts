@@ -1,15 +1,21 @@
 import { ServiceCatalog } from './../models/ServiceCatalog';
 import { DeleteError } from '../errors/DeleteError';
 import { NotFoundError } from '../errors/NotFoundError';
-import { AbstractRepository, EntityRepository, getRepository, getCustomRepository } from 'typeorm';
+import {
+    AbstractRepository,
+    EntityRepository,
+    getRepository,
+    getCustomRepository,
+} from 'typeorm';
 import { OrderRepository } from './orders.repository';
+import { Specialization } from '../models/Specialization';
 
 export interface ServiceCatalogProps {
     id?: number;
     name: string;
     price: number;
     duration: string;
-    specialization: string;
+    specialization: Specialization;
 }
 
 @EntityRepository(ServiceCatalog)
@@ -22,7 +28,7 @@ export class ServiceCatalogRepository extends AbstractRepository<ServiceCatalog>
     // Создать услугу
     async createAndSave(props: ServiceCatalogProps) {
         const { name, price, duration, specialization } = props;
-        const service: ServiceCatalogProps = new ServiceCatalog();
+        const service = new ServiceCatalog();
 
         service.name = name;
         service.price = price;

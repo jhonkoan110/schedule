@@ -4,6 +4,7 @@ import {
     AbstractRepository,
     EntityRepository,
     getCustomRepository,
+    getTreeRepository,
 } from 'typeorm';
 import { Location } from '../models/Location';
 import { LocationTypeRepository } from './locationTypes.repository';
@@ -12,6 +13,7 @@ export interface LocationProps {
     id?: number;
     parent?: null | Location;
     location_type: LocationType;
+    location_type_id: number;
     name: string;
     coordinates: string;
 }
@@ -20,9 +22,10 @@ export interface LocationProps {
 export class LocationRepository extends AbstractRepository<Location> {
     // Получить все локации
     async findAll() {
-        return await this.getTreeRepositoryFor(Location).find({
-            relations: ['masters', 'location_type', 'children'],
-        });
+        // return await this.getTreeRepositoryFor(Location).find({
+        //     relations: ['masters', 'location_type', 'children', 'parent'],
+        // });
+        return await getTreeRepository(Location).findTrees();
     }
 
     // Получить локации по id типа
@@ -32,8 +35,10 @@ export class LocationRepository extends AbstractRepository<Location> {
 
     // Получить локацию по id
     async findOneById(id: number) {
-        const location = await this.repository.findOne(id)
-        return await this.getTreeRepositoryFor(Location).findAncestorsTree(location)
+        const location = await this.repository.findOne(id);
+        return await this.getTreeRepositoryFor(Location).findAncestorsTree(
+            location
+        );
         // return await this.getTreeRepositoryFor(Location).findOne(id, {
         //     relations: ['parent'],
         // });
@@ -41,13 +46,20 @@ export class LocationRepository extends AbstractRepository<Location> {
 
     // Создать локацию
     async createAndSave(props: LocationProps) {
-        const { location_type, name, coordinates, parent } = props;
+        const {
+            location_type,
+            name,
+            coordinates,
+            parent,
+            location_type_id,
+        } = props;
         const location = new Location();
 
         location.location_type = location_type;
         location.name = name;
         location.coordinates = coordinates;
         location.parent = parent;
+        location.location_type_id = location_type_id;
 
         return await this.repository.save(location);
     }

@@ -17,12 +17,12 @@ import Loader from '../Loader/Loader';
 import useStyles from './addressStyles';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
-
 interface AddressProps {
+    masters?: any;
     transferAddress: (address: any) => void;
 }
 
-const Address: React.FC<AddressProps> = ({ transferAddress }) => {
+const Address: React.FC<AddressProps> = ({ masters, transferAddress }) => {
     const classes = useStyles();
     const dispatch = useDispatch();
 
@@ -79,7 +79,6 @@ const Address: React.FC<AddressProps> = ({ transferAddress }) => {
                     [e.currentTarget.parentNode.parentNode.childNodes[0].id]:
                         '',
                 });
-                console.log(e.currentTarget);
             }
         }
     };
@@ -127,14 +126,14 @@ const Address: React.FC<AddressProps> = ({ transferAddress }) => {
                 options={
                     locations
                         ? locations.filter(
-                              (item: any) => item.location_type.name === 'Район'
+                              (item: any) => item.location_type_id === 5
                           )
                         : []
                 }
                 getOptionLabel={(option: any) => option.name}
                 className={classes.autocomplete}
                 onChange={changeAddressInputHandler}
-                renderInput={(params :any) => (
+                renderInput={(params: any) => (
                     <TextField
                         inputRef={locationInputRef}
                         {...params}
@@ -150,14 +149,14 @@ const Address: React.FC<AddressProps> = ({ transferAddress }) => {
                 options={
                     locations
                         ? locations.filter(
-                              (item: any) => item.location_type.name === 'Улица'
+                              (item: any) => item.location_type_id === 3
                           )
                         : []
                 }
                 getOptionLabel={(option: any) => option.name}
                 className={classes.autocomplete}
                 onChange={changeAddressInputHandler}
-                renderInput={(params :any) => (
+                renderInput={(params: any) => (
                     <TextField
                         inputRef={locationInputRef}
                         {...params}
@@ -172,17 +171,17 @@ const Address: React.FC<AddressProps> = ({ transferAddress }) => {
                 options={
                     locations
                         ? locations.filter(
-                              (item: any) => item.location_type.name === 'Дом'
+                              (item: any) => item.location_type_id === 7
                           )
                         : []
                 }
                 onChange={changeAddressInputHandler}
                 getOptionLabel={(option: any) => {
-                    setAddress(option)
-                    return option.name
+                    setAddress(option);
+                    return option.name;
                 }}
                 className={classes.autocomplete}
-                renderInput={(params :any) => (
+                renderInput={(params: any) => (
                     <TextField
                         inputRef={locationInputRef}
                         {...params}

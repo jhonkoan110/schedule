@@ -38,18 +38,17 @@ export class Order {
     @Column()
     photo: string;
 
-    @OneToOne(() => Master, { eager: true })
+    @Column({ nullable: true })
+    address: string;
+
+    @ManyToOne(() => Master, (master) => master.id, { eager: true })
     @JoinColumn()
     master: Master;
-
-    @OneToOne(() => Location, { eager: true })
-    @JoinColumn()
-    location: Location;
 
     @ManyToOne(() => ServiceCatalog, (service) => service.orders, {
         eager: true,
     })
-    @JoinColumn({ name: 'serviceId' })
+    @JoinColumn()
     service: ServiceCatalog;
 
     @ManyToOne(() => User, (user) => user.orders, { eager: true })

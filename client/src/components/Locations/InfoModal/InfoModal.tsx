@@ -136,13 +136,6 @@ const InfoModal: React.FC<InfoModalProps> = ({
                             <ListItemText primary={location.coordinates} />
                         </ListItem>
                     </List>
-                    <List component="nav" aria-label="mailbox folders">
-                        <ListItem button>
-                            <ListItemText
-                                primary={location.location_type.name}
-                            />
-                        </ListItem>
-                    </List>
                 </DialogContent>
                 <DialogActions className={classes.actions}>
                     <Button

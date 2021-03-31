@@ -10,6 +10,7 @@ const checkRoleMiddleware = (roles: number[]) => (req, res: Response, next) => {
         next();
     }
     try {
+        // console.log('roles', roles);
         if (!req.headers.authorization) {
             return res
                 .status(401)
@@ -17,8 +18,6 @@ const checkRoleMiddleware = (roles: number[]) => (req, res: Response, next) => {
         }
 
         const token = req.headers.authorization.split(' ')[1]; // Bearer asdaksdj29$122
-
-        console.log(token);
 
         // Если токена нет, вернуть ошибку
         if (!token) {
@@ -28,9 +27,9 @@ const checkRoleMiddleware = (roles: number[]) => (req, res: Response, next) => {
         }
         // Если токен есть, получить его тело
         const decoded = jwt.verify(token, process.env.SECRET_KEY);
-        console.log(decoded);
-        console.log('roles', roles);
-        
+        // console.log(decoded);
+       
+        console.log('decoded role: ', decoded.role);
 
         // Если роль токена не совпадает с ролью того, кто делает запрос, вернуть ошибку
         if (!roles.includes(decoded.role)) {
@@ -38,8 +37,7 @@ const checkRoleMiddleware = (roles: number[]) => (req, res: Response, next) => {
         }
         // Если проверки прошли, продолжить выполнение запроса
         req.user = decoded;
-        console.log('reqUser',req.user);
-        
+        // console.log('reqUser',req.user);
 
         next();
     } catch (err) {

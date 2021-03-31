@@ -1,4 +1,5 @@
 import {
+    Button,
     CardContent,
     CardHeader,
     Divider,
@@ -9,13 +10,15 @@ import {
 } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Block from '../../components/Block/Block';
-import Loader from '../../components/Loader/Loader';
-import { getAllOrders } from '../../service/orders';
-import { AppStateType } from '../../store/store';
-import InfoModal from './InfoModal/InfoModal';
+import Block from '../../../components/Block/Block';
+import Error from '../../../components/Error/Error';
+import Loader from '../../../components/Loader/Loader';
+import { getOrdersByMasterId } from '../../../service/orders';
+import { AppStateType } from '../../../store/store';
+import InfoModal from '../InfoModal/InfoModal';
 
-const OperatorOrders = () => {
+const OrderList: React.FC = () => {
+    const authData = useSelector((state: AppStateType) => state.auth.authData);
     const dispatch = useDispatch();
 
     const orders = useSelector((state: AppStateType) => state.orderList.orders);
@@ -24,31 +27,28 @@ const OperatorOrders = () => {
     );
     const error = useSelector((state: AppStateType) => state.orderList.error);
 
-    const [orderData, setOrderData] = useState<any>('');
+    const [orderData, setOrderData] = useState<any>();
 
-    // Стейт модальных окон
-    const [isOpenInfoModal, setIsOpenInfoModal] = useState(false);
+    const [isInfoModalOpen, setIsInfoModalOpen] = useState<boolean>(false);
 
-    // Открыть окно информации
+    // Открыть модальное окно информации
     const openInfoModalHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
-        setIsOpenInfoModal(true);
+        setIsInfoModalOpen(true);
     };
 
-    // Закрыть окно информации
+    // Закрыть модальное окно информации
     const closeInfoModalHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
-        setIsOpenInfoModal(false);
+        setIsInfoModalOpen(false);
     };
 
     // Выбрать заказ
     const selectOrderHandler = (order: any) => {
         setOrderData(order);
-        console.log(order);
-
-        setIsOpenInfoModal(true);
+        setIsInfoModalOpen(true);
     };
 
     useEffect(() => {
-        dispatch(getAllOrders());
+        dispatch(getOrdersByMasterId(authData.master.id));
     }, []);
 
     if (isLoading) {
@@ -56,20 +56,21 @@ const OperatorOrders = () => {
     }
 
     if (error) {
-        return (
-            <Block>
-                <Typography variant="h4">{error}</Typography>
-            </Block>
-        );
+        return <Error error={error} />;
     }
 
     return (
         <>
             <Block>
-                <CardHeader title="Обработка заказов"></CardHeader>
+                <CardHeader title="Мои заказы"></CardHeader>
                 <Divider />
                 <CardContent>
                     <List>
+                        {!orders.length && (
+                            <Typography>
+                                В данный момент назначенных заказов нет
+                            </Typography>
+                        )}
                         {orders.map((item: any) => {
                             return (
                                 <ListItem
@@ -90,11 +91,11 @@ const OperatorOrders = () => {
                 <Divider />
             </Block>
 
-            {isOpenInfoModal && (
+            {isInfoModalOpen && (
                 <InfoModal
                     order={orderData}
-                    header="Информация о заказе"
-                    isOpen={isOpenInfoModal}
+                    header={`Информация о заказе №${orderData.id}`}
+                    isOpen={isInfoModalOpen}
                     closeModal={closeInfoModalHandler}
                 />
             )}
@@ -102,4 +103,4 @@ const OperatorOrders = () => {
     );
 };
 
-export default OperatorOrders;
+export default OrderList;

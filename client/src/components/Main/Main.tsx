@@ -1,10 +1,11 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router';
-import { OPERATOR } from '../../constants/constants';
+import { ADMIN, CLIENT, MASTER, OPERATOR } from '../../constants/constants';
 import Administration from '../../pages/Administration/Administration';
 import Login from '../../pages/Auth/Login/Login';
 import Registration from '../../pages/Auth/Registration/Registration';
+import OrderList from '../../pages/MasterOrders/OrderList/OrderList';
 import MyOrders from '../../pages/MyOrders/MyOrders';
 import OperatorOrders from '../../pages/OperatorOrders/OperatorOrders';
 import Schedule from '../../pages/Schedule/Schedule';
@@ -18,11 +19,10 @@ const Main = () => {
         <>
             <Switch>
                 <Route path="/orders">
-                    {authData.user.role.name === OPERATOR ? (
-                        <OperatorOrders />
-                    ) : (
-                        <MyOrders />
-                    )}
+                    {authData.user.role.name === OPERATOR && <OperatorOrders />}
+                    {authData.user.role.name === CLIENT && <MyOrders />}
+                    {authData.user.role.name === ADMIN && <MyOrders />}
+                    {authData.user.role.name === MASTER && <OrderList />}
                 </Route>
                 <Route path="/schedule">
                     <Schedule />

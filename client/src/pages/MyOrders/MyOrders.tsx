@@ -19,7 +19,9 @@ import useStyles from './myOrdersStyles';
 import Address from '../../components/Address/Address';
 import Loader from '../../components/Loader/Loader';
 import ImageAdder from '../../components/ImageUploader/ImageUploader';
-import { createOrder } from '../../service/orders';
+import { createOrder, getAllOrders } from '../../service/orders';
+import { StatusColors } from '../../constants/constants';
+import InfoModal from './InfoModal/InfoModal';
 
 // ==================================================== TABS ==================================
 
@@ -57,7 +59,7 @@ const MyOrders: React.FC = () => {
         status_color: '',
         commentary: '',
         photo: '',
-        location: null
+        address: null,
     });
 
     // Стейт фото пользователя
@@ -72,24 +74,45 @@ const MyOrders: React.FC = () => {
             ...orderData,
             photo: String(imagePreviewUrl),
             location: address,
-            status: 'Обработка заказа диспетчером'
+            status: 'Обработка заказа диспетчером',
+            status_color: StatusColors.ORDER_PROCESSING,
         };
         console.log(newOrder);
         dispatch(createOrder(newOrder));
-        dispatch(getOrdersByUserId(authData.user.id))
+        dispatch(getOrdersByUserId(authData.user.id));
     };
 
     // Стейт модальных окон
     const [isOpenAddModal, setIsOpenAddModal] = useState(false);
     const [isOpenInfoModal, setIsOpenInfoModal] = useState(false);
 
+    // Закрыть окно информации
+    const closeInfoModalHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
+        setIsOpenInfoModal(false);
+        dispatch(getOrdersByUserId(authData.user.id));
+    };
+
     // Открыть окно добавления
     const openAddModalHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
+        setOrderData({
+            id: 0,
+            master: null,
+            user: authData.user.id,
+            description: '',
+            start_date: '',
+            end_date: '',
+            status: '',
+            status_color: '',
+            commentary: '',
+            photo: '',
+            address: null,
+        });
         setIsOpenAddModal(true);
     };
     // Закрыть окно добавления
     const closeAddModalHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
         setIsOpenAddModal(false);
+        dispatch(getOrdersByUserId(authData.user.id));
     };
     // Обработчик инпутов окна добавления
     const addModalChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -98,6 +121,12 @@ const MyOrders: React.FC = () => {
             [e.target.id]: e.target.value,
         });
         console.log(orderData);
+    };
+
+    // Выбрать заказ
+    const selectOrderHandler = (order: any) => {
+        setOrderData(order);
+        setIsOpenInfoModal(true);
     };
 
     // Загрузить заказы по id пользователя
@@ -138,10 +167,13 @@ const MyOrders: React.FC = () => {
                                 <ListItem
                                     button
                                     key={item.id}
-                                    // onClick={() => selectLocationHandler(item)}
+                                    onClick={() => selectOrderHandler(item)}
                                 >
                                     <ListItemText primary={item.description} />
-                                    <ListItemText primary={item.status} />
+                                    <ListItemText
+                                        primary={item.status}
+                                        style={{ color: item.status_color }}
+                                    />
                                 </ListItem>
                             );
                         })}
@@ -180,21 +212,31 @@ const MyOrders: React.FC = () => {
                     />
                 </form>
                 <TextField
-                    id="commentary"
-                    label="Комментарий"
+                    id="address"
+                    label="Адрес"
                     className={classes.input}
                     required
                     variant="outlined"
-                    value={orderData.commentary}
+                    value={orderData.address}
                     onChange={addModalChangeHandler}
                 />
-                <Address transferAddress={setAddress} />
                 <ImageAdder
                     imagePreviewUrl={imagePreviewUrl}
                     setImagePreviewUrl={setImagePreviewUrl}
                     setFile={setFile}
                 />
             </Modal>
+
+            {isOpenInfoModal && (
+                <InfoModal
+                    imageUrl={imagePreviewUrl}
+                    order={orderData}
+                    header="Информация о заказе"
+                    isOpen={isOpenInfoModal}
+                    setIsOpen={setIsOpenInfoModal}
+                    closeModal={closeInfoModalHandler}
+                />
+            )}
         </>
     );
 };

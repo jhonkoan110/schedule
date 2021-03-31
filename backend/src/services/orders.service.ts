@@ -7,6 +7,16 @@ export const getOrders = async () => {
     return await orderRepository.findAll();
 };
 
+// Получить заказ по id
+export const getOrderById = async (id: number) => {
+    return await getCustomRepository(OrderRepository).findOrderById(id);
+};
+
+// Получить заказы по id мастера
+export const getOrdersByMasterId = async (id: number) => {
+    return await getCustomRepository(OrderRepository).findOrdersByMasterId(id);
+};
+
 // Получить заказы по id пользователя
 export const getOrdersByUserId = async (id: number) => {
     const orderRepository = getCustomRepository(OrderRepository);

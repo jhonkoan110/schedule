@@ -13,7 +13,7 @@ const imageToBase64 = require('image-to-base64');
 // Получить все заказы
 ordersRouter.get(
     '/',
-    checkRoleMiddleware([Roles.Admin, Roles.Operator]),
+    checkRoleMiddleware([Roles.Admin, Roles.Operator, Roles.Client]),
     async (req: RoleRequest, res: express.Response) => {
         try {
             // Проверка роли
@@ -28,6 +28,44 @@ ordersRouter.get(
     }
 );
 
+// Получить заказ по id
+ordersRouter.get(
+    '/order_id/:id',
+    checkRoleMiddleware([Roles.Admin, Roles.Client])
+),
+    async (req: RoleRequest, res: express.Response) => {
+        try {
+            // Проверка роли
+            const role = defineRole(req.user.role);
+            checkRole(role, Permissions.Order);
+
+            const { id } = req.params;
+            const order = await ordersService.getOrderById(+id);
+            res.status(200).json({ order });
+        } catch (error) {
+            ErrorHelper.notFoundHandle(res, error);
+        }
+    };
+
+// Получить заказы по id мастера
+ordersRouter.get(
+    '/master/:id',
+    checkRoleMiddleware([Roles.Admin, Roles.Master]),
+    async (req: RoleRequest, res: express.Response) => {
+        try {
+            // Проверка роли
+            const role = defineRole(req.user.role);
+            checkRole(role, Permissions.Order);
+
+            const { id } = req.params;
+            const orders = await ordersService.getOrdersByMasterId(+id);
+            res.status(200).json({ orders });
+        } catch (error) {
+            ErrorHelper.notFoundHandle(res, error);
+        }
+    }
+);
+
 // Получить заказы по id пользователя
 ordersRouter.get(
     '/:id',
@@ -36,7 +74,6 @@ ordersRouter.get(
         try {
             // Проверка роли
             const role = defineRole(req.user.role);
-            
             checkRole(role, Permissions.Order);
 
             const { id } = req.params;
@@ -95,7 +132,7 @@ ordersRouter.delete(
 // Обновить заказ
 ordersRouter.put(
     '/',
-    checkRoleMiddleware([Roles.Admin, Roles.Operator]),
+    checkRoleMiddleware([Roles.Admin, Roles.Operator, Roles.Client]),
     async (req: RoleRequest, res: express.Response) => {
         try {
             // Проверка роли

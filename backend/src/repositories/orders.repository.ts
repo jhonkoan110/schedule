@@ -24,14 +24,24 @@ export interface OrderProps {
     photo: string;
     master?: Master;
     service: ServiceCatalog;
-    location: Location
+    address: string;
 }
 
 @EntityRepository(Order)
 export class OrderRepository extends AbstractRepository<Order> {
     // Получить все заказы
     async findAll() {
-        return await this.repository.find();
+        return await this.repository.find({
+            relations: ['service'],
+        });
+    }
+
+    // Получить заказ по id
+    async findOrderById(id: number) {
+        return await this.repository.findOne({
+            where: { id },
+            relations: ['service'],
+        });
     }
 
     // Получить заказы по id мастера
@@ -62,7 +72,7 @@ export class OrderRepository extends AbstractRepository<Order> {
             photo,
             master,
             service,
-            location
+            address,
         } = props;
 
         const order = new Order();
@@ -78,7 +88,7 @@ export class OrderRepository extends AbstractRepository<Order> {
             photo,
             master,
             service,
-            location
+            address,
         };
 
         return await this.repository.save(newOrder);
@@ -108,6 +118,8 @@ export class OrderRepository extends AbstractRepository<Order> {
             commentary,
             photo,
             master,
+            service,
+            address,
         } = props;
 
         const order = await this.repository.findOne(id);
@@ -126,6 +138,8 @@ export class OrderRepository extends AbstractRepository<Order> {
             commentary,
             photo,
             master,
+            service,
+            address,
         });
         return await this.repository.save(order);
     }

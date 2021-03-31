@@ -20,10 +20,18 @@ import {
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import Address from '../../../components/Address/Address';
+import Address2 from '../../../components/Address/Address2';
+import District from '../../../components/Address/District';
+import House from '../../../components/Address/House';
+import Street from '../../../components/Address/Street';
 import Block from '../../../components/Block/Block';
 import Loader from '../../../components/Loader/Loader';
+import DeleteModal from '../../../components/Modal/DeleteModal/DeleteModal';
 import useStyles from '../../../components/Modal/infoModalStyle';
+import { StatusColors } from '../../../constants/constants';
 import { getAllMasters } from '../../../service/masters';
+import { updateOrder } from '../../../service/orders';
 import { getAllServiceCatalogs } from '../../../service/serviceCatalog';
 import { IServiceCatalog } from '../../../store/serviceCatalog/types';
 import { AppStateType } from '../../../store/store';
@@ -46,7 +54,13 @@ const InfoModal: React.FC<InfoModalProps> = ({
     const [isDisabled, setIsDisabled] = useState(true);
     const [isSelectServiceOpen, setIsSelectServiceOpen] = useState(false);
     const [isSelectMasterOpen, setIsSelectMasterOpen] = useState(false);
+    const [isRejectModalOpen, setIsRejectModalOpen] = useState(false);
     const [price, setPrice] = useState<number>(0);
+    const [address, setAddress] = useState<any>();
+
+    const locations = useSelector(
+        (state: AppStateType) => state.locationList.locations
+    );
 
     const services = useSelector(
         (state: AppStateType) => state.serviceCatalogList.serviceCatalog
@@ -71,15 +85,11 @@ const InfoModal: React.FC<InfoModalProps> = ({
     const [orderData, setOrderData] = useState(order);
     const [selectedService, setSelectedService] = useState<any>('');
     const [selectedMaster, setSelectedMaster] = useState<any>('');
+    const [mastersBySpec, setMastersBySpec] = useState<any>([]);
 
     // Включить редактирование
     const editOrderHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
         setIsDisabled(false);
-    };
-
-    // Включить редактирование
-    const saveOrderHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
-        setIsDisabled(true);
     };
 
     // Обработка инпутов заказа
@@ -110,7 +120,8 @@ const InfoModal: React.FC<InfoModalProps> = ({
     };
 
     // Обработка селекта услуги
-    const changeSelectServiceHandler = async (event: any) => {
+    const changeSelectServiceHandler = (event: any) => {
+        // Если услуга не выбрана, сбросить поля стоимость и дата окончания
         if (!event.target.value) {
             setOrderData({
                 ...orderData,
@@ -122,14 +133,17 @@ const InfoModal: React.FC<InfoModalProps> = ({
             return;
         }
 
-        // console.log(event.target.value);
+        // Установка выбранной услуги
         setSelectedService(event.target.value);
 
+        // Фильтр услуг по выбранному id
         const oneService = services.filter(
             (item: IServiceCatalog) => item.id === event.target.value
         );
+        // Установка стоимости заказа, исходя из стоимости выбранной услуги
         setPrice(oneService[0].price);
 
+        // Получение длительности выполнения услуги в милисекундах
         const hoursAndMinutes = oneService[0].duration.split(':');
         const hours = hoursAndMinutes[0];
         const minutes = hoursAndMinutes[1];
@@ -138,30 +152,110 @@ const InfoModal: React.FC<InfoModalProps> = ({
         );
 
         // console.log('durationMS: ', durationMs.getTime());
+        // Получегие даты начала в милисекундах
         const temp = new Date(orderData.start_date).getTime();
 
+        // Получение даты окончания в мс
         const end_date = new Date(temp + durationMs.getTime());
-        // console.log('start_date: ', orderData.start_date);
 
-        // console.log('end_date: ', end_date);
-
-        // console.log('end_ISO_data: ',new Date(end_date.toISOString().substr(0, 19)));
-        // console.log('end_date_format: ', moment(end_date).format('YYYY-MM-DThh:mm:ss'));
-
+        // Установка конечной даты в формате, нужном для компонента библиотеки
         setOrderData({
             ...orderData,
             end_date: moment(end_date).format('YYYY-MM-DDTHH:mm:ss'),
+            service: event.target.value,
         });
+
+        console.log('services: ', services);
+
+        console.log(
+            'service: ',
+            services.filter(
+                (item: IServiceCatalog) => item.id === event.target.value
+            )
+        );
+
+        // Услуги с выбранной специализацией
+        const servicesBySpec = services.filter(
+            (item: IServiceCatalog) => item.id === event.target.value
+        );
+
+        // Установка мастеров в зависимости от локации и специализации услуги
+        if (servicesBySpec) {
+            setMastersBySpec(
+                masters.filter(
+                    (master) =>
+                        master.specialization.id ===
+                            servicesBySpec[0].specialization.id &&
+                        master.location.id === address.house
+                )
+            );
+        }
     };
 
     // Обработка селекта мастера
     const changeSelectMasterHandler = async (event: any) => {
         setSelectedMaster(event.target.value);
+        setOrderData({
+            ...orderData,
+            master: event.target.value,
+        });
+    };
+
+    // Сохранить изменения заказа
+    const saveOrderChangesHandler = (
+        e: React.MouseEvent<HTMLButtonElement>
+    ) => {
+        const district = locations.filter(
+            (item: any) => item.id === address.district
+        );
+        const street = locations.filter(
+            (item: any) => item.id === address.street
+        );
+        const house = locations.filter(
+            (item: any) => item.id === address.house
+        );
+
+        const updatedOrder = {
+            ...orderData,
+            status: `Назначен мастеру`,
+            status_color: StatusColors.ASSIGNED_TO_MASTER,
+            address: `${district[0].name}, ${street[0].name}, ${house[0].name}`,
+        };
+        setIsDisabled(true);
+
+        // dispatch(updateOrder(updatedOrder));
+        console.log('updatedOrder', updatedOrder);
+
+        console.log('district', district);
+        console.log('street', street);
+        console.log('house', house);
+    };
+
+    // Открыть модальное окно "отклонить"
+    const openRejectModalHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
+        setIsRejectModalOpen(true);
+    };
+
+    // Закрыть модальное окно "отклонить"
+    const closeRejectModalHandler = (
+        e: React.MouseEvent<HTMLButtonElement>
+    ) => {
+        setIsRejectModalOpen(false);
+    };
+
+    // Отклонить заказ
+    const rejectOrderHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
+        const updatedOrder = {
+            ...orderData,
+            status: 'Отклонено оператором',
+            status_color: StatusColors.REJECTED,
+        };
+        dispatch(updateOrder(updatedOrder));
     };
 
     useEffect(() => {
         dispatch(getAllServiceCatalogs());
-        dispatch(getAllMasters())
+        dispatch(getAllMasters());
     }, []);
 
     if (isLoading) {
@@ -210,8 +304,7 @@ const InfoModal: React.FC<InfoModalProps> = ({
                                 shrink: true,
                             }}
                         />
-                    </form>
-                    <form noValidate>
+
                         <TextField
                             className={classes.input}
                             variant="outlined"
@@ -227,31 +320,15 @@ const InfoModal: React.FC<InfoModalProps> = ({
                         />
                     </form>
 
-                    <TextField
-                        id="commentary"
-                        label="Комментарий"
-                        className={classes.input}
-                        required
-                        disabled={isDisabled}
-                        variant="outlined"
-                        value={orderData.commentary}
-                        onChange={orderChangeHandler}
-                    />
-                    <TextField
-                        id="location"
-                        label="Адрес"
-                        className={classes.input}
-                        required
-                        disabled={isDisabled}
-                        variant="outlined"
-                        value={orderData.location.name}
-                        onChange={orderChangeHandler}
-                    />
-                    <FormControl style={{ width: '100%' }}>
+                    <Typography>Адрес</Typography>
+                    <Typography>{orderData.address}</Typography>
+                    <Address2 transferLocation={setAddress} />
+                    <FormControl style={{ width: '100%', marginTop: '1rem' }}>
                         <InputLabel id="service_label">
                             Выбрать услугу
                         </InputLabel>
                         <Select
+                            disabled={isDisabled}
                             style={{ marginBottom: '1rem ' }}
                             labelId="service_label"
                             id="service-open-select"
@@ -278,12 +355,14 @@ const InfoModal: React.FC<InfoModalProps> = ({
                     {mastersError && (
                         <Typography variant="h5">{mastersError}</Typography>
                     )}
-                    {masters.length > 0 && (
+
+                    {mastersBySpec.length > 0 && selectedService && (
                         <FormControl style={{ width: '100%' }}>
                             <InputLabel id="master_label">
                                 Подобрать мастера
                             </InputLabel>
                             <Select
+                                disabled={isDisabled}
                                 style={{ marginBottom: '1rem ' }}
                                 labelId="master_label"
                                 id="master-open-select"
@@ -297,7 +376,7 @@ const InfoModal: React.FC<InfoModalProps> = ({
                                 <MenuItem value="">
                                     <em>None</em>
                                 </MenuItem>
-                                {masters.map((item: any) => {
+                                {mastersBySpec.map((item: any) => {
                                     return (
                                         <MenuItem key={item.id} value={item.id}>
                                             {item.user.login}
@@ -336,7 +415,7 @@ const InfoModal: React.FC<InfoModalProps> = ({
                                 className={classes.buttonMargin}
                                 variant="contained"
                                 color="primary"
-                                onClick={saveOrderHandler}
+                                onClick={saveOrderChangesHandler}
                             >
                                 Сохранить
                             </Button>
@@ -345,13 +424,33 @@ const InfoModal: React.FC<InfoModalProps> = ({
                         <Button
                             variant="contained"
                             color="secondary"
-                            // onClick={openDeleteModalHandler}
+                            onClick={openRejectModalHandler}
                         >
-                            Удалить
+                            Отклонить
                         </Button>
                     </DialogActions>
                 </DialogContent>
             </Dialog>
+
+            {isRejectModalOpen && (
+                <DeleteModal
+                    header="Отклонение заказа"
+                    isOpen={isRejectModalOpen}
+                    text={orderData.description}
+                    closeModal={closeRejectModalHandler}
+                    apply={rejectOrderHandler}
+                >
+                    <TextField
+                        id="commentary"
+                        label="Комментарий"
+                        className={classes.input}
+                        required
+                        variant="outlined"
+                        value={orderData.commentary}
+                        onChange={orderChangeHandler}
+                    />
+                </DeleteModal>
+            )}
         </>
     );
 };

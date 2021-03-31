@@ -16,7 +16,7 @@ export class ServiceCatalog {
     @Column()
     duration: string;
 
-    @OneToOne(() => Specialization, specialization => specialization.id, {eager:true})
+    @ManyToOne(() => Specialization, specialization => specialization.id, {eager:true})
     @JoinColumn()
     specialization: Specialization;
 
