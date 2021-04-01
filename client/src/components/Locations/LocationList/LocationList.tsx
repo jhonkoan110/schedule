@@ -57,10 +57,7 @@ const LocationList: React.FC<LocationListProps> = () => {
         coordinates: '',
         name: '',
         parent: 0,
-        location_type: {
-            id: 0,
-            name: '',
-        },
+        location_type_id: 0,
     });
 
     // Отркыть окно добавления
@@ -143,10 +140,6 @@ const LocationList: React.FC<LocationListProps> = () => {
             name: locationData.name,
             coordinates: locationData.coordinates,
             location_type_id: +location_type,
-            location_type: {
-                id: +location_type,
-                name: '',
-            },
             parent: selectedParent || null,
         };
         console.log(newLocation);

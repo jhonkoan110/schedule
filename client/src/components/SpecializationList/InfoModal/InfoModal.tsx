@@ -4,7 +4,6 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle,
-    Divider,
     List,
     ListItem,
     ListItemText,

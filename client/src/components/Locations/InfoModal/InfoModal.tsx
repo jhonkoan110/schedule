@@ -100,21 +100,21 @@ const InfoModal: React.FC<InfoModalProps> = ({
     };
 
     // Обновить локацию
-    const updateLocationHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
-        const updatedLocation: ILocation = {
-            id: locationData.id,
-            name: locationData.name,
-            coordinates: locationData.coordinates,
-            location_type: {
-                id: +location_type,
-                name: '',
-            },
-            parent: null,
-        };
+    // const updateLocationHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
+    //     const updatedLocation: ILocation = {
+    //         id: locationData.id,
+    //         name: locationData.name,
+    //         coordinates: locationData.coordinates,
+    //         location_type: {
+    //             id: +location_type,
+    //             name: '',
+    //         },
+    //         parent: null,
+    //     };
 
-        dispatch(updateLocation(updatedLocation));
-        setIsOpenEditModal(false);
-    };
+    //     dispatch(updateLocation(updatedLocation));
+    //     setIsOpenEditModal(false);
+    // };
 
     return (
         <>
@@ -172,7 +172,7 @@ const InfoModal: React.FC<InfoModalProps> = ({
                     isOpen={isOpenEditModal}
                     isEdit={true}
                     closeModal={closeEditModalHandler}
-                    save={updateLocationHandler}
+                    // save={updateLocationHandler}
                 >
                     <TextField
                         id="name"

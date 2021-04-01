@@ -10,10 +10,8 @@ import {
     TextField,
     Typography,
 } from '@material-ui/core';
-import moment, { Moment } from 'moment';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllMasters } from '../../../service/masters';
 import {
     createServiceCatalog,
     getAllServiceCatalogs,
@@ -141,7 +139,7 @@ const ServiceCatalogList: React.FC<ServiceCatalogListProps> = () => {
     useEffect(() => {
         dispatch(getAllServiceCatalogs());
         dispatch(getAllSpecializations());
-    }, []);
+    }, [dispatch]);
 
     if (isLoading) {
         return <Loader />;

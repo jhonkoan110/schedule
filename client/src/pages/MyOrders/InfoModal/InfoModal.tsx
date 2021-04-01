@@ -1,25 +1,19 @@
 import {
     Button,
-    Card,
-    CardMedia,
     Dialog,
     DialogActions,
     DialogContent,
     DialogTitle,
-    List,
-    ListItem,
-    ListItemText,
     TextField,
     Typography,
 } from '@material-ui/core';
-import React, { Dispatch, useEffect, useState } from 'react';
+import React, { Dispatch, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import Address from '../../../components/Address/Address';
 import ImageUploader from '../../../components/ImageUploader/ImageUploader';
 import useStyles from '../../../components/Modal/infoModalStyle';
 import Modal from '../../../components/Modal/Modal';
 import { StatusColors } from '../../../constants/constants';
-import { getAllOrders, updateOrder } from '../../../service/orders';
+import { updateOrder } from '../../../service/orders';
 import CancelModal from '../CancelModal/CancelModal';
 
 interface InfoModalProps {

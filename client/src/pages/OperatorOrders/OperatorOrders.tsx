@@ -29,11 +29,6 @@ const OperatorOrders = () => {
     // Стейт модальных окон
     const [isOpenInfoModal, setIsOpenInfoModal] = useState(false);
 
-    // Открыть окно информации
-    const openInfoModalHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
-        setIsOpenInfoModal(true);
-    };
-
     // Закрыть окно информации
     const closeInfoModalHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
         setIsOpenInfoModal(false);
@@ -49,7 +44,7 @@ const OperatorOrders = () => {
 
     useEffect(() => {
         dispatch(getAllOrders());
-    }, []);
+    }, [dispatch]);
 
     if (isLoading) {
         return <Loader />;

@@ -125,7 +125,7 @@ const UserList: React.FC<UserListProps> = () => {
     // Загрузить всех пользователей
     useEffect(() => {
         dispatch(getAllUsers());
-    }, []);
+    }, [dispatch]);
 
     if (isLoading) {
         return <Loader />;

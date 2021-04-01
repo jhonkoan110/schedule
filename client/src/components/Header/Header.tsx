@@ -6,7 +6,7 @@ import {
     Toolbar,
 } from '@material-ui/core';
 import HomeIcon from '@material-ui/icons/Home';
-import React, { useEffect } from 'react';
+import React from 'react';
 import DateRangeIcon from '@material-ui/icons/DateRange';
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 import { NavLink } from 'react-router-dom';
@@ -14,7 +14,6 @@ import useStyles from './style';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppStateType } from '../../store/store';
 import { authDataFetched } from '../../store/auth/actionCreators';
-import { checkAuth } from '../../service/auth';
 import { ADMIN, CLIENT, MASTER, OPERATOR } from '../../constants/constants';
 
 interface HeaderProps {}

@@ -3,7 +3,6 @@ import {
     List,
     ListItem,
     ListItemText,
-    TextField,
     Typography,
 } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
@@ -78,7 +77,7 @@ const MasterList: React.FC = () => {
     // Загрузить всех мастеров
     useEffect(() => {
         dispatch(getAllMasters());
-    }, []);
+    }, [dispatch]);
 
     if (isLoading) {
         return <Loader />;

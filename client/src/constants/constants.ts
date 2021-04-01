@@ -9,3 +9,9 @@ export enum StatusColors {
     REJECTED = '#FB000D',
     ASSIGNED_TO_MASTER = '#1049A9',
 }
+
+export enum LocationTypes {
+    DISTRICT = 5,
+    STREET = 3,
+    HOUSE = 7,
+}

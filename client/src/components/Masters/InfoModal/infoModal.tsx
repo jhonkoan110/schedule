@@ -31,7 +31,6 @@ const InfoModal: React.FC<InfoModalProps> = ({
     const dispatch = useDispatch();
 
     const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
-    const [isOpenEditModal, setIsOpenEditModal] = useState(false);
 
     // Открыть модальное окно удаления
     const openDeleteModalHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -77,22 +76,22 @@ const InfoModal: React.FC<InfoModalProps> = ({
                     </List>
 
                     <DialogActions className={classes.actions}>
-                    <Button
-                        className={classes.buttonMargin}
-                        variant="contained"
-                        color="primary"
-                        // onClick={openEditModalHandler}
-                    >
-                        Редактировать
-                    </Button>
-                    <Button
-                        variant="contained"
-                        color="secondary"
-                        onClick={openDeleteModalHandler}
-                    >
-                        Удалить
-                    </Button>
-                </DialogActions>
+                        <Button
+                            className={classes.buttonMargin}
+                            variant="contained"
+                            color="primary"
+                            // onClick={openEditModalHandler}
+                        >
+                            Редактировать
+                        </Button>
+                        <Button
+                            variant="contained"
+                            color="secondary"
+                            onClick={openDeleteModalHandler}
+                        >
+                            Удалить
+                        </Button>
+                    </DialogActions>
                 </DialogContent>
             </Dialog>
 

@@ -16,16 +16,11 @@ import { getOrdersByUserId } from '../../service/myOrders';
 import Modal from '../../components/Modal/Modal';
 import React, { useState, useEffect } from 'react';
 import useStyles from './myOrdersStyles';
-import Address from '../../components/Address/Address';
 import Loader from '../../components/Loader/Loader';
 import ImageAdder from '../../components/ImageUploader/ImageUploader';
-import { createOrder, getAllOrders } from '../../service/orders';
+import { createOrder } from '../../service/orders';
 import { StatusColors } from '../../constants/constants';
 import InfoModal from './InfoModal/InfoModal';
-
-// ==================================================== TABS ==================================
-
-// ==================================================== TABS END ==================================
 
 const MyOrders: React.FC = () => {
     const dispatch = useDispatch();
@@ -132,7 +127,7 @@ const MyOrders: React.FC = () => {
     // Загрузить заказы по id пользователя
     useEffect(() => {
         dispatch(getOrdersByUserId(authData.user.id));
-    }, []);
+    }, [authData.user.id, dispatch]);
 
     if (isLoading) {
         return <Loader />;

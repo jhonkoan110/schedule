@@ -11,9 +11,6 @@ import {
     Typography,
 } from '@material-ui/core';
 import React from 'react';
-import { Dispatch } from 'redux';
-import Address from '../../../components/Address/Address';
-import ImageUploader from '../../../components/ImageUploader/ImageUploader';
 import useStyles from '../../../components/Modal/infoModalStyle';
 
 interface InfoModalProps {
@@ -93,11 +90,11 @@ const InfoModal: React.FC<InfoModalProps> = ({
                         </ListItem>
                     </List>
                     {/* <Address transferAddress={setAddress} /> */}
-                    <ImageUploader
+                    {/* <ImageUploader
                         imagePreviewUrl={imagePreviewUrl}
                         setImagePreviewUrl={setImagePreviewUrl}
-                        setFile={setFile}
-                    />
+                        setFile={setFile} */}
+                    {/* /> */}
                 </DialogContent>
                 <DialogActions className={classes.actions}>
                     <Button

@@ -64,11 +64,6 @@ const LocationTypeList: React.FC<LocationTypeListProps> = () => {
         });
     };
 
-    // Загрузить все типы локаций
-    useEffect(() => {
-        dispatch(getAllLocationTypes());
-    }, []);
-
     // Создать тип локации
     const saveLocationType = (e: React.MouseEvent<HTMLButtonElement>) => {
         dispatch(
@@ -86,6 +81,11 @@ const LocationTypeList: React.FC<LocationTypeListProps> = () => {
         setLocationTypeData({ id, name });
         setIsOpenInfoModal(true);
     };
+
+    // Загрузить все типы локаций
+    useEffect(() => {
+        dispatch(getAllLocationTypes());
+    }, [dispatch]);
 
     if (isLoading) {
         return <Loader />;

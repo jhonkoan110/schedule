@@ -4,12 +4,10 @@ import {
     locationsFetching,
 } from '../store/locations/actionCreators';
 import { ILocation } from '../store/locations/types';
-import { getAllLocationTypes } from './locationTypes';
 
 // Получить все локации
 export const getAllLocations = () => (dispatch: any) => {
     dispatch(locationsFetching(true));
-    dispatch(getAllLocationTypes());
 
     fetch('http://localhost:7000/api/locations/', {
         headers: {
@@ -32,11 +30,8 @@ export const getAllLocations = () => (dispatch: any) => {
 // Добавить локацию
 export const createLocation = (newLocation: ILocation) => (dispatch: any) => {
     dispatch(locationsFetching(true));
-    const finalLocation = {
-        ...newLocation,
-        location_type: newLocation.location_type.id,
-    };
-    console.log(finalLocation);
+
+    console.log(newLocation);
 
     fetch('http://localhost:7000/api/locations/', {
         method: 'POST',
@@ -44,7 +39,7 @@ export const createLocation = (newLocation: ILocation) => (dispatch: any) => {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${localStorage.getItem('user-token')}`,
         },
-        body: JSON.stringify(finalLocation),
+        body: JSON.stringify(newLocation),
     })
         .then((response) => {
             if (!response.ok) {
@@ -82,14 +77,12 @@ export const deleteLocation = (id: number) => (dispatch: any) => {
 };
 
 // ОБновить локацию
-export const updateLocation = (updatedLocation: ILocation) => (dispatch: any) => {
+export const updateLocation = (updatedLocation: ILocation) => (
+    dispatch: any
+) => {
     dispatch(locationsFetching(true));
-    const finalLocation = {
-        ...updatedLocation,
-        location_type: updatedLocation.location_type.id,
-    };
-    console.log(finalLocation);
-    
+
+    console.log(updatedLocation);
 
     fetch('http://localhost:7000/api/locations/', {
         method: 'PUT',
@@ -97,7 +90,7 @@ export const updateLocation = (updatedLocation: ILocation) => (dispatch: any) =>
             'Content-Type': 'application/json',
             Authorization: `Bearer ${localStorage.getItem('user-token')}`,
         },
-        body: JSON.stringify(finalLocation),
+        body: JSON.stringify(updatedLocation),
     })
         .then((response) => {
             if (!response.ok) {

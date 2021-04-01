@@ -19,7 +19,6 @@ import { ILocationTypes } from '../../../store/locationTypes/types';
 import DeleteModal from '../../Modal/DeleteModal/DeleteModal';
 import useStyles from '../../Modal/infoModalStyle';
 import Modal from '../../Modal/Modal';
-import EditModal from '../../SpecializationList/EditModal/EditModal';
 
 interface InfoModalProps {
     id: number;

@@ -43,7 +43,7 @@ const EntityList = () => {
     // Загрузить все специализации
     useEffect(() => {
         dispatch(getAllSpecializations());
-    }, []);
+    }, [dispatch]);
 
     // Открыть модальное окно
     const openModalHandler = (

@@ -110,7 +110,7 @@ const OrderList: React.FC<OrderListProps> = () => {
     useEffect(() => {
         dispatch(getAllOrders());
         dispatch(getAllUsers());
-    }, []);
+    }, [dispatch]);
 
     if (isLoading) {
         return <Loader />;

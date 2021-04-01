@@ -62,7 +62,7 @@ const SpecializationSelect: React.FC<SpecializationSelectProps> = ({
 
     useEffect(() => {
         dispatch(getAllSpecializations());
-    }, []);
+    }, [dispatch]);
 
     if (isLoading) {
         return <Loader />;

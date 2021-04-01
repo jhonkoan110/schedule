@@ -1,5 +1,4 @@
 import {
-    Button,
     CardContent,
     CardHeader,
     Divider,
@@ -31,11 +30,6 @@ const OrderList: React.FC = () => {
 
     const [isInfoModalOpen, setIsInfoModalOpen] = useState<boolean>(false);
 
-    // Открыть модальное окно информации
-    const openInfoModalHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
-        setIsInfoModalOpen(true);
-    };
-
     // Закрыть модальное окно информации
     const closeInfoModalHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
         setIsInfoModalOpen(false);
@@ -49,7 +43,7 @@ const OrderList: React.FC = () => {
 
     useEffect(() => {
         dispatch(getOrdersByMasterId(authData.master.id));
-    }, []);
+    }, [authData.master.id, dispatch]);
 
     if (isLoading) {
         return <Loader />;

@@ -3,7 +3,7 @@ import {
     SERVICE_CATALOG_FETCHED_ERR,
     SERVICE_CATALOG_FETCHING,
 } from './actionTypes';
-import { InitialStateType, IServiceCatalog } from './types';
+import { InitialStateType } from './types';
 
 const initialState: InitialStateType = {
     serviceCatalog: [],

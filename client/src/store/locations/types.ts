@@ -6,8 +6,4 @@ export interface ILocation {
     coordinates: string;
     parent: null | number;
     location_type_id?: number;
-    location_type: {
-        id: number;
-        name: string;
-    }
 }

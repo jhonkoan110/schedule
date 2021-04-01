@@ -3,7 +3,6 @@ import {
     ordersFetched,
     ordersFetchedErr,
 } from './../store/orders/actionCreators';
-import { getAllServiceCatalogs } from './serviceCatalog';
 
 // Получить все заказы
 export const getAllOrders = () => (dispatch: any) => {

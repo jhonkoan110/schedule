@@ -3,6 +3,8 @@ import React, { Dispatch, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllUsers } from '../../../../service/users';
 import { AppStateType } from '../../../../store/store';
+import Error from '../../../Error/Error';
+import Loader from '../../../Loader/Loader';
 
 interface UserSelectProps {
     transferSelectedUser: Dispatch<any>;
@@ -39,7 +41,15 @@ const UserSelect: React.FC<UserSelectProps> = ({ transferSelectedUser }) => {
 
     useEffect(() => {
         dispatch(getAllUsers());
-    }, []);
+    }, [dispatch]);
+
+    if (isLoading) {
+        return <Loader />;
+    }
+
+    if (error) {
+        return <Error error={error} />;
+    }
 
     return (
         <FormControl style={{ width: '100%' }}>

@@ -1,7 +1,6 @@
 import {
     Button,
     Card,
-    CardHeader,
     CardMedia,
     Dialog,
     DialogActions,
@@ -9,9 +8,6 @@ import {
     DialogTitle,
     FormControl,
     InputLabel,
-    List,
-    ListItem,
-    ListItemText,
     MenuItem,
     Select,
     TextField,
@@ -21,10 +17,6 @@ import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Address from '../../../components/Address/Address';
-import Address2 from '../../../components/Address/Address2';
-import District from '../../../components/Address/District';
-import House from '../../../components/Address/House';
-import Street from '../../../components/Address/Street';
 import Block from '../../../components/Block/Block';
 import Loader from '../../../components/Loader/Loader';
 import DeleteModal from '../../../components/Modal/DeleteModal/DeleteModal';
@@ -56,11 +48,6 @@ const InfoModal: React.FC<InfoModalProps> = ({
     const [isSelectMasterOpen, setIsSelectMasterOpen] = useState(false);
     const [isRejectModalOpen, setIsRejectModalOpen] = useState(false);
     const [price, setPrice] = useState<number>(0);
-    const [address, setAddress] = useState<any>();
-
-    const locations = useSelector(
-        (state: AppStateType) => state.locationList.locations
-    );
 
     const services = useSelector(
         (state: AppStateType) => state.serviceCatalogList.serviceCatalog
@@ -86,6 +73,7 @@ const InfoModal: React.FC<InfoModalProps> = ({
     const [selectedService, setSelectedService] = useState<any>('');
     const [selectedMaster, setSelectedMaster] = useState<any>('');
     const [mastersBySpec, setMastersBySpec] = useState<any>([]);
+    const [locationID, setLocationID] = useState(0);
 
     // Включить редактирование
     const editOrderHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -165,15 +153,6 @@ const InfoModal: React.FC<InfoModalProps> = ({
             service: event.target.value,
         });
 
-        console.log('services: ', services);
-
-        console.log(
-            'service: ',
-            services.filter(
-                (item: IServiceCatalog) => item.id === event.target.value
-            )
-        );
-
         // Услуги с выбранной специализацией
         const servicesBySpec = services.filter(
             (item: IServiceCatalog) => item.id === event.target.value
@@ -186,7 +165,7 @@ const InfoModal: React.FC<InfoModalProps> = ({
                     (master) =>
                         master.specialization.id ===
                             servicesBySpec[0].specialization.id &&
-                        master.location.id === address.house
+                        master.location.id === locationID
                 )
             );
         }
@@ -205,30 +184,16 @@ const InfoModal: React.FC<InfoModalProps> = ({
     const saveOrderChangesHandler = (
         e: React.MouseEvent<HTMLButtonElement>
     ) => {
-        const district = locations.filter(
-            (item: any) => item.id === address.district
-        );
-        const street = locations.filter(
-            (item: any) => item.id === address.street
-        );
-        const house = locations.filter(
-            (item: any) => item.id === address.house
-        );
-
         const updatedOrder = {
             ...orderData,
             status: `Назначен мастеру`,
             status_color: StatusColors.ASSIGNED_TO_MASTER,
-            address: `${district[0].name}, ${street[0].name}, ${house[0].name}`,
+            address: '',
         };
         setIsDisabled(true);
 
         // dispatch(updateOrder(updatedOrder));
         console.log('updatedOrder', updatedOrder);
-
-        console.log('district', district);
-        console.log('street', street);
-        console.log('house', house);
     };
 
     // Открыть модальное окно "отклонить"
@@ -256,7 +221,7 @@ const InfoModal: React.FC<InfoModalProps> = ({
     useEffect(() => {
         dispatch(getAllServiceCatalogs());
         dispatch(getAllMasters());
-    }, []);
+    }, [dispatch]);
 
     if (isLoading) {
         return <Loader />;
@@ -322,7 +287,9 @@ const InfoModal: React.FC<InfoModalProps> = ({
 
                     <Typography>Адрес</Typography>
                     <Typography>{orderData.address}</Typography>
-                    <Address2 transferLocation={setAddress} />
+
+                    <Address transferLocationID={setLocationID} />
+
                     <FormControl style={{ width: '100%', marginTop: '1rem' }}>
                         <InputLabel id="service_label">
                             Выбрать услугу
